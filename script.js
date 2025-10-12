@@ -1228,13 +1228,16 @@ document.addEventListener('DOMContentLoaded', () => {
 const scrollToTopBtn = document.createElement('button');
 scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
 scrollToTopBtn.className = 'scroll-to-top';
+// Add hover tooltip and accessibility label
+scrollToTopBtn.setAttribute('title', 'Go to top');
+scrollToTopBtn.setAttribute('aria-label', 'Go to top');
 scrollToTopBtn.style.cssText = `
     position: fixed;
     bottom: 30px;
     right: 30px;
     width: 50px;
     height: 50px;
-    background: #10b981;
+    background: #00C853;
     color: white;
     border: none;
     border-radius: 50%;
@@ -1242,7 +1245,7 @@ scrollToTopBtn.style.cssText = `
     display: none;
     z-index: 1000;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
 `;
 
 document.body.appendChild(scrollToTopBtn);
