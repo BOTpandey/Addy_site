@@ -1351,7 +1351,7 @@ body.modal-open { overflow: hidden; }
     margin-right: 2px;
 }
 .hero-title {
-    font-family: var(--font-heading);
+    font-family: var(--font-hero, var(--font-heading));
     font-weight: 900;
     font-size: 4.5rem;
     line-height: 1.05;
@@ -1374,8 +1374,11 @@ body.modal-open { overflow: hidden; }
 .hero-up,
 .hero-rel,
 .hero-underline {
+    font-family: var(--font-hero, var(--font-heading));
     display: inline-block; /* ensure background-clip: text behaves consistently */
     position: relative;
+    /* Add pronounced spacing between individual letters for the hero headline */
+    letter-spacing: 0.2em;
     /* Glass-like fill inside letters using layered gradients */
     background-image:
         linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.66) 28%, rgba(255,255,255,0.32) 48%, rgba(255,255,255,0.18) 62%, rgba(255,255,255,0.32) 78%, rgba(255,255,255,0.70) 100%),
@@ -1508,8 +1511,12 @@ body.modal-open { overflow: hidden; }
     /* Typography */
     --font-heading: 'Poppins', 'Inter', 'Montserrat', Arial, sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --heading-weight: 800;
+    --heading-weight: 700;
     --body-weight: 400;
+    /* Layout */
+    --page-gutter: clamp(16px, 4vw, 48px);
+    /* Hero display font for spaced headline */
+    --font-hero: 'Archivo Black', 'Poppins', 'Inter', system-ui, Arial, sans-serif;
 }
 /* --- Key Insights Section --- */
 /* --------------------------------------------------------- */
@@ -1648,7 +1655,7 @@ body {
     /* Wider content area with small gutters */
     max-width: 98vw;
     margin: 0 auto;
-    padding: 0 12px;
+    padding: 0 var(--page-gutter);
 }
 
 /* Global heading family and sensible defaults */
@@ -1658,12 +1665,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 /* Fluid heading scale */
-h1 { font-size: clamp(2.2rem, 2.6vw + 1.1rem, 3.3rem); line-height: 1.15; letter-spacing: -0.02em; color: var(--brand-blue-dark); }
-h2 { font-size: clamp(1.8rem, 1.6vw + 1.0rem, 2.4rem); line-height: 1.2;  letter-spacing: -0.015em; color: var(--brand-blue-dark); }
-h3 { font-size: clamp(1.4rem, 1.0vw + 0.9rem, 1.8rem);  line-height: 1.25; letter-spacing: -0.01em;  color: var(--brand-blue-dark); }
-h4 { font-size: clamp(1.2rem, 0.7vw + 0.85rem, 1.4rem); line-height: 1.3;  color: var(--brand-blue-dark); }
-h5 { font-size: clamp(1.05rem, 0.4vw + 0.8rem, 1.2rem); line-height: 1.35; color: var(--brand-blue-dark); }
-h6 { font-size: clamp(0.95rem, 0.2vw + 0.78rem, 1.05rem); line-height: 1.4; color: var(--brand-blue-dark); }
+h1 { font-size: clamp(1.9rem, 2.0vw + 1.0rem, 2.8rem); line-height: 1.15; letter-spacing: -0.02em; color: var(--brand-blue-dark); }
+h2 { font-size: clamp(1.6rem, 1.2vw + 0.95rem, 2.1rem); line-height: 1.2;  letter-spacing: -0.015em; color: var(--brand-blue-dark); }
+h3 { font-size: clamp(1.3rem, 0.8vw + 0.85rem, 1.6rem);  line-height: 1.25; letter-spacing: -0.01em;  color: var(--brand-blue-dark); }
+h4 { font-size: clamp(1.1rem, 0.6vw + 0.8rem, 1.3rem); line-height: 1.3;  color: var(--brand-blue-dark); }
+h5 { font-size: clamp(1.0rem, 0.35vw + 0.78rem, 1.15rem); line-height: 1.35; color: var(--brand-blue-dark); }
+h6 { font-size: clamp(0.92rem, 0.2vw + 0.75rem, 1.0rem); line-height: 1.4; color: var(--brand-blue-dark); }
 
 /* Typography utilities (opt-in classes) */
 .text-left { text-align: left !important; }
@@ -1725,7 +1732,7 @@ p {
 .nav-container {
     max-width: 98vw;
     margin: 0 auto;
-    padding: 0 12px;
+    padding: 0 var(--page-gutter);
     display: flex;
     align-items: center;
     height: 70px;
@@ -1862,7 +1869,7 @@ p {
     text-align: left; /* left-align text in hero */
     position: relative;
     z-index: 2;
-    padding: 0 12px; /* no extra top padding; hero flex centers vertically */
+    padding: 0 var(--page-gutter); /* horizontal gutters */
 }
 .hero-title,
 .hero-subtitle,
@@ -1883,7 +1890,7 @@ p {
 .highlight {
         color: var(--brand-blue-dark);
         background: none;
-        font-size: 70px;
+        font-size: 65px;
         -webkit-background-clip: initial;
         -webkit-text-fill-color: initial;
         background-clip: initial;
@@ -2106,8 +2113,8 @@ p {
 
 .section-title {
     text-align: center;
-    font-size: clamp(2rem, 2.2vw + 1.2rem, 3rem);
-    font-weight: 800;
+    font-size: clamp(1.7rem, 1.6vw + 1rem, 2.4rem);
+    font-weight: 700;
     margin-bottom: 4rem;
     color: var(--brand-blue-dark);
     letter-spacing: -0.02em;
@@ -2196,8 +2203,8 @@ p {
 }
 
 .insight-card h3 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1e293b;
     letter-spacing: -0.01em;
@@ -2226,8 +2233,8 @@ p {
 }
 
 .features-text h2 {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 2rem;
     color: #1e293b;
     letter-spacing: -0.02em;
@@ -2899,8 +2906,8 @@ h2, h3, .section-title {
 }
 
 .page-header h1 {
-    font-size: 3.5rem;
-    font-weight: 800;
+    font-size: 2.6rem;
+    font-weight: 700;
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -2966,8 +2973,8 @@ h2, h3, .section-title {
 }
 
 .story-text h2 {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 2rem;
     color: #1e293b;
     letter-spacing: -0.02em;
@@ -3063,8 +3070,8 @@ h2, h3, .section-title {
 }
 
 .mv-card h3 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1e293b;
     letter-spacing: -0.01em;
@@ -3124,7 +3131,7 @@ img.portrait-top {
 }
 
 .team-member h4 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 600;
     margin: 0.15rem 0 0.2rem; /* tighten spacing to keep next lines close */
     color: #1e293b;
@@ -3359,7 +3366,7 @@ img.portrait-top {
 }
 
 .overview-content h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
     color: #1e293b;
@@ -3410,7 +3417,7 @@ img.portrait-top {
 }
 
 .product-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: #1e293b;
@@ -3484,7 +3491,7 @@ img.portrait-top {
 }
 
 .service-item h3 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: #1e293b;
@@ -3620,8 +3627,8 @@ img.portrait-top {
 }
 
 .machinery-card h3 {
-    font-size: 1.9rem;
-    font-weight: 800;
+    font-size: 1.6rem;
+    font-weight: 700;
     margin-bottom: 1.5rem;
     color: #1e293b;
     letter-spacing: -0.01em;
@@ -3844,8 +3851,8 @@ img.portrait-top {
 /* Styles for .faq-section, .faq-container, .faq-item, .faq-question, .faq-answer, etc. */
 
 .mission-text h2 {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 2rem;
     color: #1e293b;
     letter-spacing: -0.02em;
@@ -3963,8 +3970,8 @@ img.portrait-top {
 }
 
 .impact-card h3 {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 600;
     margin-bottom: 1.5rem;
     color: #1e293b;
     letter-spacing: -0.01em;
@@ -4026,7 +4033,7 @@ img.portrait-top {
 }
 
 .tech-item h3 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: #1e293b;
@@ -4062,7 +4069,7 @@ img.portrait-top {
 }
 
 .goal-content h3 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: #1e293b;
@@ -4110,7 +4117,7 @@ img.portrait-top {
 }
 
 .cert-item h3 {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: #1e293b;
@@ -4147,8 +4154,8 @@ img.portrait-top {
 }
 
 .contact-info h2 {
-    font-size: 3rem;
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 2rem;
     color: #1e293b;
     letter-spacing: -0.02em;
@@ -4283,8 +4290,8 @@ img.portrait-top {
 }
 
 .contact-form h3 {
-    font-size: 2rem;
-    font-weight: 800;
+    font-size: 1.7rem;
+    font-weight: 700;
     margin-bottom: 2.5rem;
     color: #1e293b;
     text-align: center;
@@ -4741,6 +4748,26 @@ html {
 .map-actions .btn:hover {
     background: #ffd801;
 }
+
+/* Map card: phone links red by default, blue on hover (like navbar) */
+.map-card .contact-list a[href^="tel"] {
+    color: var(--brand-maroon-dark) !important; /* same red as Business Hours */
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+.map-card .contact-list a[href^="tel"]:hover {
+    color: var(--brand-cyan-dark) !important; /* same hover blue as navbar phones */
+}
+
+/* Map card: email links same behavior as phone links */
+.map-card .contact-list a[href^="mailto"] {
+    color: var(--brand-maroon-dark) !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+.map-card .contact-list a[href^="mailto"]:hover {
+    color: var(--brand-cyan-dark) !important;
+}
 @media (max-width: 900px) {
     .map-contact-grid {
         grid-template-columns: 1fr;
@@ -4826,11 +4853,11 @@ h2::after,
 
 /* Clients & Partners: make heading and underline the same (brand) color */
 .clients-partners .section-title {
-    color: var(--brand-blue-dark) !important;
+    color: var(--heading-unified, #1e293b) !important;
     background: none !important;
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
+    -webkit-text-fill-color: currentColor !important;
 }
 .clients-partners .section-title::after {
     background: currentColor !important; /* match heading color */
@@ -4854,7 +4881,7 @@ h2::after,
     background: linear-gradient(180deg, var(--cat-tint, transparent), transparent 60%);
     border-left: 6px solid var(--cat-color, var(--brand-blue-mid));
     border-radius: 18px;
-    padding: 28px 22px;
+    padding: 28px max(22px, var(--page-gutter));
     box-shadow: 0 8px 28px rgba(0,0,0,0.06);
 }
 .product-category + .product-category { margin-top: 12px; }
@@ -4943,4 +4970,64 @@ h2::after,
 .insight-card:hover .insight-icon,
 .mv-card:hover .mv-icon {
     box-shadow: 0 12px 35px rgba(4, 35, 63, 0.38) !important;
+}
+
+/* ==========================================
+   Site-wide Heading Color Unification
+   Sets all headings to the Features h2 color (#1e293b)
+   while preserving contrast on dark sections and
+   brand accents in the footer and map card.
+   ========================================== */
+:root { --heading-unified: #1e293b; }
+
+/* Apply unified color and remove gradient text effects */
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6,
+body .section-title {
+    color: var(--heading-unified) !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: currentColor !important;
+}
+
+/* Preserve special cases for readability/brand */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero .section-title,
+.cta h2,
+.cta .section-title,
+.clients-partners .section-title,
+.infrastructure .section-title,
+.map-info-content h3,
+.footer .footer-section h3,
+.footer .footer-section h4,
+.map-card .section-title { background: none !important; }
+
+/* Dark sections should remain white */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero .section-title,
+.cta h2,
+.cta .section-title,
+.map-info-content h3,
+.infrastructure .section-title {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Footer headings keep brand gold */
+.footer .footer-section h3,
+.footer .footer-section h4 { color: #ffd700 !important; }
+
+/* Map card Find Us stays solid black */
+.map-card .section-title {
+    color: #111 !important;
+    -webkit-text-fill-color: initial !important;
 }
