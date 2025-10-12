@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products & Services - ENRAY AUTOCOMP</title>
-    <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" style="background:#fff;">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" />
+                <a href="index.html" aria-label="Go to homepage">
+                    <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" width="120" height="48" />
+                </a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -25,10 +27,13 @@
                 <li class="nav-item">
                     <a href="products.html" class="nav-link active">Products & Services</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item">   
                     <a href="contact.html" class="nav-link">Contact Us</a>
                 </li>
             </ul>
+            <div class="nav-contact">
+                <span class="contact-number"><i class="fa fa-phone"></i> <a href="tel:+919712959453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9712959453</a> | <a href="tel:+919319001453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9319001453</a></span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -38,298 +43,175 @@
     </nav>
 
     <!-- Page Header -->
-    <section class="page-header">
+        <!-- Page Header -->
+            <section class="page-header">
+                <div class="container">
+                    <h1>Built for Performance</h1>
+                    <p>Discover products engineered for precision and productivity.</p>
+                </div>
+            </section>
+
+    <!-- Products Section -->
+    <section class="product-category" id="automobile-products">
         <div class="container">
-            <h1>Products & Services</h1>
-            <p>Explore our range of reliable industrial solutions built for performance.</p>
-        </div>
-    </section>
-
-    <!-- Products Overview -->
-    <!-- <section class="products-overview">
-        <div class="container">
-            <div class="overview-content">
-                <h2>Our Product Portfolio</h2>
-                
-            </div>
-        </div>
-    </section> -->
-
-    <!-- Machinery Section -->
-    <section class="machinery-section">
-        <div class="container">
-            <h2 class="section-title">Our Industrial Machinery</h2>
-            <p class="section-subtitle">State-of-the-art equipment for precision manufacturing and fabrication</p>
-            
-            <div class="machinery-grid">
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <img src="assets/Laser Machine.jpg" alt="Laser Machine" style="width:100%;height:auto;object-fit:cover;max-height:160px;" />
-                    </div>
-                    <h3>Laser Machine</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">3kW Capacity</span>
-                        <span class="spec-item">Self-Loading</span>
-                        <span class="spec-item">20mm Thickness</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>Fibre laser cutting technology</li>
-                        <li>Self-loading capability</li>
-                        <li>Up to 20mm sheet thickness</li>
-                        <li>Precise shape cutting</li>
-                        <li>Fast, efficient production</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <img src="assets/Metal Fabricating.jpg" alt="Metal Fabricating" style="width:100%;height:auto;object-fit:cover;max-height:160px;" />
-                    </div>
-                    <h3>Metal Fabricating</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">10ft Width</span>
-                        <span class="spec-item">Custom Tooling</span>
-                        <span class="spec-item">Precision Bending</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>Precision sheet metal bending</li>
-                        <li>Materials up to 10 feet wide</li>
-                        <li>Custom tooling creation</li>
-                        <li>Multiple press brakes</li>
-                        <li>High-quality custom solutions</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <img src="assets/Pipe Bending.jpg" alt="Pipe Bending" style="width:100%;height:auto;object-fit:cover;max-height:160px;" />
-                    </div>
-                    <h3>Pipe Bending Machine</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">3-Axis Control</span>
-                        <span class="spec-item">Multi-Material</span>
-                        <span class="spec-item">HVAC & Auto</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>3-axis precision control</li>
-                        <li>Various pipe sizes and materials</li>
-                        <li>HVAC and automotive applications</li>
-                        <li>Accurate, efficient fabrication</li>
-                        <li>Custom angle and shape bending</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <img src="assets/Alex Double Grinding.jpg" alt="Alex Double Grinding" style="width:100%;height:auto;object-fit:cover;max-height:160px;" />
-                    </div>
-                    <h3>Alex Double Grinding Machine</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">Double Disk</span>
-                        <span class="spec-item">High Production</span>
-                        <span class="spec-item">Parallel Grinding</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>Double disk grinding technology</li>
-                        <li>Simultaneous face grinding</li>
-                        <li>Flat and parallel surfaces</li>
-                        <li>High production rates</li>
-                        <li>Precision grinding capabilities</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <i class="fas fa-stamp"></i>
-                    </div>
-                    <h3>Stamping Machine</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">11 Gauge</span>
-                        <span class="spec-item">Multi-Material</span>
-                        <span class="spec-item">Precision Parts</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>Precision stamping technology</li>
-                        <li>Parts smaller than a nickel</li>
-                        <li>Sheet metal up to 11 gauge</li>
-                        <li>Steel, aluminum, brass, copper</li>
-                        <li>Complex component manufacturing</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>Robotic Welding</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">Automated</span>
-                        <span class="spec-item">High Quality</span>
-                        <span class="spec-item">Safety Enhanced</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>Automated precision welding</li>
-                        <li>Boosted productivity</li>
-                        <li>Improved quality control</li>
-                        <li>Enhanced worker safety</li>
-                        <li>Cost reduction</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <i class="fas fa-sync-alt"></i>
-                    </div>
-                    <h3>CNC Turning Machine</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">3-5 Axis</span>
-                        <span class="spec-item">CNC Controlled</span>
-                        <span class="spec-item">Multi-Capability</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>3, 4, or 5-axis capability</li>
-                        <li>Computer numerically controlled</li>
-                        <li>Multiple cutting capabilities</li>
-                        <li>Advanced precision machining</li>
-                        <li>Versatile manufacturing solutions</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
-
-                <div class="machinery-card">
-                    <div class="machinery-image">
-                        <i class="fas fa-fire"></i>
-                    </div>
-                    <h3>Welding Services</h3>
-                    <div class="machinery-specs">
-                        <span class="spec-item">MIG & TIG</span>
-                        <span class="spec-item">7+ Decades</span>
-                        <span class="spec-item">Multi-Machine</span>
-                    </div>
-                    
-                    <ul class="machinery-features">
-                        <li>MIG, TIG, spot welding</li>
-                        <li>Robotic MIG welding</li>
-                        <li>Precise heat control</li>
-                        <li>Over 7 decades expertise</li>
-                        <li>Hundreds of specialized tools</li>
-                    </ul>
-                    <div class="machinery-actions">
-
-                        <a href="contact.html" class="btn btn-outline">Get Quote</a>
-                    </div>
-                </div>
+            <h2 class="section-title">Automotive Components</h2>
+            <p class="section-subtitle">Automobile products engineered for performance</p>
+            <div class="product-scroll h-scroll" aria-label="Automobile products scroller">
+                <figure class="product-item">
+                    <img src="auto_prod/atv disk brake.png" alt="ATV disc brake assembly" loading="lazy" />
+                    <figcaption>ATV Disc Brake Assembly</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/atv disk brake 2.png" alt="ATV disc brake variant" loading="lazy" />
+                    <figcaption>ATV Disc Brake - Variant</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/dipstick and distick tube.png" alt="Dipstick and dipstick tube" loading="lazy" />
+                    <figcaption>Dipstick & Tube</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/inter cooler tube.png" alt="Intercooler tube" loading="lazy" />
+                    <figcaption>Intercooler Tube</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/inter cooler tube 2.png" alt="Intercooler tube variant" loading="lazy" />
+                    <figcaption>Intercooler Tube - Variant</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/mech valve.png" alt="Mechanical valve" loading="lazy" />
+                    <figcaption>Mechanical Valve</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/mech valve 2.png" alt="Mechanical valve variant" loading="lazy" />
+                    <figcaption>Mechanical Valve - Variant</figcaption>
+                </figure>
+                <figure class="product-item">
+                    <img src="auto_prod/mech valve 3.png" alt="Mechanical valve variant 3" loading="lazy" />
+                    <figcaption>Mechanical Valve - Variant 3</figcaption>
+                </figure>
             </div>
         </div>
     </section>
 
-    <!-- Industries Served -->
-    <section class="industries">
+    <section class="product-category" id="tube-products">
         <div class="container">
-            <h2 class="section-title">Industries We Serve</h2>
-            <div class="industries-grid">
-                <div class="industry-item">
-                    <i class="fas fa-car"></i>
-                    <h4>Passenger Vehicles</h4>
-                    
-                </div>
-                <div class="industry-item">
-                    <i class="fas fa-truck"></i>
-                    <h4>Commercial Vehicles</h4>
-                    
-                </div>
-                <div class="industry-item">
-                    <i class="fas fa-industry"></i>
-                    <h4>Manufacturing</h4>
-                    
-                </div>
-                <div class="industry-item">
-                    <i class="fas fa-wrench"></i>
-                    <h4>Service Centers</h4>
-                    
-                </div>
-                <div class="industry-item">
-                    <i class="fas fa-warehouse"></i>
-                    <h4>Warehousing</h4>
-                    
-                </div>
+            <h2 class="section-title">Tube and Hose Assemblies</h2>
+            <p class="section-subtitle">Tube products engineered for precision</p>
+            <div class="product-scroll h-scroll" aria-label="Tube products scroller">
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-01.png" alt="Tube product 1" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-02.png" alt="Tube product 2" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-03.png" alt="Tube product 3" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-04.png" alt="Tube product 4" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-05.png" alt="Tube product 5" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="tube_prod/tube-product-06.png" alt="Tube product 6" loading="lazy" />
+                </figure>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
+    <section class="product-category" id="bus-products">
         <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Upgrade Your HVAC Systems?</h2>
-
-                <a href="contact.html" class="btn btn-primary btn-large">Get a Quote</a>
+            <h2 class="section-title">Bus HVAC Structures</h2>
+            <p class="section-subtitle">Bus products built for durability</p>
+            <div class="product-scroll h-scroll" aria-label="Bus products scroller">
+                <figure class="product-item">
+                    <img src="bus_prod/bus-product-01.png" alt="Bus product 1" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="bus_prod/bus-product-02.png" alt="Bus product 2" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="bus_prod/bus-product-03.png" alt="Bus product 3" loading="lazy" />
+                </figure>
             </div>
         </div>
     </section>
+
+    <section class="product-category" id="cmb-products">
+        <div class="container">
+            <h2 class="section-title">CMB Components</h2>
+            <p class="section-subtitle">CMB products: combined assemblies and components</p>
+            <div class="product-scroll h-scroll" aria-label="CMB products scroller">
+                <figure class="product-item">
+                    <img src="cmb_prod/cmb-product-01.png" alt="CMB product 1" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="cmb_prod/cmb-product-02.png" alt="CMB product 2" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="cmb_prod/cmb-product-03.png" alt="CMB product 3" loading="lazy" />
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-category" id="green-products">
+        <div class="container">
+            <h2 class="section-title">Green Energy Canopy</h2>
+            <p class="section-subtitle">Green products for efficient, eco‑friendly performance</p>
+            <div class="product-scroll h-scroll" aria-label="Green products scroller">
+                <figure class="product-item">
+                    <img src="green_prod/green-product-01.png" alt="Green product 1" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="green_prod/green-product-02.png" alt="Green product 2" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="green_prod/green-product-03.png" alt="Green product 3" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="green_prod/green-product-04.png" alt="Green product 4" loading="lazy" />
+                </figure>
+                <figure class="product-item">
+                    <img src="green_prod/green-product-05.png" alt="Green product 5" loading="lazy" />
+                </figure>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section footer-logo-section">
-                    <h3>ENRAY AUTOCOMP</h3>
-                    <p>Innovative HVAC solutions for a sustainable and efficient automotive future.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    <div class="footer-section footer-logo-section">
+                        <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" class="footer-brand-logo" />
+                        <p>Innovative HVAC solutions for a<br> sustainable and efficient automotive future.</p>
+                        <div class="social-links">
+                                    <a href="#" title="LinkedIn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align:middle;fill:currentColor;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.156 1.459-2.156 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.601 2.002 3.601 4.604v5.592z"/></svg>
+                                    </a>
+                                    <a href="#" title="X (formerly Twitter)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle;fill:currentColor;"><path d="M17.53 3H21L14.19 10.72 22.25 21H16.16L10.98 14.36 5.19 21H2L9.13 13.79 1.25 3H7.48L12.29 9.13 17.53 3ZM16.42 19H18.09L7.7 4.98H5.94L16.42 19Z"/></svg>
+                                    </a>
+                                    <a href="#" title="Facebook">
+                                        <i class="fab fa-facebook" style="font-size:24px;vertical-align:middle;"></i>
+                                    </a>
+                        </div>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> +91 11 4567 8900</p>
-                    <p><i class="fas fa-envelope"></i> info@enrayautocomp.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Industrial Area, Phase 2, Gurgaon, Haryana 122015</p>
+                <div class="footer-section with-divider">
+                    <h4>CONTACT INFO</h4>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+919712959453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9712959453</a> | <a href="tel:+919319001453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9319001453</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:sales@enray.co.in" style="color:inherit;text-decoration:underline;">sales@enray.co.in</a> | <a href="mailto:tech.enrayautocomp@gmail.com" style="color:inherit;text-decoration:underline;">tech.enrayautocomp@gmail.com</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps?q=Enray+Auto+Comp+E31+Surajpur+Industrial+Area+Block+E+UPSIDC+Site+C+Gulistanpur+Greater+Noida+Uttar+Pradesh+201306" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">E31, Surajpur Industrial Area, Block E, UPSIDC Site C,<br> Gulistanpur, Greater Noida, Uttar Pradesh 201306</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 ENRAY AUTOCOMP. All rights reserved.</p>
+                 <p>&copy; 2025 ENRAY AUTOCOMP. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
-
-
     <script src="script.js"></script>
 </body>
 </html>

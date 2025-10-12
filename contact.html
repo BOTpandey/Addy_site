@@ -10,10 +10,12 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" style="background:#fff;">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" />
+                <a href="index.html" aria-label="Go to homepage">
+                    <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" width="120" height="48" />
+                </a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -25,10 +27,13 @@
                 <li class="nav-item">
                     <a href="products.html" class="nav-link">Products & Services</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item">   
                     <a href="contact.html" class="nav-link active">Contact Us</a>
                 </li>
             </ul>
+            <div class="nav-contact">
+                <span class="contact-number"><i class="fa fa-phone"></i> <a href="tel:+919712959453">+91-9712959453</a> | <a href="tel:+919319001453">+91-9319001453</a></span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -48,238 +53,87 @@
     <!-- Contact Section -->
     <section class="contact-section">
         <div class="container">
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h2>Get In Touch</h2>
-                    <p>Ready to discuss your HVAC needs? Our team of experts is here to help you find the perfect solution for your automotive applications.</p>
-                    
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Phone</h4>
-                                <p>+91 11 4567 8900</p>
-                                <p>+91 11 4567 8901</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Email</h4>
-                                <p>info@enrayautocomp.com</p>
-                                <p>support@enrayautocomp.com</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Address</h4>
-                                <p>Industrial Area, Phase 2<br>Gurgaon, Haryana 122015<br>India</p>
-                            </div>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <div class="contact-icon">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="contact-text">
-                                <h4>Business Hours</h4>
-                                <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-                                <p>Saturday: 9:00 AM - 4:00 PM</p>
-                                <p>Sunday: Closed</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="social-links">
-                        <h4>Follow Us</h4>
-                        <div class="social-icons">
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
+            <div class="map-contact-grid">
+                <div class="map-frame" role="region" aria-label="ENRAY AUTOCOMP location on map">
+                    <iframe
+                        src="https://www.google.com/maps?q=Enray+Auto+Comp+E31+Surajpur+Industrial+Area+Block+E+UPSIDC+Site+C+Gulistanpur+Greater+Noida+Uttar+Pradesh+201306&output=embed"
+                        title="Enray Auto Comp Location - E31, Surajpur Industrial Area, Greater Noida"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allowfullscreen
+                        style="width:100%; height:100%; border-radius:16px; border:1px solid #e5e7eb;">
+                    </iframe>
                 </div>
-                
-                <div class="contact-form-container">
-                    <form id="contact-form" class="contact-form">
-                        <h3>Send us a Message</h3>
-                        <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="company">Company Name</label>
-                            <input type="text" id="company" name="company">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="service">Service Interest</label>
-                            <select id="service" name="service">
-                                <option value="">Select a service</option>
-                                <option value="consultation">Consultation & Design</option>
-                                <option value="installation">Installation & Commissioning</option>
-                                <option value="maintenance">Maintenance & Support</option>
-                                <option value="training">Training & Education</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Message *</label>
-                            <textarea id="message" name="message" rows="5" required placeholder="Tell us about your HVAC needs..."></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-large">Send Message</button>
-                    </form>
-                </div>
+                <aside class="map-card">
+                    <h2 class="section-title" style="font-size: 2rem; font-weight: 700; margin-bottom: 12px;">
+                            <span class="find">Find</span> <span class="us">Us</span>
+                    </h2>
+                    <p class="muted" style="color: #6b7280; margin-bottom: 18px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Stop by our office or find your way instantly.</p>
+                    <address class="map-address" style="font-style: normal; line-height: 1.6; color: #111827; margin-bottom: 18px; font-size: 1.08rem;">
+                        <strong>Enray Auto Comp</strong><br>
+                        E31, Surajpur Industrial Area,<br>Block E, UPSIDC Site C,<br>Gulistanpur, Greater Noida, Uttar Pradesh-201306
+                    </address>
+                    <ul class="contact-list" style="list-style: none; padding: 0; margin-bottom: 18px; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                        <li style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;color:#374151;font-size:1.08rem;margin-bottom:8px;">
+                            <i class="fas fa-phone" style="color:#22c55e;font-size:1.2rem;vertical-align:middle;margin-right:4px;"></i>
+                            <span style="min-width:180px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <a href="tel:+919712959453">+91-9712959453</a> |
+                                <a href="tel:+919319001453">+91-9319001453</a>
+                            </span>
+                        </li>
+                        <li style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;color:#374151;font-size:1.08rem;margin-bottom:8px;">
+                            <i class="fas fa-envelope" style="color:#22c55e;font-size:1.2rem;vertical-align:middle;margin-right:4px;"></i>
+                            <span style="min-width:180px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                <a href="mailto:sales@enray.co.in">sales@enray.co.in</a> |
+                                <a href="mailto:tech.enrayautocomp@gmail.com">tech.enrayautocomp@gmail.com</a>
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="hours" style="width:100%;text-align:center;">
+                        <h4 style="font-size:1.1rem;font-weight:600;margin-bottom:6px;color:#1e293b;">Business Hours</h4>
+                        <p style="color:#801D1D;font-size:1rem;line-height:1.6;">Mon – Fri: 8:00 AM – 6:00 PM<br>Sat: 9:00 AM – 4:00 PM<br>Sun: Closed</p>
+                    </div>
+                    <div class="map-actions" style="margin-top:10px;display:flex;justify-content:center;width:100%;">
+                        <a class="btn btn-primary" href="https://maps.app.goo.gl/VKAGAo9SCjTdv2q56" target="_blank" rel="noopener noreferrer">
+                            Get Directions <i class="fas fa-directions"></i>
+                        </a>
+                    </div>
+                </aside>
             </div>
         </div>
     </section>
 
-    <!-- Map Section -->
-    <section class="map-section">
-        <div class="container">
-            <h2 class="section-title">Find Us</h2>
-            <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.1234567890!2d77.1234567890!3d28.1234567890!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sIndustrial%20Area%20Phase%202%20Gurgaon!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin"
-                    width="100%" 
-                    height="400" 
-                    style="border:0;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="ENRAY AUTOCOMP Location - Industrial Area Phase 2, Gurgaon">
-                </iframe>
-                <div class="map-info">
-                    <div class="map-info-content">
-                        <h3>ENRAY AUTOCOMP Pvt Ltd</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> Industrial Area, Phase 2, Gurgaon, Haryana 122015</p>
-                        <p><i class="fas fa-phone"></i> +91 11 4567 8900</p>
-                        <p><i class="fas fa-envelope"></i> info@enrayautocomp.com</p>
-                        <div class="map-directions">
-                            <a href="https://maps.google.com/maps?q=Industrial+Area+Phase+2+Gurgaon+Haryana+122015" target="_blank" class="btn btn-primary">
-                                <i class="fas fa-directions"></i> Get Directions
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- FAQ section removed per request -->
 
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-container">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h4>What types of HVAC systems do you specialize in?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>We specialize in automotive HVAC systems including air conditioning, heating, ventilation, and control systems for passenger vehicles, commercial trucks, and industrial applications.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h4>Do you provide emergency repair services?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Yes, we offer 24/7 emergency repair services for critical HVAC systems. Our rapid response team is available to address urgent issues and minimize downtime.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h4>What is your typical project timeline?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Project timelines vary based on complexity and scope. Simple installations typically take 1-2 weeks, while complex custom systems may require 4-8 weeks. We provide detailed timelines during the consultation phase.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h4>Do you offer maintenance contracts?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Yes, we offer comprehensive maintenance contracts that include regular inspections, preventive maintenance, priority support, and discounted repair services to keep your systems running optimally.</p>
-                    </div>
-                </div>
-                
-                <div class="faq-item">
-                    <div class="faq-question">
-                        <h4>Are your systems environmentally friendly?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Absolutely! We use eco-friendly refrigerants, energy-efficient components, and sustainable manufacturing practices. All our systems are designed to minimize environmental impact while maximizing performance.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Get Started?</h2>
-                <p>Contact us today for a free consultation and discover how our HVAC solutions can enhance your automotive operations.</p>
-                <a href="tel:+911145678900" class="btn btn-primary btn-large">Call Now</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section footer-logo-section">
-                    <h3>ENRAY AUTOCOMP</h3>
-                    <p>Innovative HVAC solutions for a sustainable and efficient automotive future.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    <div class="footer-section footer-logo-section">
+                        <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" class="footer-brand-logo" />
+                        <p>Innovative HVAC solutions for a<br> sustainable and efficient automotive future.</p>
+                        <div class="social-links">
+                                    <a href="#" title="LinkedIn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align:middle;fill:currentColor;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.156 1.459-2.156 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.601 2.002 3.601 4.604v5.592z"/></svg>
+                                    </a>
+                                    <a href="#" title="X (formerly Twitter)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle;fill:currentColor;"><path d="M17.53 3H21L14.19 10.72 22.25 21H16.16L10.98 14.36 5.19 21H2L9.13 13.79 1.25 3H7.48L12.29 9.13 17.53 3ZM16.42 19H18.09L7.7 4.98H5.94L16.42 19Z"/></svg>
+                                    </a>
+                                    <a href="#" title="Facebook">
+                                        <i class="fab fa-facebook" style="font-size:24px;vertical-align:middle;"></i>
+                                    </a>
+                        </div>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> +91 11 4567 8900</p>
-                    <p><i class="fas fa-envelope"></i> info@enrayautocomp.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Industrial Area, Phase 2, Gurgaon, Haryana 122015</p>
+                <div class="footer-section with-divider">
+                    <h4>CONTACT INFO</h4>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+919712959453" style="color:inherit;text-decoration:underline;">+91-9712959453</a> | <a href="tel:+919319001453" style="color:inherit;text-decoration:underline;">+91-9319001453</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:sales@enray.co.in" style="color:inherit;text-decoration:underline;">sales@enray.co.in</a> | <a href="mailto:tech.enrayautocomp@gmail.com" style="color:inherit;text-decoration:underline;">tech.enrayautocomp@gmail.com</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps?q=Enray+Auto+Comp+E31+Surajpur+Industrial+Area+Block+E+UPSIDC+Site+C+Gulistanpur+Greater+Noida+Uttar+Pradesh+201306" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">E31, Surajpur Industrial Area, Block E, UPSIDC Site C,<br> Gulistanpur, Greater Noida, Uttar Pradesh 201306</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 ENRAY AUTOCOMP. All rights reserved.</p>
+                <p>&copy; 2025 ENRAY AUTOCOMP. All rights reserved.</p>
             </div>
         </div>
     </footer>

@@ -10,10 +10,12 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" style="background:#fff;">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" />
+                <a href="index.html" aria-label="Go to homepage">
+                    <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" width="120" height="48" />
+                </a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -25,10 +27,13 @@
                 <li class="nav-item">
                     <a href="products.html" class="nav-link">Products & Services</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item">   
                     <a href="contact.html" class="nav-link">Contact Us</a>
                 </li>
             </ul>
+            <div class="nav-contact">
+                <span class="contact-number"><i class="fa fa-phone"></i> <a href="tel:+919712959453">+91-9712959453</a> | <a href="tel:+919319001453">+91-9319001453</a></span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -48,17 +53,16 @@
     <!-- Company Story -->
     <section class="company-story">
         <div class="container">
-            <div class="story-content">
-                <div class="story-text">
-                    <h2>Our Story</h2>
-                    <p>We at ENRAY AUTOCOMP Pvt Ltd are committed to manufacture high quality High Precision customized fabrication, Sheet Metal Components & Heavy Fabricated Assemblies, Motorbike Frames and machining components for EV and Automotive Industry.</p>
-                    <p>We strive for Customer Satisfaction and to be our customer's Preferred Vendor by meeting or exceeding external and internal demands and expectations concerning all products and related services.</p>
-                    <p>We achieve this by following Quality Systems conforming to ISO 9001:2015 with emphasis on technological up gradation and total teamwork of employees.</p>
-                    <p>We believe in Continuous Improvement and follow that with 100% sincerity.</p>
+            <div class="story-content" style="display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; background: linear-gradient(90deg, #f8fafc 60%, #e3eafc 100%); border-radius: 32px; box-shadow: 0 8px 32px rgba(37,99,235,0.10); padding: 40px 32px; margin-bottom: 1px;">
+                <div class="story-text" style="flex: 1 1 340px; min-width: 320px; max-width: 540px; text-align: left;">
+                    <p style="font-size:1.15rem; line-height:1.7; margin-bottom:16px; color:#333;">At <strong>ENRAY AUTOCOMP Pvt Ltd</strong>, we are dedicated to delivering high-quality, precision-engineered fabrication, sheet metal components, heavy assemblies, and motorbike frames for the EV and automotive industries.</p>
+                    <p style="font-size:1.08rem; line-height:1.7; margin-bottom:16px; color:#444;">Our commitment to <span style="color:#2563eb;font-weight:500;">customer satisfaction</span> drives us to exceed expectations, ensuring every product and service meets the highest standards.</p>
+                    <p style="font-size:1.08rem; line-height:1.7; margin-bottom:16px; color:#444;">We operate with <span style="color:#2563eb;font-weight:500;">ISO 9001:2015</span> certified quality systems, focusing on technological advancement and total teamwork.</p>
+                    <p style="font-size:1.08rem; line-height:1.7; color:#444;">Continuous improvement and 100% sincerity are at the heart of our operations, empowering us to shape a sustainable future for mobility.</p>
                 </div>
-                <div class="story-image">
-                    <div class="story-photo">
-                        <img src="assets/future2.png" alt="About ENRAY AUTOCOMP" style="width:540px;max-width:100%;height:540px;object-fit:cover;border-radius:28px;box-shadow:0 12px 48px rgba(37,99,235,0.22);background:#fff;display:block;margin:0 auto;" />
+                <div class="story-image" style="flex: 1 1 320px; min-width: 280px; display: flex; justify-content: center; align-items: center;">
+                    <div class="story-photo" style="max-width:540px; width:100%;">
+                        <img src="assets/manpower.png" alt="About ENRAY AUTOCOMP" style="width:100%;height:clamp(320px, 36vw, 520px);object-fit:cover;border-radius:28px;box-shadow:0 12px 48px rgba(37,99,235,0.22);background:#fff;display:block;margin:0 auto;" />
                     </div>
                 </div>
             </div>
@@ -71,7 +75,18 @@
             <div class="mv-grid">
                 <div class="mv-card">
                     <div class="mv-icon">
-                        <i class="fas fa-bullseye"></i>
+                    <!-- Improved arrow hitting target SVG icon, white color scheme -->
+                    <svg width="56" height="56" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                        <circle cx="20" cy="20" r="18" stroke="white" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="10" stroke="white" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="4" fill="white"/>
+                        <!-- Arrow shaft -->
+                        <line x1="32" y1="8" x2="20" y2="20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Arrowhead -->
+                        <polygon points="32,8 29.5,9.5 30.5,7.5 29,6 33,7" fill="white"/>
+                        <!-- Arrow fletching -->
+                        <polygon points="24,16 22,18 23,15" fill="white"/>
+                    </svg>
                     </div>
                     <h3>Our Mission</h3>
                     <p>To manufacture high quality High Precision customized fabrication, Sheet Metal Components & Heavy Fabricated Assemblies, Motorbike Frames and machining components for EV and Automotive Industry with unwavering commitment to customer satisfaction.</p>
@@ -85,7 +100,15 @@
                 </div>
                 <div class="mv-card">
                     <div class="mv-icon">
-                        <i class="fas fa-heart"></i>
+                        <!-- Two hands holding a heart SVG icon, larger hands, white color scheme -->
+                        <svg width="56" height="56" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+                            <!-- Heart -->
+                            <path d="M20 13c2-4 8-4 10 0 1.6 3.2-0.2 6.7-3.3 8.7L20 27l-6.7-5.3c-3.1-2-4.9-5.5-3.3-8.7 2-4 8-4 10 0z" fill="white"/>
+                            <!-- Left hand (larger) -->
+                            <path d="M10 32c-2.5 0-4-2-4-4.2 0-1.7 1.3-3 3-3 .9 0 1.7.4 2.3 1l4.2 4.2c.6.6.6 1.6 0 2.2-.6.6-1.6.6-2.2 0l-3.5-3.5c-.3-.3-.7-.5-1.1-.5-.8 0-1.5.7-1.5 1.5 0 .8.7 1.5 1.5 1.5h4.5c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5H10z" fill="white"/>
+                            <!-- Right hand (larger) -->
+                            <path d="M30 32c2.5 0 4-2 4-4.2 0-1.7-1.3-3-3-3-.9 0-1.7.4-2.3 1l-4.2 4.2c-.6.6-.6 1.6 0 2.2.6.6 1.6.6 2.2 0l3.5-3.5c.3-.3.7-.5 1.1-.5.8 0 1.5.7 1.5 1.5 0 .8-.7 1.5-1.5 1.5h-4.5c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5H30z" fill="white"/>
+                        </svg>
                     </div>
                     <h3>Our Values</h3>
                     <p>Quality Systems conforming to ISO 9001:2015, technological up gradation, total teamwork of employees, and 100% sincerity in continuous improvement form the foundation of our values and operational excellence.</p>
@@ -97,15 +120,23 @@
     <!-- Team Section -->
     <section class="team">
         <div class="container">
-            <h2 class="section-title">Meet Our Leaders</h2>
+            <h2 class="section-title">Our Executive Team</h2>
             <div class="team-grid">
                 <div class="team-member">
                     <div class="member-photo">
-                        <img src="assets/rishabh.jpeg" alt="Rishabh Bhardwaj" style="width:110px;height:110px;object-fit:cover;border-radius:50%;box-shadow:0 2px 12px rgba(37,99,235,0.10);background:#fff;" />
+                        <img src="assets/abhishek.png" alt="Abhishek Sharma" class="portrait-top" style="width:150px;height:150px;object-fit:cover;border-radius:50%;box-shadow:0 2px 12px rgba(37,99,235,0.10);background:#fff;" />
+                    </div>
+                    <h4>Abhishek Sharma</h4>
+                    <p class="position">Founder | Managing Director</p>
+                    <p class="bio">Enray Autocomp | Vayu Solar</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-photo">
+                        <img src="assets/rishabh.jpeg" alt="Rishabh Bhardwaj" style="width:150px;height:150px;object-fit:cover;border-radius:50%;box-shadow:0 2px 12px rgba(37,99,235,0.10);background:#fff;" />
                     </div>
                     <h4>Rishabh Bhardwaj</h4>
                     <p class="position">Chief Executive Officer</p>
-                    <p class="bio">Passionate Innovator | Cleantech Entrepreneur<br>Patent Holder | Transforming Renewable & Automobile Industry</p>
+                    <p class="bio">Passionate Innovator | Cleantech Entrepreneur Patent Holder</p>
                 </div>
             </div>
         </div>
@@ -113,26 +144,30 @@
 
     <!-- Stats Section -->
     <section class="stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">Years of Experience</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Projects Completed</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Expert Engineers</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">99%</div>
-                    <div class="stat-label">Client Satisfaction</div>
-                </div>
-            </div>
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">3+</div>
+            <div class="stat-label">Years of Excellence</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">1,000+</div>
+            <div class="stat-label">Units Manufactured</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">65+</div>
+            <div class="stat-label">Skilled Professionals</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number stat-number-label">ISO&nbsp;&amp;&nbsp;CE</div>
+            <div class="stat-label" style="white-space:nowrap;">Certified Quality Systems</div>
+          </div>
         </div>
+
+        <p class="stats-footnote" style="text-align:center; max-width:700px; margin:18px auto 0; line-height:1.6; font-size:0.95rem; color:#666;">
+        *Data sourced from publicly available records, including the Ministry of Corporate Affairs and NIDHI EIR (Start-up India) listings for Enray Autocomp Pvt. Ltd., incorporated in 2022.*
+        </p>
+      </div>
     </section>
 
     <!-- Why Choose Us -->
@@ -156,13 +191,6 @@
                 </div>
                 <div class="why-item">
                     <div class="why-icon">
-                        <i class="fas fa-motorcycle"></i>
-                    </div>
-                    <h4>Motorbike Frames</h4>
-                    <p>Expert manufacturing of Motorbike Frames and machining components with precision and quality that exceeds industry standards.</p>
-                </div>
-                <div class="why-item">
-                    <div class="why-icon">
                         <i class="fas fa-heart"></i>
                     </div>
                     <h4>100% Sincerity</h4>
@@ -172,39 +200,35 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Work With Us?</h2>
-                <p>Discover how our expertise and commitment to excellence can transform your automotive HVAC operations.</p>
-                <a href="contact.html" class="btn btn-primary btn-large">Get In Touch</a>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section footer-logo-section">
-                    <h3>ENRAY AUTOCOMP</h3>
-                    <p>Innovative HVAC solutions for a sustainable and efficient automotive future.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+                    <div class="footer-section footer-logo-section">
+                        <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" class="footer-brand-logo" />
+                        <p>Innovative HVAC solutions for a<br> sustainable and efficient automotive future.</p>
+                        <div class="social-links">
+                                    <a href="#" title="LinkedIn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align:middle;fill:currentColor;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.156 1.459-2.156 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.601 2.002 3.601 4.604v5.592z"/></svg>
+                                    </a>
+                                    <a href="#" title="X (formerly Twitter)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle;fill:currentColor;"><path d="M17.53 3H21L14.19 10.72 22.25 21H16.16L10.98 14.36 5.19 21H2L9.13 13.79 1.25 3H7.48L12.29 9.13 17.53 3ZM16.42 19H18.09L7.7 4.98H5.94L16.42 19Z"/></svg>
+                                    </a>
+                                    <a href="#" title="Facebook">
+                                        <i class="fab fa-facebook" style="font-size:24px;vertical-align:middle;"></i>
+                                    </a>
+                        </div>
                     </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> +91 11 4567 8900</p>
-                    <p><i class="fas fa-envelope"></i> info@enrayautocomp.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Industrial Area, Phase 2, Gurgaon, Haryana 122015</p>
+                <div class="footer-section with-divider">
+                    <h4>CONTACT INFO</h4>
+                    <p><i class="fas fa-phone"></i> <a href="tel:+919712959453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9712959453</a> | <a href="tel:+919319001453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9319001453</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:sales@enray.co.in" style="color:inherit;text-decoration:underline;">sales@enray.co.in</a> | <a href="mailto:tech.enrayautocomp@gmail.com" style="color:inherit;text-decoration:underline;">tech.enrayautocomp@gmail.com</a></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps?q=Enray+Auto+Comp+E31+Surajpur+Industrial+Area+Block+E+UPSIDC+Site+C+Gulistanpur+Greater+Noida+Uttar+Pradesh+201306" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">E31, Surajpur Industrial Area, Block E, UPSIDC Site C,<br> Gulistanpur, Greater Noida, Uttar Pradesh 201306</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 ENRAY AUTOCOMP. All rights reserved.</p>
+                <p>&copy; 2025 ENRAY AUTOCOMP. All rights reserved.</p>
             </div>
         </div>
     </footer>

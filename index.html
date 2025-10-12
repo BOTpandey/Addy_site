@@ -10,10 +10,12 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" style="background:#fff;">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" />
+                <a href="index.html" aria-label="Go to homepage">
+                    <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" width="180" height="72" />
+                </a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -25,10 +27,13 @@
                 <li class="nav-item">
                     <a href="products.html" class="nav-link">Products & Services</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item">   
                     <a href="contact.html" class="nav-link">Contact Us</a>
                 </li>
             </ul>
+            <div class="nav-contact">
+                <span class="contact-number"><i class="fa fa-phone"></i> <a href="tel:+919712959453">+91-9712959453</a> | <a href="tel:+919319001453">+91-9319001453</a></span>
+            </div>
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -42,25 +47,18 @@
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
-                    <span class="highlight">REVVING UP</span><br>
-                    <span class="highlight">RELIABILITY</span>
+                    <span class="hero-main hero-rev">REVVING <span class="hero-up">UP</span></span><br>
+                    <span class="hero-main hero-rel"><span class="hero-underline">RELIABILITY</span></span>
                 </h1>
                 <p class="hero-subtitle">
-                    Innovative HVAC solutions for a sustainable and efficient automotive future.
+                    Innovative HVAC solutions for a sustainable and efficient automotive future
                 </p>
                 <p class="hero-description">
                     We believe in Continuous Improvement and follow that with 100% sincerity
                 </p>
                 <div class="hero-buttons">
-                    <a href="products.html" class="btn btn-primary">Our Solutions</a>
-                    <a href="contact.html" class="btn btn-secondary">Get Quote</a>
-                </div>
-            </div>
-            <div class="hero-image">
-                <div class="hero-graphic">
-                    <i class="fas fa-cog fa-spin"></i>
-                    <i class="fas fa-wrench"></i>
-                    <i class="fas fa-tools"></i>
+                    <a href="#infrastructure" class="btn btn-primary">Explore Us</a>
+                    <a href="contact.html" class="btn btn-secondary">Get a Quote</a>
                 </div>
             </div>
         </div>
@@ -99,8 +97,8 @@
     <!-- Features Section -->
     <section class="features">
         <div class="container">
-            <div class="features-content">
-                <div class="features-text">
+            <div class="features-content" style="display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; background: linear-gradient(90deg, #f8fafc 60%, #e3eafc 100%); border-radius: 32px; box-shadow: 0 8px 32px rgba(37,99,235,0.10); padding: 40px 32px; margin-bottom: 1px;">
+                <div class="features-text" style="flex: 1 1 340px; min-width: 320px; max-width: 540px; text-align: left;">
                     <h2>Leading the Future of Automotive HVAC</h2>
                     <p>At ENRAY AUTOCOMP, we combine cutting-edge technology with decades of industry expertise to deliver HVAC solutions that drive automotive excellence.</p>
                     <ul class="features-list">
@@ -110,10 +108,135 @@
                         <li><i class="fas fa-check"></i> Custom Engineering</li>
                     </ul>
                 </div>
-                <div class="features-image">
-                    <div class="features-photo">
-                        <img src="assets/future.png" alt="Leading the Future" style="width:480px;max-width:100%;height:480px;object-fit:cover;border-radius:26px;box-shadow:0 10px 40px rgba(37,99,235,0.20);background:#fff;display:block;margin:0 auto;" />
+                <div class="features-image" style="flex: 1 1 320px; min-width: 280px; display: flex; justify-content: center; align-items: center;">
+                    <div class="features-photo" style="max-width:540px; width:100%;">
+                        <img src="assets/home img.png" alt="Leading the Future" style="width:100%;height:clamp(320px, 36vw, 520px);object-fit:cover;border-radius:32px;box-shadow:0 16px 64px rgba(37,99,235,0.22);background:#fff;display:block;margin:0 auto;" />
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manufacturing Capabilities -->
+    <section id="infrastructure" class="infrastructure">
+        <div class="container">
+            <h2 class="section-title">Our Infrastructure</h2>
+            <p class="section-subtitle">Explore our comprehensive manufacturing expertise and equipment</p>
+            <div class="infra-carousel-wrapper">
+                <button class="infra-carousel-arrow infra-prev" aria-label="Previous card" title="Previous">
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <div class="infra-carousel-track">
+                    <div class="infra-card" data-category="sheet-metal">
+                        <div class="infra-card-img-wrapper">
+                            <img src="sheet metal cutting/Laser cutting 2kW.png" alt="Sheet Metal Cutting" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>Sheet Metal<br> Fabrication</h4>
+                            <p>Advanced Manufacturing equipment ensuring precision and efficiency in sheet metal cutting processes.</p>
+                        </div>
+                    </div>
+                    <div class="infra-card" data-category="complex-machines">
+                        <div class="infra-card-img-wrapper">
+                            <img src="Complex machine/CNC honing.png" alt="Complex Machines" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>CNC and Multi-Axis Machining</h4>
+                            <p>Precision machining infrastructure ensuring tight dimensional accuracy for critical components.</p>
+                        </div>
+                    </div>
+                    <div class="infra-card" data-category="welding">
+                        <div class="infra-card-img-wrapper">
+                            <img src="welding/Laser Welding.png" alt="Welding" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>Robotic and Specialized Welding</h4>
+                            <p>Delivering precision, consistency, and efficiency through automated and advanced welding solutions.</p>
+                        </div>
+                    </div>
+                    <div class="infra-card" data-category="tubular">
+                        <div class="infra-card-img-wrapper">
+                            <img src="tubular/CNC pipe bend 3axis.png" alt="Tubular Processing" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>Tubular Fabrication Facilities</h4>
+                            <p>Comprehensive solutions for precision tube cutting, bending, and assembly.</p>
+                        </div>
+                    </div>
+                    <div class="infra-card" data-category="infrastructure">
+                        <div class="infra-card-img-wrapper">
+                            <img src="infra/powder coating room.png" alt="Infrastructure" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>Supporting Facilities & Processes</h4>
+                            <p>Robust in-house facilities for end-to-end manufacturing.</p>
+                        </div>
+                    </div>
+                    <div class="infra-card" data-category="others">
+                        <div class="infra-card-img-wrapper">
+                            <img src="others/hose crimping.png" alt="Other Capabilities" />
+                            <div class="infra-card-more">Click for More</div>
+                        </div>
+                        <div class="infra-card-info">
+                            <h4>Assembly & Quality Control</h4>
+                            <p>Seamless integration of assembly operations with robust quality assurance systems.</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="infra-carousel-arrow infra-next" aria-label="Next card" title="Next">
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="infra-cta">
+                <a href="products.html" class="btn btn-primary btn-large" aria-label="View our products">View Our Products</a>
+            </div>
+        </div>
+
+        <!-- Image Gallery Modal -->
+        <div id="infraModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="infraModalTitle" aria-hidden="true">
+            <span class="modal-close" role="button" tabindex="0" aria-label="Close dialog">&times;</span>
+            <div class="modal-content" tabindex="-1">
+                <!-- Top header kept for category title -->
+                <div class="modal-header" id="infraModalTitle" role="heading" aria-level="2"></div>
+
+                <!-- Two-column body: left media, right info -->
+                <div class="modal-body">
+                    <div class="modal-left">
+                        <div class="modal-main">
+                            <div class="modal-gallery">
+                                <!-- Main image will be dynamically injected here -->
+                            </div>
+                            <button class="modal-prev" aria-label="Previous image">&#10094;</button>
+                            <button class="modal-next" aria-label="Next image">&#10095;</button>
+                            <div class="image-counter" role="status" aria-live="polite" aria-atomic="true">1 / 10</div>
+                        </div>
+                        <div class="modal-thumbnails">
+                            <button class="thumb-scroll-left" aria-label="Scroll thumbnails left">&#10094;</button>
+                            <div class="thumbnails-container">
+                                <!-- Thumbnails will be dynamically loaded here -->
+                            </div>
+                            <button class="thumb-scroll-right" aria-label="Scroll thumbnails right">&#10095;</button>
+                        </div>
+                    </div>
+
+                    <aside class="modal-right">
+                        <div class="modal-info">
+                            <div class="modal-info-content">
+                                <p class="modal-info-blurb">Add your description here. You can describe your infrastructure, processes, or any highlights relevant to this category.</p>
+                                <div class="modal-info-items"></div>
+                                <ul class="modal-info-points">
+                                    <li>Key capability or feature point</li>
+                                    <li>Quality or certification note</li>
+                                    <li>Throughput or capacity detail</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </aside>
                 </div>
             </div>
         </div>
@@ -127,83 +250,64 @@
             
             <div class="clients-container">
                 <div class="clients-scroll clients-scroll-row1">
-                    <div class="client-logo"><img src="partners/Adani.png" alt="Adani" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/DENSO.png" alt="DENSO" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/dorman logo.jpg" alt="Dorman" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/fourth partner logo.png" alt="Partner 4" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/Havells logo.png" alt="Havells" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/ntpc logo.png" alt="NTPC" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/PCS-Logo.jpg" alt="PCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/bosch.png" alt="Bosch" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/chroma.png" alt="Chroma" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/DENSO.png" alt="Denso" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/dorman.png" alt="Dorman" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/frigel.png" alt="Frigel" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/matsui.jpg" alt="" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/PCS-Logo.jpg" alt="PCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/talbros.png" alt="Talbros" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/tcs logo.jpg" alt="TCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
                     <!-- Duplicate for seamless scroll -->
-                    <div class="client-logo"><img src="partners/Adani.png" alt="Adani" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/DENSO.png" alt="DENSO" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/dorman logo.jpg" alt="Dorman" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/fourth partner logo.png" alt="Partner 4" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/Havells logo.png" alt="Havells" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/ntpc logo.png" alt="NTPC" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/PCS-Logo.jpg" alt="PCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                </div>
-                <div class="clients-scroll clients-scroll-row2">
-                    <div class="client-logo"><img src="partners/tata power logo.jpeg" alt="Tata Power" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/TCCI logo.png" alt="TCCI" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/tcqo.jpg" alt="TCQO" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/tcs logo.jpg" alt="TCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/valleo logo.jpg" alt="Valleo" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/Vedanta logo.png" alt="Vedanta" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/warree logo.jpg" alt="Warree" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <!-- Duplicate for seamless scroll -->
-                    <div class="client-logo"><img src="partners/tata power logo.jpeg" alt="Tata Power" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/TCCI logo.png" alt="TCCI" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/tcqo.jpg" alt="TCQO" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/tcs logo.jpg" alt="TCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/valleo logo.jpg" alt="Valleo" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/Vedanta logo.png" alt="Vedanta" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                    <div class="client-logo"><img src="partners/warree logo.jpg" alt="Warree" style="height:70px;max-width:150px;object-fit:contain;" /></div>
-                </div>
+                    <div class="client-logo"><img src="clients/bosch.png" alt="Bosch" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/chroma.png" alt="Chroma" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/DENSO.png" alt="Denso" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/dorman.png" alt="Dorman" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/frigel.png" alt="Frigel" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/matsui.jpg" alt="" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/PCS-Logo.jpg" alt="PCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/talbros.png" alt="Talbros" style="height:70px;max-width:150px;object-fit:contain;" /></div>
+                    <div class="client-logo"><img src="clients/tcs logo.jpg" alt="TCS" style="height:70px;max-width:150px;object-fit:contain;" /></div>              
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Ready to Transform Your HVAC Operations?</h2>
-                <p>Contact us today to discuss your automotive HVAC needs and discover how we can help you achieve sustainable efficiency.</p>
-                <a href="contact.html" class="btn btn-primary btn-large">Get Started Today</a>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section footer-logo-section">
-                    <h3>ENRAY AUTOCOMP</h3>
-                    <p>Innovative HVAC solutions for a sustainable and efficient automotive future.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section footer-logo-section">
+                        <img src="assets/logo.png" alt="ENRAY AUTOCOMP Logo" class="footer-brand-logo" />
+                        <p>Innovative HVAC solutions for a<br> sustainable and efficient automotive future.</p>
+                        <div class="social-links">
+                                    <a href="#" title="LinkedIn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="vertical-align:middle;fill:currentColor;"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.026-3.063-1.868-3.063-1.868 0-2.156 1.459-2.156 2.967v5.7h-3v-10h2.881v1.367h.041c.401-.761 1.379-1.563 2.841-1.563 3.039 0 3.601 2.002 3.601 4.604v5.592z"/></svg>
+                                    </a>
+                                    <a href="#" title="X (formerly Twitter)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="vertical-align:middle;fill:currentColor;"><path d="M17.53 3H21L14.19 10.72 22.25 21H16.16L10.98 14.36 5.19 21H2L9.13 13.79 1.25 3H7.48L12.29 9.13 17.53 3ZM16.42 19H18.09L7.7 4.98H5.94L16.42 19Z"/></svg>
+                                    </a>
+                                    <a href="#" title="Facebook">
+                                        <i class="fab fa-facebook" style="font-size:24px;vertical-align:middle;"></i>
+                                    </a>
+                        </div>
+                    </div>
+                    <div class="footer-section with-divider">
+                        <h4>CONTACT INFO</h4>
+                        <p><i class="fas fa-phone"></i> <a href="tel:+919712959453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9712959453</a> | <a href="tel:+919319001453" class="phone-link" style="color:inherit;text-decoration:none;">+91-9319001453</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:sales@enray.co.in" style="color:inherit;text-decoration:underline;">sales@enray.co.in</a> | <a href="mailto:tech.enrayautocomp@gmail.com" style="color:inherit;text-decoration:underline;">tech.enrayautocomp@gmail.com</a></p>
+                        <p><i class="fas fa-map-marker-alt"></i> <a href="https://www.google.com/maps?q=Enray+Auto+Comp+E31+Surajpur+Industrial+Area+Block+E+UPSIDC+Site+C+Gulistanpur+Greater+Noida+Uttar+Pradesh+201306" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">E31, Surajpur Industrial Area, Block E, UPSIDC Site C,<br> Gulistanpur, Greater Noida, Uttar Pradesh 201306</a></p>
                     </div>
                 </div>
-                <div class="footer-section footer-contact-info">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> +91 11 4567 8900</p>
-                    <p><i class="fas fa-envelope"></i> info@enrayautocomp.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Industrial Area, Phase 2, Gurgaon, Haryana 122015</p>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 ENRAY AUTOCOMP. All rights reserved.</p>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 ENRAY AUTOCOMP. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-
-
+        </footer>
     <script src="script.js"></script>
+    
+    
 </body>
 </html>

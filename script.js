@@ -1,3 +1,803 @@
+// --- Infra Carousel Auto-Focus & Loop ---
+document.addEventListener('DOMContentLoaded', function() {
+    const infraTrack = document.querySelector('.infra-carousel-track');
+    const infraCards = infraTrack ? infraTrack.querySelectorAll('.infra-card') : [];
+    let focusIndex = 0;
+    let autoFocusInterval = null;
+    let isPaused = false;
+    let resumeTimeout = null;
+
+    function setFocus(idx, opts = {}) {
+        const doScroll = opts.scroll !== false; // default true
+        infraCards.forEach((card, i) => {
+            if (i === idx) {
+                card.classList.add('infra-card-focus');
+                if (doScroll) {
+                    const infraSection = document.querySelector('.infrastructure');
+                    if (infraSection) {
+                        const rect = infraSection.getBoundingClientRect();
+                        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                        const dragging = infraTrack && infraTrack.classList.contains('dragging');
+                        if (inView && infraTrack && !dragging) {
+                            const trackRect = infraTrack.getBoundingClientRect();
+                            const cardRect = card.getBoundingClientRect();
+                            const delta = (cardRect.left + cardRect.right) / 2 - (trackRect.left + trackRect.right) / 2;
+                            // compute proposed target scrollLeft
+                            let target = infraTrack.scrollLeft + delta;
+                            // clamp to ensure first/last cards are not clipped
+                            const styles = getComputedStyle(infraTrack);
+                            const padLeft = parseFloat(styles.paddingLeft) || 0;
+                            const padRight = parseFloat(styles.paddingRight) || 0;
+                            // safe margin to account for scale(1.08) overflow
+                            const safe = 24;
+                            const maxScroll = infraTrack.scrollWidth - infraTrack.clientWidth;
+                            const minTarget = 0 - padLeft - safe;
+                            const maxTarget = maxScroll + padRight + safe;
+                            target = Math.max(minTarget, Math.min(maxTarget, target));
+                            const by = target - infraTrack.scrollLeft;
+                            infraTrack.scrollBy({ left: by, behavior: 'smooth' });
+                        }
+                    }
+                }
+            } else {
+                card.classList.remove('infra-card-focus');
+            }
+        });
+        focusIndex = idx;
+    }
+
+    function startAutoFocus() {
+        if (autoFocusInterval) clearInterval(autoFocusInterval);
+        autoFocusInterval = setInterval(() => {
+            const infraSection = document.querySelector('.infrastructure');
+            const rect = infraSection ? infraSection.getBoundingClientRect() : null;
+            const inView = rect && rect.top < window.innerHeight && rect.bottom > 0;
+            if (!isPaused && inView && infraCards.length) {
+                const nextIdx = (focusIndex + 1) % infraCards.length;
+                setFocus(nextIdx, { scroll: true });
+            }
+        }, 1600);
+    }
+
+    // Initial focus without scrolling to avoid nudging the track under the pointer
+    setFocus(focusIndex, { scroll: false });
+
+    // Start/pause when the section enters/leaves viewport
+    let hasStartedOnView = false;
+    const infraSectionEl = document.querySelector('.infrastructure');
+    if (infraSectionEl) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    isPaused = false;
+                    if (!autoFocusInterval) startAutoFocus();
+                    // Nudge once immediately so animation is visible right away
+                    if (!hasStartedOnView && infraCards.length) {
+                        hasStartedOnView = true;
+                        setTimeout(() => setFocus((focusIndex + 1) % infraCards.length, { scroll: true }), 150);
+                    }
+                } else {
+                    isPaused = true;
+                }
+            });
+        }, { threshold: 0.15 });
+        io.observe(infraSectionEl);
+    }
+    // Pause autoplay when hovering anywhere over the track; resume when leaving the track
+    if (infraTrack) {
+        infraTrack.addEventListener('mouseenter', () => {
+            isPaused = true;
+            if (autoFocusInterval) {
+                clearInterval(autoFocusInterval);
+                autoFocusInterval = null;
+            }
+        });
+        infraTrack.addEventListener('mouseleave', () => {
+            isPaused = false;
+            startAutoFocus();
+        });
+        // Accessibility: pause while focus is within the track, resume when focus leaves track
+        infraTrack.addEventListener('focusin', () => { isPaused = true; });
+        infraTrack.addEventListener('focusout', (e) => {
+            // Only resume if focus has moved completely outside the track
+            const next = e.relatedTarget;
+            if (!next || !infraTrack.contains(next)) {
+                isPaused = false;
+                startAutoFocus();
+            }
+        });
+    }
+
+    // Card-level hover: focus the hovered card without scrolling; do not resume autoplay
+    infraCards.forEach((card, idx) => {
+        card.addEventListener('mouseenter', function() {
+            isPaused = true;
+            setFocus(idx, { scroll: false });
+        });
+        card.addEventListener('mouseleave', function(e) {
+            // If leaving to another element inside the track, stay paused
+            if (infraTrack && e.relatedTarget && infraTrack.contains(e.relatedTarget)) {
+                return;
+            }
+            // Otherwise, resumption is handled by track mouseleave/focusout
+        });
+    });
+
+    // Arrow navigation
+    const prevBtn = document.querySelector('.infra-prev');
+    const nextBtn = document.querySelector('.infra-next');
+
+    function pauseAndResumeLater() {
+        isPaused = true;
+        if (autoFocusInterval) { clearInterval(autoFocusInterval); autoFocusInterval = null; }
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(() => {
+            isPaused = false;
+            startAutoFocus();
+        }, 2500);
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pauseAndResumeLater();
+            if (!infraCards.length) return;
+            const idx = (focusIndex - 1 + infraCards.length) % infraCards.length;
+            setFocus(idx, { scroll: true });
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pauseAndResumeLater();
+            if (!infraCards.length) return;
+            const idx = (focusIndex + 1) % infraCards.length;
+            setFocus(idx, { scroll: true });
+        });
+    }
+});
+
+// Shared reveal-on-scroll observer used by animation initializers below
+let observer;
+try {
+    observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15 });
+} catch (e) {
+    observer = null;
+}
+
+// --- Continuous marquee for Automobile Products scroller ---
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('#automobile-products .product-scroll');
+    if (!track) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    const originalWidth = track.scrollWidth;
+    const overflow = originalWidth > track.clientWidth + 4;
+    if (!overflow || items.length < 4) return;
+    items.forEach(node => track.appendChild(node.cloneNode(true)));
+    let loopWidth = originalWidth;
+
+    track.classList.add('marquee-active');
+
+    let paused = false;
+    let userInteracting = false;
+    let inView = false;
+    let last = performance.now();
+    let pxPerSec = 40;
+
+    const onFrame = (now) => {
+        const dt = now - last;
+        last = now;
+        if (!paused && !userInteracting && inView) {
+            const delta = (pxPerSec * dt) / 1000;
+            track.scrollLeft += delta;
+            if (track.scrollLeft >= loopWidth) {
+                track.scrollLeft -= loopWidth;
+            }
+        }
+        requestAnimationFrame(onFrame);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inView = entry.isIntersecting; });
+    }, { threshold: 0.2 });
+    io.observe(track);
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+    track.addEventListener('focusin', () => paused = true);
+    track.addEventListener('focusout', () => paused = false);
+
+    const markInteract = () => { userInteracting = true; };
+    const unmarkInteract = () => { setTimeout(() => userInteracting = false, 300); };
+    track.addEventListener('mousedown', markInteract);
+    window.addEventListener('mouseup', unmarkInteract);
+    track.addEventListener('touchstart', markInteract, { passive: true });
+    window.addEventListener('touchend', unmarkInteract, { passive: true });
+
+    window.addEventListener('resize', () => {
+        const firstHalfWidth = items.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        loopWidth = firstHalfWidth + gap * (items.length - 1);
+    });
+
+    requestAnimationFrame(onFrame);
+});
+
+// --- Continuous marquee for Tube Products scroller ---
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('#tube-products .product-scroll');
+    if (!track) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    const originalWidth = track.scrollWidth;
+    const overflow = originalWidth > track.clientWidth + 4;
+    if (!overflow || items.length < 4) return;
+    items.forEach(node => track.appendChild(node.cloneNode(true)));
+    let loopWidth = originalWidth;
+
+    track.classList.add('marquee-active');
+
+    let paused = false;
+    let userInteracting = false;
+    let inView = false;
+    let last = performance.now();
+    let pxPerSec = 40;
+
+    const onFrame = (now) => {
+        const dt = now - last;
+        last = now;
+        if (!paused && !userInteracting && inView) {
+            const delta = (pxPerSec * dt) / 1000;
+            track.scrollLeft += delta;
+            if (track.scrollLeft >= loopWidth) {
+                track.scrollLeft -= loopWidth;
+            }
+        }
+        requestAnimationFrame(onFrame);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inView = entry.isIntersecting; });
+    }, { threshold: 0.2 });
+    io.observe(track);
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+    track.addEventListener('focusin', () => paused = true);
+    track.addEventListener('focusout', () => paused = false);
+
+    const markInteract = () => { userInteracting = true; };
+    const unmarkInteract = () => { setTimeout(() => userInteracting = false, 300); };
+    track.addEventListener('mousedown', markInteract);
+    window.addEventListener('mouseup', unmarkInteract);
+    track.addEventListener('touchstart', markInteract, { passive: true });
+    window.addEventListener('touchend', unmarkInteract, { passive: true });
+
+    window.addEventListener('resize', () => {
+        const firstHalfWidth = items.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        loopWidth = firstHalfWidth + gap * (items.length - 1);
+    });
+
+    requestAnimationFrame(onFrame);
+});
+
+// --- Continuous marquee for Bus Products scroller ---
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('#bus-products .product-scroll');
+    if (!track) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    const originalWidth = track.scrollWidth;
+    const overflow = originalWidth > track.clientWidth + 4;
+    if (!overflow || items.length < 4) return;
+    items.forEach(node => track.appendChild(node.cloneNode(true)));
+    let loopWidth = originalWidth;
+
+    track.classList.add('marquee-active');
+
+    let paused = false;
+    let userInteracting = false;
+    let inView = false;
+    let last = performance.now();
+    let pxPerSec = 40;
+
+    const onFrame = (now) => {
+        const dt = now - last;
+        last = now;
+        if (!paused && !userInteracting && inView) {
+            const delta = (pxPerSec * dt) / 1000;
+            track.scrollLeft += delta;
+            if (track.scrollLeft >= loopWidth) {
+                track.scrollLeft -= loopWidth;
+            }
+        }
+        requestAnimationFrame(onFrame);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inView = entry.isIntersecting; });
+    }, { threshold: 0.2 });
+    io.observe(track);
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+    track.addEventListener('focusin', () => paused = true);
+    track.addEventListener('focusout', () => paused = false);
+
+    const markInteract = () => { userInteracting = true; };
+    const unmarkInteract = () => { setTimeout(() => userInteracting = false, 300); };
+    track.addEventListener('mousedown', markInteract);
+    window.addEventListener('mouseup', unmarkInteract);
+    track.addEventListener('touchstart', markInteract, { passive: true });
+    window.addEventListener('touchend', unmarkInteract, { passive: true });
+
+    window.addEventListener('resize', () => {
+        const firstHalfWidth = items.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        loopWidth = firstHalfWidth + gap * (items.length - 1);
+    });
+
+    requestAnimationFrame(onFrame);
+});
+// --- Continuous marquee for CMB Products scroller ---
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('#cmb-products .product-scroll');
+    if (!track) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    const originalWidth = track.scrollWidth;
+    const overflow = originalWidth > track.clientWidth + 4;
+    if (!overflow || items.length < 4) return;
+    items.forEach(node => track.appendChild(node.cloneNode(true)));
+    let loopWidth = originalWidth;
+
+    track.classList.add('marquee-active');
+
+    let paused = false;
+    let userInteracting = false;
+    let inView = false;
+    let last = performance.now();
+    let pxPerSec = 40;
+
+    const onFrame = (now) => {
+        const dt = now - last;
+        last = now;
+        if (!paused && !userInteracting && inView) {
+            const delta = (pxPerSec * dt) / 1000;
+            track.scrollLeft += delta;
+            if (track.scrollLeft >= loopWidth) {
+                track.scrollLeft -= loopWidth;
+            }
+        }
+        requestAnimationFrame(onFrame);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inView = entry.isIntersecting; });
+    }, { threshold: 0.2 });
+    io.observe(track);
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+    track.addEventListener('focusin', () => paused = true);
+    track.addEventListener('focusout', () => paused = false);
+
+    const markInteract = () => { userInteracting = true; };
+    const unmarkInteract = () => { setTimeout(() => userInteracting = false, 300); };
+    track.addEventListener('mousedown', markInteract);
+    window.addEventListener('mouseup', unmarkInteract);
+    track.addEventListener('touchstart', markInteract, { passive: true });
+    window.addEventListener('touchend', unmarkInteract, { passive: true });
+
+    window.addEventListener('resize', () => {
+        const firstHalfWidth = items.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        loopWidth = firstHalfWidth + gap * (items.length - 1);
+    });
+
+    requestAnimationFrame(onFrame);
+});
+
+// --- Continuous marquee for Green Products scroller ---
+document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('#green-products .product-scroll');
+    if (!track) return;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const items = Array.from(track.children);
+    if (items.length === 0) return;
+
+    const originalWidth = track.scrollWidth;
+    const overflow = originalWidth > track.clientWidth + 4;
+    if (!overflow || items.length < 4) return;
+    items.forEach(node => track.appendChild(node.cloneNode(true)));
+    let loopWidth = originalWidth;
+
+    track.classList.add('marquee-active');
+
+    let paused = false;
+    let userInteracting = false;
+    let inView = false;
+    let last = performance.now();
+    let pxPerSec = 40;
+
+    const onFrame = (now) => {
+        const dt = now - last;
+        last = now;
+        if (!paused && !userInteracting && inView) {
+            const delta = (pxPerSec * dt) / 1000;
+            track.scrollLeft += delta;
+            if (track.scrollLeft >= loopWidth) {
+                track.scrollLeft -= loopWidth;
+            }
+        }
+        requestAnimationFrame(onFrame);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inView = entry.isIntersecting; });
+    }, { threshold: 0.2 });
+    io.observe(track);
+
+    track.addEventListener('mouseenter', () => paused = true);
+    track.addEventListener('mouseleave', () => paused = false);
+    track.addEventListener('focusin', () => paused = true);
+    track.addEventListener('focusout', () => paused = false);
+
+    const markInteract = () => { userInteracting = true; };
+    const unmarkInteract = () => { setTimeout(() => userInteracting = false, 300); };
+    track.addEventListener('mousedown', markInteract);
+    window.addEventListener('mouseup', unmarkInteract);
+    track.addEventListener('touchstart', markInteract, { passive: true });
+    window.addEventListener('touchend', unmarkInteract, { passive: true });
+
+    window.addEventListener('resize', () => {
+        const firstHalfWidth = items.reduce((w, el) => w + el.getBoundingClientRect().width, 0);
+        const styles = getComputedStyle(track);
+        const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+        loopWidth = firstHalfWidth + gap * (items.length - 1);
+    });
+
+    requestAnimationFrame(onFrame);
+});
+// --- Generic horizontal drag-to-scroll for product scrollers ---
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollers = document.querySelectorAll('.h-scroll');
+    scrollers.forEach(track => {
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+        let isDragging = false;
+        let lastX = 0;
+        let lastTime = 0;
+        let velocity = 0;
+
+        const onDown = (e) => {
+            const x = (e.touches ? e.touches[0].clientX : e.clientX);
+            isDown = true;
+            isDragging = false;
+            startX = x;
+            scrollLeft = track.scrollLeft;
+            lastX = x;
+            lastTime = Date.now();
+            velocity = 0;
+        };
+        const onMove = (e) => {
+            if (!isDown) return;
+            const x = (e.touches ? e.touches[0].clientX : e.clientX);
+            const dx = x - startX;
+            if (Math.abs(dx) > 4) isDragging = true;
+            track.scrollLeft = scrollLeft - dx;
+            const now = Date.now();
+            const dt = now - lastTime || 16;
+            velocity = (x - lastX) / dt;
+            lastX = x;
+            lastTime = now;
+        };
+        const onUp = () => {
+            if (!isDown) return;
+            isDown = false;
+            if (Math.abs(velocity) > 0.04) {
+                let momentum = velocity * 500;
+                const start = track.scrollLeft;
+                const duration = 300;
+                const startTime = performance.now();
+                const step = (t) => {
+                    const elapsed = t - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    track.scrollLeft = start - momentum * eased;
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }
+        };
+        // Mouse
+        track.addEventListener('mousedown', onDown);
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('mouseup', onUp);
+        // Touch
+        track.addEventListener('touchstart', onDown, { passive: true });
+        window.addEventListener('touchmove', onMove, { passive: true });
+        window.addEventListener('touchend', onUp, { passive: true });
+        // Prevent child clicks after drag
+        track.addEventListener('click', (e) => {
+            if (isDragging) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            isDragging = false;
+        }, true);
+    });
+});
+// --- Infra Carousel Navigation ---
+document.addEventListener('DOMContentLoaded', function() {
+    const infraTrack = document.querySelector('.infra-carousel-track');
+    // Implement pointer drag-to-scroll with momentum and click suppression
+    if (infraTrack) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let isDragging = false;
+        let lastX = 0;
+        let lastTime = 0;
+        let velocity = 0;
+
+        const onPointerDown = (e) => {
+            isDown = true;
+            isDragging = false;
+            infraTrack.classList.add('dragging');
+            startX = e.pageX || e.clientX;
+            scrollLeft = infraTrack.scrollLeft;
+            lastX = startX;
+            lastTime = Date.now();
+            velocity = 0;
+            // capture pointer for pointer events
+            if (e.pointerId) e.target.setPointerCapture && e.target.setPointerCapture(e.pointerId);
+        };
+
+        const onPointerMove = (e) => {
+            if (!isDown) return;
+            const x = e.pageX || e.clientX;
+            const dx = x - startX;
+            if (Math.abs(dx) > 5) isDragging = true;
+            infraTrack.scrollLeft = scrollLeft - dx;
+
+            // compute velocity
+            const now = Date.now();
+            const dt = now - lastTime || 16;
+            velocity = (x - lastX) / dt;
+            lastX = x;
+            lastTime = now;
+        };
+
+        const onPointerUp = (e) => {
+            if (!isDown) return;
+            isDown = false;
+            infraTrack.classList.remove('dragging');
+            // apply momentum
+            if (Math.abs(velocity) > 0.05) {
+                let momentum = velocity * 600; // increased multiplier for snappier flick
+                const start = infraTrack.scrollLeft;
+                const duration = 320; // shorter duration for faster feel
+                const startTime = performance.now();
+
+                const step = (t) => {
+                    const elapsed = t - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // ease out cubic
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    infraTrack.scrollLeft = start - momentum * eased;
+                    if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+            }
+
+            // suppress click if we were dragging
+            if (isDragging) {
+                const suppressClick = (ev) => {
+                    ev.stopImmediatePropagation();
+                    ev.preventDefault();
+                    ev.target.removeEventListener('click', suppressClick, true);
+                };
+                // add a temporary capture to prevent the next click
+                document.addEventListener('click', suppressClick, true);
+            }
+        };
+
+        // Pointer events if supported
+        infraTrack.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+
+        // Fallback for mouse events
+        infraTrack.addEventListener('mousedown', onPointerDown);
+        window.addEventListener('mousemove', onPointerMove);
+        window.addEventListener('mouseup', onPointerUp);
+
+        // Touch events (improves responsiveness on some mobile browsers)
+        infraTrack.addEventListener('touchstart', (e) => onPointerDown(e.touches[0] || e), {passive:false});
+        window.addEventListener('touchmove', (e) => onPointerMove(e.touches[0] || e), {passive:false});
+        window.addEventListener('touchend', (e) => onPointerUp(e.changedTouches ? e.changedTouches[0] : e));
+    }
+});
+// ...existing code...
+// Manufacturing Capabilities gallery data
+const infrastructureData = {
+    'sheet-metal': {
+        title: 'Sheet Metal Fabrication',
+        images: [
+            { src: 'sheet metal cutting/Laser cutting 2kW.png', caption: 'Laser Cutting Machine -2kW' },
+            { src: 'sheet metal cutting/Laser cutting 3kW.png', caption: 'Laser Cutting Machine -3kW' },
+            { src: 'sheet metal cutting/Press break 150 ton.png', caption: 'Press break -150ton' },
+            { src: 'sheet metal cutting/Press break 75 ton.png', caption: 'Press break -75ton' }
+        ],
+        items: [
+            {
+                title: 'Utilize high-power laser cutting machines for precision and heavy-duty tasks',
+                desc: 'Equipped with 2 kW lasers for precision cutting and 3 kW lasers for heavy-duty applications, enabling versatile and accurate sheet metal processing.'
+            },
+            {
+                title: 'Employ press brakes with varying capacities for flexible forming needs',
+                desc: 'Press brakes feature 75-ton capacity for versatile forming and 150-ton capacity for large-scale bending, supporting diverse fabrication requirements.'
+            }
+        ],
+        // Fallback (not used when items exist)
+        description: '',
+        points: []
+    },
+    'complex-machines': {
+        title: 'CNC and Multi-Axis Machining',
+        images: [
+            { src: 'Complex machine/CNC honing.png', caption: 'CNC Honing' },
+            { src: 'Complex machine/CNC turning.png', caption: 'CNC Turning' },
+            { src: 'Complex machine/VMC 3axis.png', caption: 'VMC -3Axis' },
+            { src: 'Complex machine/VMC 5axis.png', caption: 'VMC -5Axis' }
+        ],
+        items: [
+            {
+                title: 'UTILIZE VMC 5 AXIS & 3 AXIS FOR COMPLEX GEOMETRIES',
+                desc: 'Enable Machining of Parts With Tight Tolerances And Intricate Shapes, Supporting Advanced Manufacturing Requirements.'
+            },
+            {
+                title: 'EMPLOY CNC TURNING FOR HIGH PRECISION ROTATIONAL PARTS',
+                desc: 'Manufacture Rotational Components With Superior Accuracy And Consistency, Ideal For Automotive And HVAC Applications.'
+            },
+            {
+                title: 'IMPLEMENT CNC HONING FOR OPTIMAL SURFACE FINISHING',
+                desc: 'Enhance Part Performance Through Precise Surface Finishing Techniques That Improve Durability And Function.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'welding': {
+        title: 'Robotic and Specialized Welding',
+        images: [
+            { src: 'welding/Laser Welding.png', caption: 'Laser Welding' },
+            { src: 'welding/Mig welding.png', caption: 'Mig Welding' },
+            { src: 'welding/robotic welding.png', caption: 'Robotic Welding' },
+            { src: 'welding/Spot welding.png', caption: 'Spot Welding' },
+            { src: 'welding/Tig welding.png', caption: 'Tig Welding' },
+            { src: 'welding/welding SPM.png', caption: 'Welding SPM' }
+        ],
+        items: [
+            {
+                title: 'Flexible process coverage',
+                desc: 'Utilize MIG, TIG, and laser welding techniques that offer flexibility for different material types and thicknesses, ensuring precise and effective welds.'
+            },
+            {
+                title: 'Robotic welding for consistency',
+                desc: 'Robotic welding systems deliver uniform welds that enhance assembly reliability and reduce defects, meeting procurement demands for consistent quality.'
+            },
+            {
+                title: 'High-volume throughput with SPM & spot welding',
+                desc: 'Deploy Special Purpose Machines (SPM) and spot welding to optimize high-volume production, supporting scalable manufacturing needs.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'tubular': {
+        title: 'Tubular Fabrication Facilities',
+        images: [
+            { src: 'tubular/CNC pipe bend 3axis.png', caption: 'CNC Pipe Bending -3Axis' },
+            { src: 'tubular/CNC pipe bend 5axis.png', caption: 'CNC Pipe Bending -5axis' },
+            { src: 'tubular/NC pipe bend.png', caption: 'NC Pipe Bending Machine' }
+        ],
+        items: [
+            {
+                title: 'Manufacture complex tubular assemblies using CNC pipe bending machines',
+                desc: 'Utilize 5 Axis and 3 Axis CNC Pipe Bending Machines to create intricate tubular shapes with high dimensional accuracy and surface quality.'
+            },
+            {
+                title: 'Achieve precise bends with NC pipe bending technology',
+                desc: 'Employ NC Pipe Bending Machines to deliver precise pipe bends essential for complex tubular fabrication projects.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'infrastructure': {
+        title: 'Supporting Facilities and Processes',
+        images: [
+            { src: 'infra/powder coating room.png', caption: 'Powder Coating Room' },
+            { src: 'infra/press shop.png', caption: 'Press Shop' },
+            { src: 'infra/tool room.png', caption: 'Tool Room' }
+        ],
+        description: 'Our facility includes a tool room for precision design and maintenance of essential tools, a press room equipped with high-performance presses for accurate shaping and assembly of components, and a powder coating facility that delivers durable, high-quality finishes to enhance both protection and aesthetics.',
+        points: []
+    },
+    'others': {
+        title: 'Quality & Assembly Equipment',
+        images: [
+            { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
+            { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },
+            { src: 'others/hydrofoaming.png', caption: 'Hydroforming Machine' },
+            { src: 'others/induction brazing.png', caption: 'Induction Brazing Machine' },
+            { src: 'others/pressure decay leak tester.png', caption: 'Pressure Decay Leak Tester' },
+            { src: 'others/tube end reforming.png', caption: 'Tube End Forming Machine' },
+            { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' }
+        ],
+        items: [
+            {
+                title: 'Specialized machines for pipe forming',
+                desc: 'Employ Tube End Forming Machine, Hydroforming Machine, Hose Crimping Machine, and Hose Cutting Machine to achieve precise tube and hose fabrication essential for product assembly.'
+            },
+            {
+                title: 'Implement advanced joining and brazing technology',
+                desc: 'Use Induction Brazing Machine to ensure strong, reliable joints critical for product durability and performance.'
+            },
+            {
+                title: 'Conduct rigorous leak testing for quality assurance',
+                desc: 'Apply Pressure Decay Leak Tester to verify leak-proof assemblies, maintaining high product integrity and compliance with quality standards.'
+            },
+            {
+                title: 'Ensure compliance with MNC procurement and quality standards',
+                desc: 'Leverage advanced equipment and processes to meet strict quality control requirements aligned with multinational corporation procurement standards.'
+            }
+        ],
+        description: '',
+        points: []
+    }
+};
+
 // Mobile Navigation Toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -27,32 +827,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Navbar scroll effect
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'linear-gradient(90deg, #1C3761, #2C528B)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    } else {
-        navbar.style.background = 'linear-gradient(90deg, #1C3761, #2C528B)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    }
-});
 
-// Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, observerOptions);
+// ...existing code...
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', () => {
@@ -85,12 +862,295 @@ window.addEventListener('load', () => {
         heroImage.style.opacity = '0';
         heroImage.style.transform = 'translateX(50px)';
         heroImage.style.transition = 'opacity 1s ease, transform 1s ease';
+    }
+
+        // Initialize Infrastructure Modal (run regardless of hero image presence)
+        const infraModal = document.getElementById('infraModal');
+        const modalClose = document.querySelector('.modal-close');
+        const modalHeader = document.querySelector('.modal-header');
+        const modalGallery = document.querySelector('.modal-gallery');
+        const imageCounter = document.querySelector('.image-counter');
+        const thumbnailsContainer = document.querySelector('.thumbnails-container');
+        const prevBtn = document.querySelector('.modal-prev');
+        const nextBtn = document.querySelector('.modal-next');
+        const thumbScrollLeft = document.querySelector('.thumb-scroll-left');
+        const thumbScrollRight = document.querySelector('.thumb-scroll-right');
+        const sideBlurb = document.querySelector('.modal-info-blurb');
+        const sidePoints = document.querySelector('.modal-info-points');
+    let sideItems = document.querySelector('.modal-info-items');
+    let lastFocusedTrigger = null; // to restore focus on close
         
+        let currentImageIndex = 0;
+        let currentImages = [];
+
+        // Ensure the main image fits fully within the modal (no clipping)
+        function sizeModalImageArea() {
+            const header = document.querySelector('.modal-header');
+            const main = document.querySelector('.modal-main');
+            const thumbs = document.querySelector('.modal-thumbnails');
+            const galleryImg = document.querySelector('.modal-gallery img');
+            if (!main) return;
+            const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+            const headerH = header ? header.getBoundingClientRect().height : 0;
+            const thumbsH = thumbs ? thumbs.getBoundingClientRect().height : 0;
+            // Leave a little breathing room (16px)
+            const available = Math.max(240, vh - headerH - thumbsH - 16);
+            main.style.minHeight = available + 'px';
+            // If an image is present, ensure it doesn't exceed available space
+            if (galleryImg) {
+                galleryImg.style.maxHeight = (available - 40) + 'px';
+            }
+        }
+
+        function updateImageCounter() {
+            imageCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+        }
+
+        function showImage(index) {
+            modalGallery.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = currentImages[index].src;
+            img.alt = currentImages[index].caption;
+            // Re-size once the image loads for exact dimensions
+            img.addEventListener('load', sizeModalImageArea);
+            
+            const caption = document.createElement('p');
+            caption.textContent = currentImages[index].caption;
+            caption.className = 'modal-caption';
+            
+            modalGallery.appendChild(img);
+            modalGallery.appendChild(caption);
+            updateImageCounter();
+            // Also call sizing to handle quick transitions
+            sizeModalImageArea();
+
+            // Sidebar no longer mirrors image caption; keep only on image
+
+            // Update thumbnails
+            const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
+
+            // Scroll thumbnail into view
+            const activeThumb = thumbnails[index];
+            if (activeThumb) {
+                activeThumb.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center'
+                });
+            }
+        }
+
+        function createThumbnails() {
+            thumbnailsContainer.innerHTML = '';
+            currentImages.forEach((image, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = `thumbnail ${index === currentImageIndex ? 'active' : ''}`;
+                
+                const thumbImg = document.createElement('img');
+                thumbImg.src = image.src;
+                thumbImg.alt = `Thumbnail ${index + 1}`;
+                
+                thumbnail.appendChild(thumbImg);
+                thumbnail.addEventListener('click', () => {
+                    currentImageIndex = index;
+                    showImage(currentImageIndex);
+                });
+                
+                thumbnailsContainer.appendChild(thumbnail);
+            });
+        }
+
+        // Infrastructure item click handlers
+        document.querySelectorAll('.infra-card').forEach(card => {
+            card.addEventListener('click', () => {
+                lastFocusedTrigger = card; // remember what opened the modal
+                const category = card.dataset.category;
+                const data = infrastructureData[category];
+                if (data) {
+                    currentImages = data.images;
+                    currentImageIndex = 0;
+                    modalHeader.textContent = data.title;
+                    // Optional description and points if present in data
+                    // Prefer structured items (title + description per item) when present
+                    const hasItems = Array.isArray(data.items) && data.items.length > 0;
+                    // Ensure items container exists; if not, create it so content is visible
+                    if (!sideItems && hasItems) {
+                        const infoContent = document.querySelector('.modal-info-content');
+                        if (infoContent) {
+                            const container = document.createElement('div');
+                            container.className = 'modal-info-items';
+                            infoContent.insertBefore(container, sidePoints || null);
+                            sideItems = container;
+                        }
+                    }
+
+                    if (sideItems) {
+                        sideItems.innerHTML = '';
+                        if (hasItems) {
+                            data.items.forEach(item => {
+                                const wrap = document.createElement('div');
+                                wrap.className = 'modal-info-item';
+
+                                if (item.title) {
+                                    const h4 = document.createElement('h4');
+                                    h4.className = 'modal-info-item-title';
+                                    h4.textContent = item.title;
+                                    wrap.appendChild(h4);
+                                }
+                                if (item.desc) {
+                                    const p = document.createElement('p');
+                                    p.className = 'modal-info-item-desc';
+                                    p.textContent = item.desc;
+                                    wrap.appendChild(p);
+                                }
+                                sideItems.appendChild(wrap);
+                            });
+                        }
+                        // Show/hide items container based on data
+                        sideItems.style.display = hasItems ? 'block' : 'none';
+                    }
+
+                    // If items exist and container is present, hide blurb/points; else use fallback blurb + points
+                    const useFallback = !hasItems || !sideItems;
+                    if (sideBlurb) {
+                        sideBlurb.textContent = useFallback && typeof data.description === 'string' ? data.description : '';
+                        sideBlurb.style.display = useFallback && data.description ? 'block' : 'none';
+                    }
+                    if (sidePoints) {
+                        sidePoints.innerHTML = '';
+                        if (useFallback && Array.isArray(data.points)) {
+                            data.points.forEach(pt => {
+                                const li = document.createElement('li');
+                                li.textContent = pt;
+                                sidePoints.appendChild(li);
+                            });
+                        }
+                        sidePoints.style.display = useFallback && Array.isArray(data.points) && data.points.length ? 'block' : 'none';
+                    }
+                    createThumbnails();
+                    showImage(currentImageIndex);
+                    // Size on open
+                    sizeModalImageArea();
+                    // Open modal with accessibility attributes
+                    infraModal.style.display = 'block';
+                    infraModal.setAttribute('aria-hidden', 'false');
+                    document.body.classList.add('modal-open'); // hide navbar + lock scroll
+
+                    // Focus management: trap focus inside modal
+                    const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+                    const focusable = Array.from(infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
+                    const firstFocusable = focusable[0] || modalClose || infraModal;
+                    const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
+                    // Move focus to modal content or close button
+                    setTimeout(() => {
+                        (firstFocusable instanceof HTMLElement ? firstFocusable : infraModal).focus();
+                    }, 0);
+
+                    function trapFocus(e) {
+                        if (e.key !== 'Tab') return;
+                        if (focusable.length === 0) {
+                            e.preventDefault();
+                            (infraModal instanceof HTMLElement ? infraModal : document.body).focus();
+                            return;
+                        }
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    }
+                    infraModal.addEventListener('keydown', trapFocus);
+                    infraModal._trapFocus = trapFocus; // store for cleanup
+                }
+            });
+        });
+
+        // Modal controls
+        function closeModalAndRestoreFocus() {
+            infraModal.style.display = 'none';
+            infraModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            if (infraModal._trapFocus) infraModal.removeEventListener('keydown', infraModal._trapFocus);
+            // restore focus to trigger
+            if (lastFocusedTrigger && lastFocusedTrigger.focus) {
+                setTimeout(() => lastFocusedTrigger.focus(), 0);
+            }
+        }
+
+        modalClose && modalClose.addEventListener('click', closeModalAndRestoreFocus);
+        // Support keyboard activation for the close element
+        modalClose && modalClose.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeModalAndRestoreFocus();
+            }
+        });
+
+        prevBtn && prevBtn.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+            showImage(currentImageIndex);
+        });
+
+        nextBtn && nextBtn.addEventListener('click', () => {
+            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+            showImage(currentImageIndex);
+        });
+
+        // Recompute size on window resize
+        window.addEventListener('resize', () => {
+            sizeModalImageArea();
+        });
+
+        // Thumbnail scroll controls
+        thumbScrollLeft && thumbScrollLeft.addEventListener('click', () => {
+            thumbnailsContainer.scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        });
+
+        thumbScrollRight && thumbScrollRight.addEventListener('click', () => {
+            thumbnailsContainer.scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        });
+
+        // Close modal on outside click
+        infraModal && infraModal.addEventListener('click', (e) => {
+            if (e.target === infraModal) {
+                closeModalAndRestoreFocus();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (infraModal && infraModal.style.display === 'block') {
+                if (e.key === 'ArrowLeft') {
+                    prevBtn && prevBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextBtn && nextBtn.click();
+                } else if (e.key === 'Escape') {
+                    closeModalAndRestoreFocus();
+                }
+            }
+        });
+
+        // Finish hero image animation after setup
         setTimeout(() => {
             heroImage.style.opacity = '1';
             heroImage.style.transform = 'translateX(0)';
         }, 600);
-    }
+    
 });
 
 // Add hover effects to buttons
@@ -174,7 +1234,7 @@ scrollToTopBtn.style.cssText = `
     right: 30px;
     width: 50px;
     height: 50px;
-    background: #2563eb;
+    background: #10b981;
     color: white;
     border: none;
     border-radius: 50%;
@@ -182,7 +1242,7 @@ scrollToTopBtn.style.cssText = `
     display: none;
     z-index: 1000;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 `;
 
 document.body.appendChild(scrollToTopBtn);
@@ -277,6 +1337,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+
+
 // ...existing code...
 
 // Observe elements for animation
@@ -293,20 +1355,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add counter animation for stats
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
-    
     counters.forEach(counter => {
+        if (counter.classList.contains('stat-number-label')) return;
         const target = parseInt(counter.textContent.replace(/\D/g, ''));
         const duration = 2000; // 2 seconds
         const increment = target / (duration / 16); // 60fps
         let current = 0;
-        
         const timer = setInterval(() => {
             current += increment;
             if (current >= target) {
                 current = target;
                 clearInterval(timer);
             }
-            
             if (counter.textContent.includes('%')) {
                 counter.textContent = Math.floor(current) + '%';
             } else if (counter.textContent.includes('+')) {
@@ -428,189 +1488,4 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Chatbot Functionality
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing chatbot...');
-    
-    const chatbotToggle = document.getElementById('chatbotToggle');
-    const chatbotContainer = document.getElementById('chatbotContainer');
-    const chatbotClose = document.getElementById('chatbotClose');
-    const chatbotInput = document.getElementById('chatbotInput');
-    const chatbotSend = document.getElementById('chatbotSend');
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const quickActionBtns = document.querySelectorAll('.quick-action-btn');
-
-    console.log('Chatbot elements found:', { 
-        chatbotToggle: !!chatbotToggle, 
-        chatbotContainer: !!chatbotContainer, 
-        chatbotClose: !!chatbotClose 
-    });
-
-    // Simple toggle function
-    function toggleChatbot() {
-        console.log('Toggling chatbot...');
-        if (chatbotContainer && chatbotToggle) {
-            const isActive = chatbotContainer.classList.contains('active');
-            console.log('Current state:', isActive);
-            
-            if (isActive) {
-                chatbotContainer.classList.remove('active');
-                chatbotToggle.classList.remove('active');
-                console.log('Chatbot closed');
-            } else {
-                chatbotContainer.classList.add('active');
-                chatbotToggle.classList.add('active');
-                console.log('Chatbot opened');
-                
-                if (chatbotInput) {
-                    setTimeout(() => chatbotInput.focus(), 100);
-                }
-                
-                // Hide badge when opened
-                const badge = document.querySelector('.chatbot-badge');
-                if (badge) {
-                    badge.style.display = 'none';
-                }
-            }
-        }
-    }
-
-    // Add click event to toggle button
-    if (chatbotToggle) {
-        chatbotToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Toggle button clicked');
-            toggleChatbot();
-        });
-    } else {
-        console.error('Chatbot toggle button not found!');
-    }
-
-    // Add click event to close button
-    if (chatbotClose) {
-        chatbotClose.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('Close button clicked');
-            if (chatbotContainer && chatbotToggle) {
-                chatbotContainer.classList.remove('active');
-                chatbotToggle.classList.remove('active');
-            }
-        });
-    }
-
-    // Close chatbot when clicking outside
-    document.addEventListener('click', (e) => {
-        if (chatbotContainer && chatbotToggle && 
-            !chatbotContainer.contains(e.target) && 
-            !chatbotToggle.contains(e.target)) {
-            chatbotContainer.classList.remove('active');
-            chatbotToggle.classList.remove('active');
-        }
-    });
-
-    // Send message function
-    function sendMessage(message, isUser = true) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chatbot-message ${isUser ? 'user-message' : 'bot-message'}`;
-        
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
-        
-        const content = document.createElement('div');
-        content.className = 'message-content';
-        content.innerHTML = `
-            <p>${message}</p>
-            <span class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-        `;
-        
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(content);
-        chatbotMessages.appendChild(messageDiv);
-        
-        // Scroll to bottom
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-
-    // Bot responses
-    function getBotResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        if (message.includes('service') || message.includes('machinery')) {
-            return "We offer a comprehensive range of industrial machinery including Laser Machines, Metal Fabricating, Pipe Bending, CNC Turning, Robotic Welding, and more. Would you like to know about a specific machine?";
-        } else if (message.includes('quote') || message.includes('price')) {
-            return "I'd be happy to help you get a quote! Please provide details about your project requirements, and I'll connect you with our sales team. You can also call us at +91 11 4567 8900.";
-        } else if (message.includes('book') || message.includes('consultation')) {
-            return "Great! I can help you book a consultation. Our experts are available Monday-Friday 8AM-6PM. Please let me know your preferred date and time, or call us directly at +91 11 4567 8900.";
-        } else if (message.includes('contact') || message.includes('phone')) {
-            return "You can reach us at:\n📞 Phone: +91 11 4567 8900\n📧 Email: info@enrayautocomp.com\n📍 Address: Industrial Area, Phase 2, Gurgaon, Haryana 122015";
-        } else if (message.includes('hvac')) {
-            return "ENRAY AUTOCOMP specializes in innovative HVAC solutions for the automotive industry. We provide specialized service, professional maintenance, and cost-effective solutions with 100% sincerity in continuous improvement.";
-        // Removed sustainability response
-        } else if (message.includes('hello') || message.includes('hi')) {
-            return "Hello! Welcome to ENRAY AUTOCOMP. I'm here to help you with information about our HVAC solutions, machinery, or any questions you might have. How can I assist you today?";
-        } else {
-            return "Thank you for your message! I'm here to help with information about our HVAC solutions, industrial machinery, or general inquiries. For immediate assistance, please call us at +91 11 4567 8900 or email info@enrayautocomp.com.";
-        }
-    }
-
-    // Send message on button click
-    if (chatbotSend && chatbotInput) {
-        chatbotSend.addEventListener('click', () => {
-            const message = chatbotInput.value.trim();
-            if (message) {
-                sendMessage(message, true);
-                chatbotInput.value = '';
-                
-                // Simulate bot typing
-                setTimeout(() => {
-                    const botResponse = getBotResponse(message);
-                    sendMessage(botResponse, false);
-                }, 1000);
-            }
-        });
-
-        // Send message on Enter key
-        chatbotInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                chatbotSend.click();
-            }
-        });
-    }
-
-    // Quick action buttons
-    quickActionBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const message = btn.getAttribute('data-message');
-            sendMessage(message, true);
-            chatbotInput.value = '';
-            
-            setTimeout(() => {
-                const botResponse = getBotResponse(message);
-                sendMessage(botResponse, false);
-            }, 1000);
-        });
-    });
-
-    // Auto-hide badge after opening
-    if (chatbotToggle) {
-        chatbotToggle.addEventListener('click', () => {
-            const badge = document.querySelector('.chatbot-badge');
-            if (badge) {
-                badge.style.display = 'none';
-            }
-        });
-    }
-
-    // Show welcome message after 3 seconds
-    setTimeout(() => {
-        if (!chatbotContainer.classList.contains('active')) {
-            const badge = document.querySelector('.chatbot-badge');
-            if (badge) {
-                badge.style.display = 'flex';
-            }
-        }
-    }, 3000);
-});
+// Quote modal removed: Get a Quote now links to contact.html
