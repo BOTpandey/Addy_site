@@ -1546,6 +1546,24 @@ body.modal-open { overflow: hidden; }
     padding-bottom: 0.05em;          /* micro-buffer per block */
 }
 .hero-rotator .rot-block .hero-main { line-height: 1.1; }
+.hero-rotator .rot-block .hero-main {
+    position: relative;
+    display: inline-block;
+}
+.hero-rotator .rot-block .hero-main::before,
+.hero-rotator .rot-block .hero-main::after {
+    color: currentColor;
+    opacity: 0.85;
+    font-weight: 700;
+}
+.hero-rotator .rot-block .hero-main::before {
+    content: '‘';
+    margin-right: 0.08em;
+}
+.hero-rotator .rot-block .hero-main::after {
+    content: '’';
+    margin-left: 0.08em;
+}
 .hero-rotator .rot-block.is-active {
     position: relative;
     opacity: 1;
@@ -5057,7 +5075,7 @@ h2::after,
 .team .section-title,
 .why-choose .section-title,
 .product-category .section-title {
-    color: #04233F !important;
+    color: #0A1F44 !important;
     background: none !important;
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
@@ -5073,7 +5091,7 @@ h2::after,
 .key-insights .insight-icon,
 .mission-vision .mv-icon,
 .why-choose .why-icon {
-    background: #04233F !important;
+    background: #0A1F44 !important;
     color: #ffffff !important; /* icon glyphs stay white */
     box-shadow: 0 8px 25px rgba(4, 35, 63, 0.28) !important;
 }
