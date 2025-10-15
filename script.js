@@ -1,5 +1,66 @@
 // --- Infra Carousel Auto-Focus & Loop ---
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Hero Block Rotator ---
+    (function initHeroBlockRotator(){
+        const rotator = document.getElementById('hero-rotator');
+        if (!rotator) return;
+        const blocks = Array.from(rotator.querySelectorAll('.rot-block'));
+        if (blocks.length <= 1) return;
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let idx = blocks.findIndex(b => b.classList.contains('is-active'));
+        if (idx < 0) idx = 0;
+        let timer = null;
+    const visibleMs = 3600; // slower cycle so quotes stay longer
+    const animMs = prefersReduced ? 0 : 460; // keep in sync with CSS
+
+        // Set initial height to current active block to avoid layout jump
+        function syncHeight(el) {
+            // Use scrollHeight for stability and add a small buffer for descenders
+            const h = el.scrollHeight;
+            rotator.style.height = (h + 4) + 'px';
+        }
+        syncHeight(blocks[idx]);
+
+        function setActive(nextIdx){
+            const current = blocks[idx];
+            const next = blocks[nextIdx];
+            if (current === next) return;
+            // mark current as leaving
+            current.classList.remove('is-active');
+            if (animMs) current.classList.add('is-leaving');
+            current.setAttribute('aria-hidden', 'true');
+            // prepare next
+            next.classList.add('is-active');
+            next.classList.remove('is-leaving');
+            next.setAttribute('aria-hidden', 'false');
+            // update container height smoothly
+            syncHeight(next);
+            // cleanup leaving state after animation
+            if (animMs) setTimeout(() => current.classList.remove('is-leaving'), animMs + 40);
+            else current.classList.remove('is-leaving');
+            idx = nextIdx;
+        }
+
+        function cycle(){
+            clearTimeout(timer);
+            const nextIdx = (idx + 1) % blocks.length;
+            setActive(nextIdx);
+            timer = setTimeout(cycle, visibleMs + animMs);
+        }
+
+        // Start quickly for immediate feedback
+    timer = setTimeout(cycle, 700);
+
+        // Pause/resume on interaction
+        let paused = false;
+        function pause(){ if (!paused){ paused = true; clearTimeout(timer);} }
+        function resume(){ if (paused){ paused = false; timer = setTimeout(cycle, visibleMs);} }
+        rotator.addEventListener('mouseenter', pause);
+        rotator.addEventListener('mouseleave', resume);
+        rotator.addEventListener('focusin', pause);
+        rotator.addEventListener('focusout', (e)=>{ if (!rotator.contains(e.relatedTarget)) resume(); });
+    })();
+
     const infraTrack = document.querySelector('.infra-carousel-track');
     const infraCards = infraTrack ? infraTrack.querySelectorAll('.infra-card') : [];
     let focusIndex = 0;
@@ -575,28 +636,38 @@ document.addEventListener('DOMContentLoaded', function() {
         let startX;
         let scrollLeft;
         let isDragging = false;
+        let dragDistance = 0;
         let lastX = 0;
         let lastTime = 0;
         let velocity = 0;
+        const DRAG_THRESHOLD = 12; // pixels before we consider it a drag
 
         const onPointerDown = (e) => {
             isDown = true;
             isDragging = false;
-            infraTrack.classList.add('dragging');
             startX = e.pageX || e.clientX;
             scrollLeft = infraTrack.scrollLeft;
             lastX = startX;
             lastTime = Date.now();
             velocity = 0;
-            // capture pointer for pointer events
-            if (e.pointerId) e.target.setPointerCapture && e.target.setPointerCapture(e.pointerId);
+            // capture pointer for pointer events on the track element
+            if (e.pointerId && infraTrack.setPointerCapture) {
+                try { infraTrack.setPointerCapture(e.pointerId); } catch(_) {}
+            }
         };
 
         const onPointerMove = (e) => {
             if (!isDown) return;
             const x = e.pageX || e.clientX;
             const dx = x - startX;
-            if (Math.abs(dx) > 5) isDragging = true;
+            dragDistance = Math.abs(dx);
+            if (dragDistance > DRAG_THRESHOLD) {
+                if (!isDragging) {
+                    isDragging = true;
+                    // add dragging class only once we confirm an actual drag
+                    infraTrack.classList.add('dragging');
+                }
+            }
             infraTrack.scrollLeft = scrollLeft - dx;
 
             // compute velocity
@@ -611,6 +682,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isDown) return;
             isDown = false;
             infraTrack.classList.remove('dragging');
+            // release pointer capture if used
+            if (e.pointerId && infraTrack.releasePointerCapture) {
+                try { infraTrack.releasePointerCapture(e.pointerId); } catch(_) {}
+            }
             // apply momentum
             if (Math.abs(velocity) > 0.05) {
                 let momentum = velocity * 600; // increased multiplier for snappier flick
@@ -629,32 +704,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 requestAnimationFrame(step);
             }
 
-            // suppress click if we were dragging
-            if (isDragging) {
+            // suppress the next click only if it was a true drag (not a tiny move)
+            if (isDragging && dragDistance > DRAG_THRESHOLD) {
                 const suppressClick = (ev) => {
-                    ev.stopImmediatePropagation();
-                    ev.preventDefault();
-                    ev.target.removeEventListener('click', suppressClick, true);
+                    // Allow clicks on controls outside the track; only suppress within the track
+                    if (infraTrack.contains(ev.target)) {
+                        ev.stopImmediatePropagation();
+                        ev.preventDefault();
+                    }
+                    infraTrack.removeEventListener('click', suppressClick, true);
                 };
-                // add a temporary capture to prevent the next click
-                document.addEventListener('click', suppressClick, true);
+                // capture only on the track, not the whole document
+                infraTrack.addEventListener('click', suppressClick, true);
             }
+            // reset drag tracking
+            dragDistance = 0;
+            isDragging = false;
         };
 
-        // Pointer events if supported
-        infraTrack.addEventListener('pointerdown', onPointerDown);
-        window.addEventListener('pointermove', onPointerMove);
-        window.addEventListener('pointerup', onPointerUp);
+        const hasPointer = 'PointerEvent' in window;
+        if (hasPointer) {
+            // Pointer events path
+            infraTrack.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+        } else {
+            // Mouse fallback
+            infraTrack.addEventListener('mousedown', onPointerDown);
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerUp);
+            // Touch events
+            infraTrack.addEventListener('touchstart', (e) => onPointerDown(e.touches[0] || e), {passive:false});
+            window.addEventListener('touchmove', (e) => onPointerMove(e.touches[0] || e), {passive:false});
+            window.addEventListener('touchend', (e) => onPointerUp(e.changedTouches ? e.changedTouches[0] : e));
+        }
 
-        // Fallback for mouse events
-        infraTrack.addEventListener('mousedown', onPointerDown);
-        window.addEventListener('mousemove', onPointerMove);
-        window.addEventListener('mouseup', onPointerUp);
-
-        // Touch events (improves responsiveness on some mobile browsers)
-        infraTrack.addEventListener('touchstart', (e) => onPointerDown(e.touches[0] || e), {passive:false});
-        window.addEventListener('touchmove', (e) => onPointerMove(e.touches[0] || e), {passive:false});
-        window.addEventListener('touchend', (e) => onPointerUp(e.changedTouches ? e.changedTouches[0] : e));
+        // Click delegation: open modal when clicking anywhere on a card (unless a real drag just occurred)
+        infraTrack.addEventListener('click', (e) => {
+            // If a drag suppression is in place, capture-phase handler will have prevented this
+            const card = e.target.closest('.infra-card');
+            if (!card || !infraTrack.contains(card)) return;
+            e.preventDefault();
+            openInfraCard(card);
+        });
     }
 });
 // ...existing code...
@@ -963,115 +1055,154 @@ window.addEventListener('load', () => {
             });
         }
 
-        // Infrastructure item click handlers
+        // Open modal helper so any part of the card can trigger it
+        function openInfraCard(card) {
+            lastFocusedTrigger = card; // remember what opened the modal
+            const category = card.dataset.category;
+            const data = infrastructureData[category];
+            if (!data) return;
+            currentImages = data.images;
+            currentImageIndex = 0;
+            modalHeader.textContent = data.title;
+            // Optional description and points if present in data
+            // Prefer structured items (title + description per item) when present
+            const hasItems = Array.isArray(data.items) && data.items.length > 0;
+            // Ensure items container exists; if not, create it so content is visible
+            if (!sideItems && hasItems) {
+                const infoContent = document.querySelector('.modal-info-content');
+                if (infoContent) {
+                    const container = document.createElement('div');
+                    container.className = 'modal-info-items';
+                    infoContent.insertBefore(container, sidePoints || null);
+                    sideItems = container;
+                }
+            }
+
+            if (sideItems) {
+                sideItems.innerHTML = '';
+                if (hasItems) {
+                    data.items.forEach(item => {
+                        const wrap = document.createElement('div');
+                        wrap.className = 'modal-info-item';
+
+                        if (item.title) {
+                            const h4 = document.createElement('h4');
+                            h4.className = 'modal-info-item-title';
+                            h4.textContent = item.title;
+                            wrap.appendChild(h4);
+                        }
+                        if (item.desc) {
+                            const p = document.createElement('p');
+                            p.className = 'modal-info-item-desc';
+                            p.textContent = item.desc;
+                            wrap.appendChild(p);
+                        }
+                        sideItems.appendChild(wrap);
+                    });
+                }
+                // Show/hide items container based on data
+                sideItems.style.display = hasItems ? 'block' : 'none';
+            }
+
+            // If items exist and container is present, hide blurb/points; else use fallback blurb + points
+            const useFallback = !hasItems || !sideItems;
+            if (sideBlurb) {
+                sideBlurb.textContent = useFallback && typeof data.description === 'string' ? data.description : '';
+                sideBlurb.style.display = useFallback && data.description ? 'block' : 'none';
+            }
+            if (sidePoints) {
+                sidePoints.innerHTML = '';
+                if (useFallback && Array.isArray(data.points)) {
+                    data.points.forEach(pt => {
+                        const li = document.createElement('li');
+                        li.textContent = pt;
+                        sidePoints.appendChild(li);
+                    });
+                }
+                sidePoints.style.display = useFallback && Array.isArray(data.points) && data.points.length ? 'block' : 'none';
+            }
+            createThumbnails();
+            showImage(currentImageIndex);
+            // Size on open
+            sizeModalImageArea();
+            // Open modal with accessibility attributes
+            infraModal.style.display = 'block';
+            infraModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open'); // hide navbar + lock scroll
+
+            // Focus management: trap focus inside modal
+            const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+            const focusable = Array.from(infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
+            const firstFocusable = focusable[0] || modalClose || infraModal;
+            const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
+            // Move focus to modal content or close button
+            setTimeout(() => {
+                (firstFocusable instanceof HTMLElement ? firstFocusable : infraModal).focus();
+            }, 0);
+
+            function trapFocus(e) {
+                if (e.key !== 'Tab') return;
+                if (focusable.length === 0) {
+                    e.preventDefault();
+                    (infraModal instanceof HTMLElement ? infraModal : document.body).focus();
+                    return;
+                }
+                if (e.shiftKey) {
+                    if (document.activeElement === firstFocusable) {
+                        e.preventDefault();
+                        lastFocusable.focus();
+                    }
+                } else {
+                    if (document.activeElement === lastFocusable) {
+                        e.preventDefault();
+                        firstFocusable.focus();
+                    }
+                }
+            }
+            infraModal.addEventListener('keydown', trapFocus);
+            infraModal._trapFocus = trapFocus; // store for cleanup
+        }
+
+        // Bind clicks to the whole card plus its main regions
         document.querySelectorAll('.infra-card').forEach(card => {
-            card.addEventListener('click', () => {
-                lastFocusedTrigger = card; // remember what opened the modal
-                const category = card.dataset.category;
-                const data = infrastructureData[category];
-                if (data) {
-                    currentImages = data.images;
-                    currentImageIndex = 0;
-                    modalHeader.textContent = data.title;
-                    // Optional description and points if present in data
-                    // Prefer structured items (title + description per item) when present
-                    const hasItems = Array.isArray(data.items) && data.items.length > 0;
-                    // Ensure items container exists; if not, create it so content is visible
-                    if (!sideItems && hasItems) {
-                        const infoContent = document.querySelector('.modal-info-content');
-                        if (infoContent) {
-                            const container = document.createElement('div');
-                            container.className = 'modal-info-items';
-                            infoContent.insertBefore(container, sidePoints || null);
-                            sideItems = container;
-                        }
-                    }
-
-                    if (sideItems) {
-                        sideItems.innerHTML = '';
-                        if (hasItems) {
-                            data.items.forEach(item => {
-                                const wrap = document.createElement('div');
-                                wrap.className = 'modal-info-item';
-
-                                if (item.title) {
-                                    const h4 = document.createElement('h4');
-                                    h4.className = 'modal-info-item-title';
-                                    h4.textContent = item.title;
-                                    wrap.appendChild(h4);
-                                }
-                                if (item.desc) {
-                                    const p = document.createElement('p');
-                                    p.className = 'modal-info-item-desc';
-                                    p.textContent = item.desc;
-                                    wrap.appendChild(p);
-                                }
-                                sideItems.appendChild(wrap);
-                            });
-                        }
-                        // Show/hide items container based on data
-                        sideItems.style.display = hasItems ? 'block' : 'none';
-                    }
-
-                    // If items exist and container is present, hide blurb/points; else use fallback blurb + points
-                    const useFallback = !hasItems || !sideItems;
-                    if (sideBlurb) {
-                        sideBlurb.textContent = useFallback && typeof data.description === 'string' ? data.description : '';
-                        sideBlurb.style.display = useFallback && data.description ? 'block' : 'none';
-                    }
-                    if (sidePoints) {
-                        sidePoints.innerHTML = '';
-                        if (useFallback && Array.isArray(data.points)) {
-                            data.points.forEach(pt => {
-                                const li = document.createElement('li');
-                                li.textContent = pt;
-                                sidePoints.appendChild(li);
-                            });
-                        }
-                        sidePoints.style.display = useFallback && Array.isArray(data.points) && data.points.length ? 'block' : 'none';
-                    }
-                    createThumbnails();
-                    showImage(currentImageIndex);
-                    // Size on open
-                    sizeModalImageArea();
-                    // Open modal with accessibility attributes
-                    infraModal.style.display = 'block';
-                    infraModal.setAttribute('aria-hidden', 'false');
-                    document.body.classList.add('modal-open'); // hide navbar + lock scroll
-
-                    // Focus management: trap focus inside modal
-                    const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
-                    const focusable = Array.from(infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
-                    const firstFocusable = focusable[0] || modalClose || infraModal;
-                    const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
-                    // Move focus to modal content or close button
-                    setTimeout(() => {
-                        (firstFocusable instanceof HTMLElement ? firstFocusable : infraModal).focus();
-                    }, 0);
-
-                    function trapFocus(e) {
-                        if (e.key !== 'Tab') return;
-                        if (focusable.length === 0) {
-                            e.preventDefault();
-                            (infraModal instanceof HTMLElement ? infraModal : document.body).focus();
-                            return;
-                        }
-                        if (e.shiftKey) {
-                            if (document.activeElement === firstFocusable) {
-                                e.preventDefault();
-                                lastFocusable.focus();
-                            }
-                        } else {
-                            if (document.activeElement === lastFocusable) {
-                                e.preventDefault();
-                                firstFocusable.focus();
-                            }
-                        }
-                    }
-                    infraModal.addEventListener('keydown', trapFocus);
-                    infraModal._trapFocus = trapFocus; // store for cleanup
+            // Entire card
+            card.style.cursor = 'pointer';
+            // Make the card focusable for keyboard users
+            if (!card.hasAttribute('tabindex')) {
+                card.setAttribute('tabindex', '0');
+            }
+            card.addEventListener('click', (ev) => {
+                // If user really dragged, ignore this click (track handler will suppress anyway)
+                openInfraCard(card);
+            });
+            // Keyboard activate
+            card.addEventListener('keydown', (ev) => {
+                const key = ev.key;
+                if (key === 'Enter' || key === ' ') {
+                    ev.preventDefault();
+                    openInfraCard(card);
                 }
             });
+            // Image area
+            const imgWrap = card.querySelector('.infra-card-img-wrapper');
+            if (imgWrap) {
+                imgWrap.style.cursor = 'pointer';
+                imgWrap.addEventListener('click', (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    openInfraCard(card);
+                });
+            }
+            // Info/text area
+            const info = card.querySelector('.infra-card-info');
+            if (info) {
+                info.style.cursor = 'pointer';
+                info.addEventListener('click', (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    openInfraCard(card);
+                });
+            }
         });
 
         // Modal controls
@@ -1300,7 +1431,8 @@ function typeWriter(element, html, speed = 100) {
 // Set hero title as fixed HTML (no animation)
 window.addEventListener('load', () => {
     const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
+    // Do not overwrite if block rotator is present
+    if (heroTitle && !heroTitle.querySelector('#hero-rotator')) {
         heroTitle.innerHTML = '<span class="highlight">REVVING UP</span><br><span class="highlight">RELIABILITY</span>';
     }
 });

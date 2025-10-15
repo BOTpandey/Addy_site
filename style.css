@@ -498,6 +498,46 @@ a {
     transition: color 0.2s ease;
 }
 a:hover { color: var(--link-hover); }
+
+/* ========================================================= */
+/* Brand Heading Color Overrides                             */
+/* Force key headings to use brand color #0A1F44 across pages */
+/* ========================================================= */
+
+/* Page headers on About, Products, Contact */
+.page-header h1 {
+    color: #0A1F44 !important;
+}
+
+/* Generic section titles (e.g., Why Choose, Clients, Product sections) */
+.section-title {
+    color: #0A1F44 !important;
+}
+
+/* Features block headline on homepage */
+.features h2 {
+    color: #0A1F44 !important;
+}
+
+/* Mission, Vision, Values headings on About page */
+.mission-vision h3 {
+    color: #0A1F44 !important;
+}
+
+/* Contact page: override map-card heading and inline styles */
+.map-card .section-title,
+.map-card .section-title .find,
+.map-card .section-title .us {
+    color: #0A1F44 !important;
+}
+.contact-section .hours h4 {
+    color: #0A1F44 !important;
+}
+
+/* Homepage Infrastructure section title (override older white rule) */
+body .infrastructure .section-title {
+    color: #0A1F44 !important;
+}
 a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
 
 /* Focus styles for interactive elements */
@@ -1482,6 +1522,46 @@ body.modal-open { overflow: hidden; }
 /* Subtle depth for hero title; detailed outline handled on child spans */
 .hero-title {
     text-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+/* Block rotator for hero headline (wipe + horizontal motion) */
+.hero-rotator {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;                /* prevent text peeking during transition */
+    transition: height 240ms ease;   /* smooth height changes */
+    padding-bottom: 0.2em;           /* more room for descenders (g, y, p, j) */
+}
+.hero-rotator .rot-block {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    opacity: 0;
+    transform: translateX(10px) translateZ(0);
+    /* Horizontal wipe reveal using clip-path */
+    clip-path: inset(0 100% 0 0);
+    transition: opacity 460ms cubic-bezier(.2,.7,.2,1),
+                transform 460ms cubic-bezier(.2,.7,.2,1),
+                clip-path 460ms cubic-bezier(.2,.7,.2,1);
+    will-change: opacity, transform, clip-path;
+    backface-visibility: hidden;
+    padding-bottom: 0.05em;          /* micro-buffer per block */
+}
+.hero-rotator .rot-block .hero-main { line-height: 1.1; }
+.hero-rotator .rot-block.is-active {
+    position: relative;
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
+    clip-path: inset(0 0 0 0);
+    z-index: 2;
+}
+.hero-rotator .rot-block.is-leaving {
+    opacity: 0;
+    transform: translateX(-10px) translateZ(0);
+    clip-path: inset(0 0 0 100%);
+    z-index: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+    .hero-rotator { transition: none; }
+    .hero-rotator .rot-block { transition: none; transform: none; clip-path: none; }
 }
 /* ============================= */
 /* PAGE: INDEX (Home)            */
@@ -3130,7 +3210,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
 
 /* Improve portrait cropping to keep faces visible within the circle */
 img.portrait-top {
-    object-position: 50% 28%; /* shift upward a bit so face is centered */
+    object-position: 50% 18%; /* shift further toward top so head isn’t cropped */
 }
 
 .team-member h4 {
@@ -3340,10 +3420,11 @@ img.portrait-top {
 .product-item img {
     width: 100%;
     height: 140px;
-    object-fit: contain; /* show full image without cropping */
+    object-fit: contain !important; /* show full image without cropping */
     object-position: center;
     background: #f8fafc; /* subtle backdrop for letterboxing */
     display: block;
+    padding: 6px; /* breathing room so edges never look clipped */
 }
 .product-item figcaption {
     padding: 8px 10px 10px;
@@ -3361,6 +3442,9 @@ img.portrait-top {
     .product-scroll { grid-auto-columns: 82vw; gap: 8px; }
     .product-item img { height: 110px; }
 }
+
+/* Defensive: make sure all images within product categories never crop */
+.product-category .product-item img { object-fit: contain !important; }
 
 .overview-content {
     text-align: center;
@@ -5021,6 +5105,16 @@ body .section-title {
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
     -webkit-text-fill-color: currentColor !important;
+}
+
+/* Fix: Infrastructure underline should be white */
+.infrastructure .section-title::after {
+    background: #ffffff !important;
+}
+
+/* Fix: Contact page address name brand color */
+.contact-section .map-address strong {
+    color: #0A1F44 !important;
 }
 
 /* Remove previous special-case overrides so unified heading color applies everywhere */
