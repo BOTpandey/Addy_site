@@ -419,6 +419,11 @@
 .section-title .us {
             color: inherit !important;
 }
+/* Map-card: make address and hours use navbar link color */
+.map-card .map-address,
+.map-card .hours p {
+    color: var(--brand-blue-dark) !important;
+}
 /* Industries We Serve Section */
 /* --------------------------------------------------------- */
 /* SECTION: INDUSTRIES WE SERVE                              */
@@ -1553,16 +1558,20 @@ body.modal-open { overflow: hidden; }
 .hero-rotator .rot-block .hero-main::before,
 .hero-rotator .rot-block .hero-main::after {
     color: currentColor;
-    opacity: 0.85;
+    opacity: 0.9;
     font-weight: 700;
+    /* Use a serif for curlier, more decorative braces */
+    font-family: Georgia, "Times New Roman", Cambria, "Palatino Linotype", serif;
+    font-size: 1.05em;
+    line-height: 0.9;
 }
 .hero-rotator .rot-block .hero-main::before {
-    content: '‘';
-    margin-right: 0.08em;
+    content: '“';
+    margin-right: 0.12em;
 }
 .hero-rotator .rot-block .hero-main::after {
-    content: '’';
-    margin-left: 0.08em;
+    content: '”';
+    margin-left: 0.12em;
 }
 .hero-rotator .rot-block.is-active {
     position: relative;
@@ -1683,6 +1692,15 @@ body.modal-open { overflow: hidden; }
 .footer-contact-info i {
     font-size: 1.1em;
     margin-right: 6px;
+}
+
+/* Footer: ensure spacing between envelope/map icons and text */
+.footer .footer-section i.fa-envelope,
+.footer .footer-section i.fas.fa-envelope,
+.footer .footer-section i.fa-map-marker-alt,
+.footer .footer-section i.fas.fa-map-marker-alt {
+    margin-right: 10px; /* add clear space before text */
+    vertical-align: middle;
 }
 
 /* --- Brand palette applied below --- */
@@ -2040,6 +2058,21 @@ p {
     justify-content: flex-start; /* left-align the button row */
 }
 
+/* Align hero subtitle, description, and buttons just after the opening quote */
+.hero {
+    /* Responsive offset to align under the first letter after the quote */
+    --hero-align-offset: clamp(20px, 1.2vw + 16px, 56px);
+}
+.hero .hero-subtitle,
+.hero .hero-description,
+.hero .hero-buttons {
+    margin-left: var(--hero-align-offset);
+}
+
+@media (max-width: 520px) {
+    .hero { --hero-align-offset: 14px; }
+}
+
 /* (Glass effect removed as requested) */
 
 /* Scroll cue removed as requested */
@@ -2357,10 +2390,11 @@ p {
 }
 
 .features-list i {
-    color: #10b981;
+    /* Feature check icon default color */
+    color: #00c853; /* green */
     margin-right: 1.5rem;
     font-size: 1.3rem;
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(0, 200, 83, 0.10); /* soft green tint */
     padding: 0.5rem;
     border-radius: 50%;
     width: 40px;
@@ -2369,6 +2403,12 @@ p {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+}
+
+/* On hover, align with navbar hover/active color */
+.features-list li:hover i {
+    color: #00b34b; /* slightly darker green on hover */
+    background: rgba(0, 200, 83, 0.18);
 }
 
 .features-image {
