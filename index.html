@@ -63,7 +63,6 @@
                 </p>
                 <div class="hero-buttons">
                     <a href="#infrastructure" class="btn btn-primary">Explore Us</a>
-                    <a href="contact.html" class="btn btn-secondary">Get a Quote</a>
                 </div>
             </div>
         </div>
@@ -90,7 +89,7 @@
                 </div>
                 <div class="insight-card">
                     <div class="insight-icon">
-                        <i class="fas fa-dollar-sign"></i>
+                        <i class="fas fa-indian-rupee-sign"></i>
                     </div>
                     <h3>Cost-Effective Solutions</h3>
                     <p>Smart engineering and efficient systems that deliver maximum value while reducing operational costs and energy consumption.</p>
@@ -98,6 +97,86 @@
             </div>
         </div>
     </section>
+
+    <!-- Quote Request Modal -->
+    <div id="quoteModal" class="modal quote-modal" role="dialog" aria-modal="true" aria-labelledby="quoteTitle" aria-hidden="true">
+        <span class="modal-close" role="button" tabindex="0" aria-label="Close dialog">&times;</span>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <div class="modal-title-icon"><i class="fas fa-file-signature" aria-hidden="true"></i></div>
+                    <h3 id="quoteTitle">Get a Quote</h3>
+                </div>
+                <p class="modal-subtitle">Select a category and machine, add your details, and we'll get back to you.</p>
+            </div>
+            <div class="modal-body">
+                <form id="quote-form" class="quote-form" novalidate>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="q-name">Your Name *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-user"></i></span>
+                                <input type="text" id="q-name" name="name" placeholder="Full name" required />
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="q-email">Email *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                                <input type="email" id="q-email" name="email" placeholder="you@company.com" required />
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="q-phone">Phone</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-phone"></i></span>
+                                <input type="tel" id="q-phone" name="phone" placeholder="+91-XXXXXXXXXX" />
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="q-company">Company</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-building"></i></span>
+                                <input type="text" id="q-company" name="company" placeholder="Company (optional)" />
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="q-category">Category *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-layer-group"></i></span>
+                                <select id="q-category" name="category" required>
+                                    <option value="" selected disabled>Select a category</option>
+                                    <!-- Options injected from script.js infrastructureData -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="q-machine">Machine *</label>
+                            <div class="input-wrap">
+                                <span class="input-icon"><i class="fas fa-cogs"></i></span>
+                                <select id="q-machine" name="machine" required disabled>
+                                    <option value="" selected disabled>Select a machine</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field textarea-wrap">
+                        <label for="q-message">Requirements / Notes</label>
+                        <div class="input-wrap textarea-wrap">
+                            <span class="input-icon"><i class="fas fa-comment-dots"></i></span>
+                            <textarea id="q-message" name="message" rows="4" placeholder="Briefly describe your requirement (dimensions, quantities, materials, timelines, etc.)"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Send via Email</button>
+                        <button type="button" class="btn btn-secondary" id="q-cancel">Cancel</button>
+                    </div>
+                    <div class="form-status" id="q-status" aria-live="polite"></div>
+                    <p class="small" style="margin-top:8px; color:#6b7280; text-align:center;">If your email app didn’t open, email us at <a href="mailto:sales@enray.co.in">sales@enray.co.in</a>.</p>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Features Section -->
     <section class="features">
@@ -199,6 +278,7 @@
             </div>
             <div class="infra-cta">
                 <a href="products.html" class="btn btn-primary btn-large" aria-label="View our products">View Our Products</a>
+                <a href="#quote" id="getQuoteBtn" class="btn btn-secondary btn-large" aria-label="Request a quote">Get a Quote</a>
             </div>
         </div>
 

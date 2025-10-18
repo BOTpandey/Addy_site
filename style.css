@@ -618,6 +618,8 @@ a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
 .infra-cta {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 14px;
     margin-top: 28px;
 }
 

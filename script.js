@@ -958,18 +958,18 @@ window.addEventListener('load', () => {
 
         // Initialize Infrastructure Modal (run regardless of hero image presence)
         const infraModal = document.getElementById('infraModal');
-        const modalClose = document.querySelector('.modal-close');
-        const modalHeader = document.querySelector('.modal-header');
-        const modalGallery = document.querySelector('.modal-gallery');
-        const imageCounter = document.querySelector('.image-counter');
-        const thumbnailsContainer = document.querySelector('.thumbnails-container');
-        const prevBtn = document.querySelector('.modal-prev');
-        const nextBtn = document.querySelector('.modal-next');
-        const thumbScrollLeft = document.querySelector('.thumb-scroll-left');
-        const thumbScrollRight = document.querySelector('.thumb-scroll-right');
-        const sideBlurb = document.querySelector('.modal-info-blurb');
-        const sidePoints = document.querySelector('.modal-info-points');
-    let sideItems = document.querySelector('.modal-info-items');
+        const infraModalClose = infraModal ? infraModal.querySelector('.modal-close') : null;
+        const modalHeader = infraModal ? infraModal.querySelector('.modal-header') : null;
+        const modalGallery = infraModal ? infraModal.querySelector('.modal-gallery') : null;
+        const imageCounter = infraModal ? infraModal.querySelector('.image-counter') : null;
+        const thumbnailsContainer = infraModal ? infraModal.querySelector('.thumbnails-container') : null;
+        const prevBtn = infraModal ? infraModal.querySelector('.modal-prev') : null;
+        const nextBtn = infraModal ? infraModal.querySelector('.modal-next') : null;
+        const thumbScrollLeft = infraModal ? infraModal.querySelector('.thumb-scroll-left') : null;
+        const thumbScrollRight = infraModal ? infraModal.querySelector('.thumb-scroll-right') : null;
+        const sideBlurb = infraModal ? infraModal.querySelector('.modal-info-blurb') : null;
+        const sidePoints = infraModal ? infraModal.querySelector('.modal-info-points') : null;
+    let sideItems = infraModal ? infraModal.querySelector('.modal-info-items') : null;
     let lastFocusedTrigger = null; // to restore focus on close
         
         let currentImageIndex = 0;
@@ -977,10 +977,10 @@ window.addEventListener('load', () => {
 
         // Ensure the main image fits fully within the modal (no clipping)
         function sizeModalImageArea() {
-            const header = document.querySelector('.modal-header');
-            const main = document.querySelector('.modal-main');
-            const thumbs = document.querySelector('.modal-thumbnails');
-            const galleryImg = document.querySelector('.modal-gallery img');
+            const header = infraModal ? infraModal.querySelector('.modal-header') : null;
+            const main = infraModal ? infraModal.querySelector('.modal-main') : null;
+            const thumbs = infraModal ? infraModal.querySelector('.modal-thumbnails') : null;
+            const galleryImg = infraModal ? infraModal.querySelector('.modal-gallery img') : null;
             if (!main) return;
             const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             const headerH = header ? header.getBoundingClientRect().height : 0;
@@ -1069,7 +1069,7 @@ window.addEventListener('load', () => {
             const hasItems = Array.isArray(data.items) && data.items.length > 0;
             // Ensure items container exists; if not, create it so content is visible
             if (!sideItems && hasItems) {
-                const infoContent = document.querySelector('.modal-info-content');
+                const infoContent = infraModal ? infraModal.querySelector('.modal-info-content') : null;
                 if (infoContent) {
                     const container = document.createElement('div');
                     container.className = 'modal-info-items';
@@ -1133,7 +1133,7 @@ window.addEventListener('load', () => {
             // Focus management: trap focus inside modal
             const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
             const focusable = Array.from(infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
-            const firstFocusable = focusable[0] || modalClose || infraModal;
+            const firstFocusable = focusable[0] || infraModalClose || infraModal;
             const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
             // Move focus to modal content or close button
             setTimeout(() => {
@@ -1217,9 +1217,9 @@ window.addEventListener('load', () => {
             }
         }
 
-        modalClose && modalClose.addEventListener('click', closeModalAndRestoreFocus);
+        infraModalClose && infraModalClose.addEventListener('click', closeModalAndRestoreFocus);
         // Support keyboard activation for the close element
-        modalClose && modalClose.addEventListener('keydown', (e) => {
+        infraModalClose && infraModalClose.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 closeModalAndRestoreFocus();
@@ -1623,4 +1623,160 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Quote modal removed: Get a Quote now links to contact.html
+// Quote modal: open a quote form with category/machine options sourced from infrastructureData and submit via mailto
+document.addEventListener('DOMContentLoaded', function() {
+    const getQuoteBtn = document.getElementById('getQuoteBtn');
+    const quoteModal = document.getElementById('quoteModal');
+    const modalClose = quoteModal ? quoteModal.querySelector('.modal-close') : null;
+    const form = document.getElementById('quote-form');
+    const statusEl = document.getElementById('q-status');
+    const categorySel = document.getElementById('q-category');
+    const machineSel = document.getElementById('q-machine');
+    const cancelBtn = document.getElementById('q-cancel');
+
+    if (!getQuoteBtn || !quoteModal || !form || !categorySel || !machineSel) return;
+
+    // Build category options based on infrastructureData keys used on homepage cards
+    const categoryMap = {
+        'sheet-metal': 'Sheet Metal Fabrication',
+        'complex-machines': 'CNC and Multi-Axis Machining',
+        'welding': 'Robotic and Specialized Welding',
+        'tubular': 'Tubular Fabrication Facilities',
+        'infrastructure': 'Supporting Facilities and Processes',
+        'others': 'Quality & Assembly Equipment'
+    };
+
+    function populateCategories() {
+        // Clear dynamic options
+        Array.from(categorySel.options).slice(1).forEach(o => o.remove());
+        Object.keys(categoryMap).forEach(key => {
+            if (infrastructureData[key]) {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = categoryMap[key];
+                categorySel.appendChild(opt);
+            }
+        });
+    }
+
+    function populateMachines(catKey) {
+        machineSel.innerHTML = '';
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.disabled = true;
+        placeholder.selected = true;
+        placeholder.textContent = 'Select a machine';
+        machineSel.appendChild(placeholder);
+
+        const data = infrastructureData[catKey];
+        if (!data) {
+            machineSel.disabled = true;
+            return;
+        }
+        // Take captions from images as machine names
+        const names = (data.images || []).map(img => img.caption).filter(Boolean);
+        names.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            machineSel.appendChild(opt);
+        });
+        machineSel.disabled = names.length === 0;
+    }
+
+    function openQuoteModal() {
+        populateCategories();
+        machineSel.disabled = true;
+        quoteModal.style.display = 'block';
+        quoteModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        // focus first field
+        const nameInput = document.getElementById('q-name');
+        if (nameInput) setTimeout(() => nameInput.focus(), 50);
+    }
+
+    function closeQuoteModal() {
+        quoteModal.style.display = 'none';
+        quoteModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        statusEl && (statusEl.textContent = '');
+        form.reset();
+        machineSel.disabled = true;
+    }
+
+    getQuoteBtn.addEventListener('click', (e) => {
+        // Allow hash link smooth scroll default handler to run, but still open modal
+        e.preventDefault();
+        openQuoteModal();
+    });
+    modalClose && modalClose.addEventListener('click', closeQuoteModal);
+    cancelBtn && cancelBtn.addEventListener('click', closeQuoteModal);
+    quoteModal.addEventListener('click', (e) => { if (e.target === quoteModal) closeQuoteModal(); });
+    document.addEventListener('keydown', (e) => {
+        if (quoteModal.style.display === 'block' && e.key === 'Escape') closeQuoteModal();
+    });
+
+    categorySel.addEventListener('change', () => {
+        populateMachines(categorySel.value);
+    });
+
+    function buildMailtoLink(payload) {
+        const to = 'sales@enray.co.in';
+        const subject = encodeURIComponent(`Quote Request: ${payload.categoryLabel} - ${payload.machine || 'General'}`);
+        const lines = [
+            `Name: ${payload.name}`,
+            `Email: ${payload.email}`,
+            payload.phone ? `Phone: ${payload.phone}` : null,
+            payload.company ? `Company: ${payload.company}` : null,
+            `Category: ${payload.categoryLabel}`,
+            payload.machine ? `Machine: ${payload.machine}` : null,
+            '',
+            'Requirements:',
+            payload.message || '(none)'
+        ].filter(Boolean);
+        const body = encodeURIComponent(lines.join('\n'));
+        return `mailto:${to}?subject=${subject}&body=${body}`;
+    }
+
+    function validateQuoteForm() {
+        let ok = true;
+        const requiredIds = ['q-name','q-email','q-category','q-machine'];
+        requiredIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const val = (el.value || '').trim();
+            const isValid = !!val && (id !== 'q-email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val));
+            el.classList.toggle('error', !isValid);
+            ok = ok && isValid;
+        });
+        return ok;
+    }
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        statusEl.textContent = '';
+        if (!validateQuoteForm()) {
+            statusEl.textContent = 'Please complete the required fields.';
+            return;
+        }
+        const catKey = categorySel.value;
+        const payload = {
+            name: document.getElementById('q-name').value.trim(),
+            email: document.getElementById('q-email').value.trim(),
+            phone: document.getElementById('q-phone').value.trim(),
+            company: document.getElementById('q-company').value.trim(),
+            category: catKey,
+            categoryLabel: categoryMap[catKey] || catKey,
+            machine: machineSel.value,
+            message: document.getElementById('q-message').value.trim()
+        };
+        const mailto = buildMailtoLink(payload);
+        // Try to open user's email client
+        window.location.href = mailto;
+        statusEl.textContent = 'Opening your email client...';
+        // Keep modal open briefly in case client fails to open
+        setTimeout(() => {
+            statusEl.textContent = 'If your email app did not open, please email us directly at sales@enray.co.in.';
+        }, 1500);
+    });
+});
