@@ -2308,7 +2308,7 @@ p {
 .insight-icon {
     width: 90px;
     height: 90px;
-    background: transparent;
+    background: transparent !important;
     border-radius: 0;
     display: flex;
     align-items: center;
@@ -2319,6 +2319,9 @@ p {
     box-shadow: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
+    aspect-ratio: 1;
+    max-width: 90px;
+    max-height: 90px;
 }
 
 .insight-card:hover .insight-icon {
@@ -5195,8 +5198,42 @@ h2::after,
 .why-icon img {
     border-radius: 0;
     padding: 0;
-    background: transparent;
+    background: transparent !important;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Force transparent background for all icon containers */
+.insight-icon,
+.mv-icon,
+.why-icon {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Ensure PNG images with transparency display correctly */
+.insight-icon img[src$=".PNG"],
+.insight-icon img[src$=".png"],
+.mv-icon img[src$=".PNG"],
+.mv-icon img[src$=".png"],
+.why-icon img[src$=".PNG"],
+.why-icon img[src$=".png"] {
+    background: transparent !important;
+    background-color: transparent !important;
+    mix-blend-mode: normal;
+}
+
+/* Fix square-shaped icon display by maintaining aspect ratio */
+.insight-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
 }
 
 .insight-card:hover .insight-icon img,
