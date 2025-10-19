@@ -1,3 +1,4 @@
+
 // --- Infra Carousel Auto-Focus & Loop ---
 document.addEventListener('DOMContentLoaded', function() {
     // --- Hero Block Rotator ---
@@ -217,6 +218,454 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Manufacturing Capabilities gallery data
+const infrastructureData = {
+    'sheet-metal': {
+        title: 'Sheet Metal Fabrication',
+        images: [
+            { src: 'sheet metal cutting/Laser cutting 2kW.png', caption: 'Laser Cutting Machine -2kW' },
+            { src: 'sheet metal cutting/Laser cutting 3kW.png', caption: 'Laser Cutting Machine -3kW' },
+            { src: 'sheet metal cutting/Press break 150 ton.png', caption: 'Press break -150ton' },
+            { src: 'sheet metal cutting/Press break 75 ton.png', caption: 'Press break -75ton' }
+        ],
+        items: [
+            {
+                title: 'Utilize high-power laser cutting machines for precision and heavy-duty tasks',
+                desc: 'Equipped with 2 kW lasers for precision cutting and 3 kW lasers for heavy-duty applications, enabling versatile and accurate sheet metal processing.'
+            },
+            {
+                title: 'Employ press brakes with varying capacities for flexible forming needs',
+                desc: 'Press brakes feature 75-ton capacity for versatile forming and 150-ton capacity for large-scale bending, supporting diverse fabrication requirements.'
+            }
+        ],
+        // Fallback (not used when items exist)
+        description: '',
+        points: []
+    },
+    'complex-machines': {
+        title: 'CNC and Multi-Axis Machining',
+        images: [
+            { src: 'Complex machine/CNC honing.png', caption: 'CNC Honing' },
+            { src: 'Complex machine/CNC turning.png', caption: 'CNC Turning' },
+            { src: 'Complex machine/VMC 3axis.png', caption: 'VMC -3Axis' },
+            { src: 'Complex machine/VMC 5axis.png', caption: 'VMC -5Axis' }
+        ],
+        items: [
+            {
+                title: 'UTILIZE VMC 5 AXIS & 3 AXIS FOR COMPLEX GEOMETRIES',
+                desc: 'Enable Machining of Parts With Tight Tolerances And Intricate Shapes, Supporting Advanced Manufacturing Requirements.'
+            },
+            {
+                title: 'EMPLOY CNC TURNING FOR HIGH PRECISION ROTATIONAL PARTS',
+                desc: 'Manufacture Rotational Components With Superior Accuracy And Consistency, Ideal For Automotive And HVAC Applications.'
+            },
+            {
+                title: 'IMPLEMENT CNC HONING FOR OPTIMAL SURFACE FINISHING',
+                desc: 'Enhance Part Performance Through Precise Surface Finishing Techniques That Improve Durability And Function.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'welding': {
+        title: 'Robotic and Specialized Welding',
+        images: [
+            { src: 'welding/Laser Welding.png', caption: 'Laser Welding' },
+            { src: 'welding/Mig welding.png', caption: 'Mig Welding' },
+            { src: 'welding/robotic welding.png', caption: 'Robotic Welding' },
+            { src: 'welding/Spot welding.png', caption: 'Spot Welding' },
+            { src: 'welding/Tig welding.png', caption: 'Tig Welding' },
+            { src: 'welding/welding SPM.png', caption: 'Welding SPM' }
+        ],
+        items: [
+            {
+                title: 'Flexible process coverage',
+                desc: 'Utilize MIG, TIG, and laser welding techniques that offer flexibility for different material types and thicknesses, ensuring precise and effective welds.'
+            },
+            {
+                title: 'Robotic welding for consistency',
+                desc: 'Robotic welding systems deliver uniform welds that enhance assembly reliability and reduce defects, meeting procurement demands for consistent quality.'
+            },
+            {
+                title: 'High-volume throughput with SPM & spot welding',
+                desc: 'Deploy Special Purpose Machines (SPM) and spot welding to optimize high-volume production, supporting scalable manufacturing needs.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'tubular': {
+        title: 'Tubular Fabrication Facilities',
+        images: [
+            { src: 'tubular/CNC pipe bend 3axis.png', caption: 'CNC Pipe Bending -3Axis' },
+            { src: 'tubular/CNC pipe bend 5axis.png', caption: 'CNC Pipe Bending -5axis' },
+            { src: 'tubular/NC pipe bend.png', caption: 'NC Pipe Bending Machine' }
+        ],
+        items: [
+            {
+                title: 'Manufacture complex tubular assemblies using CNC pipe bending machines',
+                desc: 'Utilize 5 Axis and 3 Axis CNC Pipe Bending Machines to create intricate tubular shapes with high dimensional accuracy and surface quality.'
+            },
+            {
+                title: 'Achieve precise bends with NC pipe bending technology',
+                desc: 'Employ NC Pipe Bending Machines to deliver precise pipe bends essential for complex tubular fabrication projects.'
+            }
+        ],
+        description: '',
+        points: []
+    },
+    'infrastructure': {
+        title: 'Supporting Facilities and Processes',
+        images: [
+            { src: 'infra/powder coating room.png', caption: 'Powder Coating Room' },
+            { src: 'infra/press shop.png', caption: 'Press Shop' },
+            { src: 'infra/tool room.png', caption: 'Tool Room' }
+        ],
+        description: 'Our facility includes a tool room for precision design and maintenance of essential tools, a press room equipped with high-performance presses for accurate shaping and assembly of components, and a powder coating facility that delivers durable, high-quality finishes to enhance both protection and aesthetics.',
+        points: []
+    },
+    'others': {
+        title: 'Quality & Assembly Equipment',
+        images: [
+            { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
+            { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },
+            { src: 'others/hydrofoaming.png', caption: 'Hydroforming Machine' },
+            { src: 'others/induction brazing.png', caption: 'Induction Brazing Machine' },
+            { src: 'others/pressure decay leak tester.png', caption: 'Pressure Decay Leak Tester' },
+            { src: 'others/tube end reforming.png', caption: 'Tube End Forming Machine' },
+            { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' }
+        ],
+        items: [
+            {
+                title: 'Specialized machines for pipe forming',
+                desc: 'Employ Tube End Forming Machine, Hydroforming Machine, Hose Crimping Machine, and Hose Cutting Machine to achieve precise tube and hose fabrication essential for product assembly.'
+            },
+            {
+                title: 'Implement advanced joining and brazing technology',
+                desc: 'Use Induction Brazing Machine to ensure strong, reliable joints critical for product durability and performance.'
+            },
+            {
+                title: 'Conduct rigorous leak testing for quality assurance',
+                desc: 'Apply Pressure Decay Leak Tester to verify leak-proof assemblies, maintaining high product integrity and compliance with quality standards.'
+            },
+            {
+                title: 'Ensure compliance with MNC procurement and quality standards',
+                desc: 'Leverage advanced equipment and processes to meet strict quality control requirements aligned with multinational corporation procurement standards.'
+            }
+        ],
+        description: '',
+        points: []
+    }
+};
+
+// Initialize Infrastructure Modal
+document.addEventListener('DOMContentLoaded', function() {
+    const infraModal = document.getElementById('infraModal');
+    const infraModalClose = infraModal ? infraModal.querySelector('.modal-close') : null;
+    const modalHeader = infraModal ? infraModal.querySelector('.modal-header') : null;
+    const modalGallery = infraModal ? infraModal.querySelector('.modal-gallery') : null;
+    const imageCounter = infraModal ? infraModal.querySelector('.image-counter') : null;
+    const thumbnailsContainer = infraModal ? infraModal.querySelector('.thumbnails-container') : null;
+    const prevBtn = infraModal ? infraModal.querySelector('.modal-prev') : null;
+    const nextBtn = infraModal ? infraModal.querySelector('.modal-next') : null;
+    const thumbScrollLeft = infraModal ? infraModal.querySelector('.thumb-scroll-left') : null;
+    const thumbScrollRight = infraModal ? infraModal.querySelector('.thumb-scroll-right') : null;
+    const sideBlurb = infraModal ? infraModal.querySelector('.modal-info-blurb') : null;
+    const sidePoints = infraModal ? infraModal.querySelector('.modal-info-points') : null;
+    let sideItems = infraModal ? infraModal.querySelector('.modal-info-items') : null;
+    let lastFocusedTrigger = null; // to restore focus on close
+    
+    let currentImageIndex = 0;
+    let currentImages = [];
+
+    // Make modal variables globally accessible
+    window.infraModal = infraModal;
+    window.infraModalClose = infraModalClose;
+    window.modalHeader = modalHeader;
+    window.modalGallery = modalGallery;
+    window.imageCounter = imageCounter;
+    window.thumbnailsContainer = thumbnailsContainer;
+    window.prevBtn = prevBtn;
+    window.nextBtn = nextBtn;
+    window.thumbScrollLeft = thumbScrollLeft;
+    window.thumbScrollRight = thumbScrollRight;
+    window.sideBlurb = sideBlurb;
+    window.sidePoints = sidePoints;
+    window.sideItems = sideItems;
+    window.lastFocusedTrigger = lastFocusedTrigger;
+    window.currentImageIndex = currentImageIndex;
+    window.currentImages = currentImages;
+
+    // Helper functions for modal
+    function sizeModalImageArea() {
+        const header = window.infraModal ? window.infraModal.querySelector('.modal-header') : null;
+        const main = window.infraModal ? window.infraModal.querySelector('.modal-main') : null;
+        const thumbs = window.infraModal ? window.infraModal.querySelector('.modal-thumbnails') : null;
+        const galleryImg = window.infraModal ? window.infraModal.querySelector('.modal-gallery img') : null;
+        if (!main) return;
+        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        const headerH = header ? header.getBoundingClientRect().height : 0;
+        const thumbsH = thumbs ? thumbs.getBoundingClientRect().height : 0;
+        // Leave a little breathing room (16px)
+        const available = Math.max(240, vh - headerH - thumbsH - 16);
+        main.style.minHeight = available + 'px';
+        // If an image is present, ensure it doesn't exceed available space
+        if (galleryImg) {
+            galleryImg.style.maxHeight = (available - 40) + 'px';
+        }
+    }
+
+    function updateImageCounter() {
+        window.imageCounter.textContent = `${window.currentImageIndex + 1} / ${window.currentImages.length}`;
+    }
+
+    function showImage(index) {
+        window.modalGallery.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = window.currentImages[index].src;
+        img.alt = window.currentImages[index].caption;
+        // Re-size once the image loads for exact dimensions
+        img.addEventListener('load', sizeModalImageArea);
+        
+        const caption = document.createElement('p');
+        caption.textContent = window.currentImages[index].caption;
+        caption.className = 'modal-caption';
+        
+        window.modalGallery.appendChild(img);
+        window.modalGallery.appendChild(caption);
+        updateImageCounter();
+        // Also call sizing to handle quick transitions
+        sizeModalImageArea();
+
+        // Sidebar no longer mirrors image caption; keep only on image
+
+        // Update thumbnails
+        const thumbnails = window.thumbnailsContainer.querySelectorAll('.thumbnail');
+        thumbnails.forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+
+        // Scroll thumbnail into view
+        const activeThumb = thumbnails[index];
+        if (activeThumb) {
+            activeThumb.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+        }
+    }
+
+    function createThumbnails() {
+        window.thumbnailsContainer.innerHTML = '';
+        window.currentImages.forEach((image, index) => {
+            const thumbnail = document.createElement('div');
+            thumbnail.className = `thumbnail ${index === window.currentImageIndex ? 'active' : ''}`;
+            
+            const thumbImg = document.createElement('img');
+            thumbImg.src = image.src;
+            thumbImg.alt = `Thumbnail ${index + 1}`;
+            
+            thumbnail.appendChild(thumbImg);
+            thumbnail.addEventListener('click', () => {
+                window.currentImageIndex = index;
+                showImage(window.currentImageIndex);
+            });
+            
+            window.thumbnailsContainer.appendChild(thumbnail);
+        });
+    }
+
+    // Open modal helper function
+    window.openInfraCard = function openInfraCard(card) {
+        console.log('openInfraCard called with card:', card);
+        if (!window.infraModal) {
+            console.log('Modal not initialized');
+            return;
+        }
+        console.log('Modal found, proceeding...');
+        window.lastFocusedTrigger = card; // remember what opened the modal
+        const category = card.dataset.category;
+        const data = infrastructureData[category];
+        if (!data) {
+            return;
+        }
+        window.currentImages = data.images;
+        window.currentImageIndex = 0;
+        window.modalHeader.textContent = data.title;
+        // Optional description and points if present in data
+        // Prefer structured items (title + description per item) when present
+        const hasItems = Array.isArray(data.items) && data.items.length > 0;
+        // Ensure items container exists; if not, create it so content is visible
+        if (!window.sideItems && hasItems) {
+            const infoContent = window.infraModal ? window.infraModal.querySelector('.modal-info-content') : null;
+            if (infoContent) {
+                const container = document.createElement('div');
+                container.className = 'modal-info-items';
+                infoContent.insertBefore(container, window.sidePoints || null);
+                window.sideItems = container;
+            }
+        }
+
+        if (window.sideItems) {
+            window.sideItems.innerHTML = '';
+            if (hasItems) {
+                data.items.forEach(item => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'modal-info-item';
+
+                    if (item.title) {
+                        const h4 = document.createElement('h4');
+                        h4.className = 'modal-info-item-title';
+                        h4.textContent = item.title;
+                        wrap.appendChild(h4);
+                    }
+                    if (item.desc) {
+                        const p = document.createElement('p');
+                        p.className = 'modal-info-item-desc';
+                        p.textContent = item.desc;
+                        wrap.appendChild(p);
+                    }
+                    window.sideItems.appendChild(wrap);
+                });
+            }
+            // Show/hide items container based on data
+            window.sideItems.style.display = hasItems ? 'block' : 'none';
+        }
+
+        // If items exist and container is present, hide blurb/points; else use fallback blurb + points
+        const useFallback = !hasItems || !window.sideItems;
+        if (window.sideBlurb) {
+            window.sideBlurb.textContent = useFallback && typeof data.description === 'string' ? data.description : '';
+            window.sideBlurb.style.display = useFallback && data.description ? 'block' : 'none';
+        }
+        if (window.sidePoints) {
+            window.sidePoints.innerHTML = '';
+            if (useFallback && Array.isArray(data.points)) {
+                data.points.forEach(pt => {
+                    const li = document.createElement('li');
+                    li.textContent = pt;
+                    window.sidePoints.appendChild(li);
+                });
+            }
+            window.sidePoints.style.display = useFallback && Array.isArray(data.points) && data.points.length ? 'block' : 'none';
+        }
+        createThumbnails();
+        showImage(window.currentImageIndex);
+        // Size on open
+        sizeModalImageArea();
+        // Open modal with accessibility attributes
+        window.infraModal.style.display = 'block';
+        window.infraModal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open'); // hide navbar + lock scroll
+
+        // Focus management: trap focus inside modal
+        const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+        const focusable = Array.from(window.infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
+        const firstFocusable = focusable[0] || window.infraModalClose || window.infraModal;
+        const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
+        // Move focus to modal content or close button
+        setTimeout(() => {
+            (firstFocusable instanceof HTMLElement ? firstFocusable : window.infraModal).focus();
+        }, 0);
+
+        function trapFocus(e) {
+            if (e.key !== 'Tab') return;
+            if (focusable.length === 0) {
+                e.preventDefault();
+                (window.infraModal instanceof HTMLElement ? window.infraModal : document.body).focus();
+                return;
+            }
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        }
+        window.infraModal.addEventListener('keydown', trapFocus);
+        window.infraModal._trapFocus = trapFocus; // store for cleanup
+    };
+
+    // Modal control functions
+    function closeModalAndRestoreFocus() {
+        window.infraModal.style.display = 'none';
+        window.infraModal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        if (window.infraModal._trapFocus) window.infraModal.removeEventListener('keydown', window.infraModal._trapFocus);
+        // restore focus to trigger
+        if (window.lastFocusedTrigger && window.lastFocusedTrigger.focus) {
+            setTimeout(() => window.lastFocusedTrigger.focus(), 0);
+        }
+    }
+
+    // Modal event handlers
+    window.infraModalClose && window.infraModalClose.addEventListener('click', closeModalAndRestoreFocus);
+    // Support keyboard activation for the close element
+    window.infraModalClose && window.infraModalClose.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            closeModalAndRestoreFocus();
+        }
+    });
+
+    window.prevBtn && window.prevBtn.addEventListener('click', () => {
+        window.currentImageIndex = (window.currentImageIndex - 1 + window.currentImages.length) % window.currentImages.length;
+        showImage(window.currentImageIndex);
+    });
+
+    window.nextBtn && window.nextBtn.addEventListener('click', () => {
+        window.currentImageIndex = (window.currentImageIndex + 1) % window.currentImages.length;
+        showImage(window.currentImageIndex);
+    });
+
+    // Recompute size on window resize
+    window.addEventListener('resize', () => {
+        sizeModalImageArea();
+    });
+
+    // Thumbnail scroll controls
+    window.thumbScrollLeft && window.thumbScrollLeft.addEventListener('click', () => {
+        window.thumbnailsContainer.scrollBy({
+            left: -200,
+            behavior: 'smooth'
+        });
+    });
+
+    window.thumbScrollRight && window.thumbScrollRight.addEventListener('click', () => {
+        window.thumbnailsContainer.scrollBy({
+            left: 200,
+            behavior: 'smooth'
+        });
+    });
+
+    // Close modal on outside click
+    window.infraModal && window.infraModal.addEventListener('click', (e) => {
+        if (e.target === window.infraModal) {
+            closeModalAndRestoreFocus();
+        }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (window.infraModal && window.infraModal.style.display === 'block') {
+            if (e.key === 'ArrowLeft') {
+                window.prevBtn && window.prevBtn.click();
+            } else if (e.key === 'ArrowRight') {
+                window.nextBtn && window.nextBtn.click();
+            } else if (e.key === 'Escape') {
+                closeModalAndRestoreFocus();
+            }
+        }
+    });
+});
+
 
 // Shared reveal-on-scroll observer used by animation initializers below
 let observer;
@@ -640,11 +1089,21 @@ document.addEventListener('DOMContentLoaded', function() {
         let lastX = 0;
         let lastTime = 0;
         let velocity = 0;
+        let suppressNextClick = false;
         const DRAG_THRESHOLD = 12; // pixels before we consider it a drag
 
         const onPointerDown = (e) => {
+            // Check if the pointer down is on a card - if so, don't start drag
+            const card = e.target.closest('.infra-card');
+            if (card) {
+                console.log('Pointer down on card, not starting drag');
+                return; // Don't start drag if clicking on a card
+            }
+            
+            console.log('Pointer down on track');
             isDown = true;
             isDragging = false;
+            suppressNextClick = false;
             startX = e.pageX || e.clientX;
             scrollLeft = infraTrack.scrollLeft;
             lastX = startX;
@@ -658,12 +1117,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const onPointerMove = (e) => {
             if (!isDown) return;
+            
+            // Check if we're moving over a card - if so, stop drag
+            const card = e.target.closest('.infra-card');
+            if (card) {
+                console.log('Moving over card, stopping drag');
+                isDown = false;
+                isDragging = false;
+                infraTrack.classList.remove('dragging');
+                return;
+            }
+            
             const x = e.pageX || e.clientX;
             const dx = x - startX;
             dragDistance = Math.abs(dx);
             if (dragDistance > DRAG_THRESHOLD) {
                 if (!isDragging) {
+                    console.log('Drag started, suppressNextClick = true');
                     isDragging = true;
+                    suppressNextClick = true;
                     // add dragging class only once we confirm an actual drag
                     infraTrack.classList.add('dragging');
                 }
@@ -680,6 +1152,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const onPointerUp = (e) => {
             if (!isDown) return;
+            console.log('Pointer up, suppressNextClick =', suppressNextClick);
             isDown = false;
             infraTrack.classList.remove('dragging');
             // release pointer capture if used
@@ -704,19 +1177,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 requestAnimationFrame(step);
             }
 
-            // suppress the next click only if it was a true drag (not a tiny move)
-            if (isDragging && dragDistance > DRAG_THRESHOLD) {
-                const suppressClick = (ev) => {
-                    // Allow clicks on controls outside the track; only suppress within the track
-                    if (infraTrack.contains(ev.target)) {
-                        ev.stopImmediatePropagation();
-                        ev.preventDefault();
-                    }
-                    infraTrack.removeEventListener('click', suppressClick, true);
-                };
-                // capture only on the track, not the whole document
-                infraTrack.addEventListener('click', suppressClick, true);
-            }
             // reset drag tracking
             dragDistance = 0;
             isDragging = false;
@@ -739,156 +1199,73 @@ document.addEventListener('DOMContentLoaded', function() {
             window.addEventListener('touchend', (e) => onPointerUp(e.changedTouches ? e.changedTouches[0] : e));
         }
 
-        // Click delegation: open modal when clicking anywhere on a card (unless a real drag just occurred)
+        // Add click event listeners directly to each card
+        const infraCards = infraTrack.querySelectorAll('.infra-card');
+        console.log('Found', infraCards.length, 'infrastructure cards');
+        
+        // Temporarily add CSS to ensure cards are clickable
+        const style = document.createElement('style');
+        style.textContent = `
+            .infra-card {
+                pointer-events: auto !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        infraCards.forEach((card, index) => {
+            console.log(`Setting up click listener for card ${index}:`, card.dataset.category);
+            console.log('Card element:', card);
+            console.log('Card computed style:', window.getComputedStyle(card));
+            console.log('Card pointer-events:', window.getComputedStyle(card).pointerEvents);
+            
+            // Add a test event to see if the card is clickable
+            card.addEventListener('mouseenter', () => {
+                console.log('Mouse entered card:', card.dataset.category);
+            });
+            
+            card.addEventListener('mousedown', (e) => {
+                console.log('Mouse down on card:', card.dataset.category);
+                console.log('Mouse down event:', e);
+            });
+            
+            card.addEventListener('click', (e) => {
+                console.log('Card clicked:', card.dataset.category);
+                console.log('Click event details:', e);
+                
+                // Suppress click if there was a recent drag
+                if (suppressNextClick) {
+                    console.log('Click suppressed due to drag');
+                    suppressNextClick = false;
+                    return;
+                }
+                
+                console.log('Opening modal for card:', card.dataset.category);
+                e.preventDefault();
+                e.stopPropagation(); // Prevent event from bubbling to track
+                window.openInfraCard(card);
+            });
+        });
+
+        // Keep track click handler for debugging (but it should not be needed now)
         infraTrack.addEventListener('click', (e) => {
-            // If a drag suppression is in place, capture-phase handler will have prevented this
-            const card = e.target.closest('.infra-card');
-            if (!card || !infraTrack.contains(card)) return;
-            e.preventDefault();
-            openInfraCard(card);
+            console.log('Click detected on track, target:', e.target);
+            console.log('Target class list:', e.target.classList);
+            console.log('Target tag name:', e.target.tagName);
+            
+            // This should only fire if the click is directly on the track (not on a card)
+            if (e.target === infraTrack) {
+                console.log('Click on track itself, ignoring');
+                return;
+            }
+            
+            // If we get here, it means a click bubbled up from a card but wasn't handled
+            console.log('Unexpected click on track - this should not happen');
         });
     }
 });
 // ...existing code...
-// Manufacturing Capabilities gallery data
-const infrastructureData = {
-    'sheet-metal': {
-        title: 'Sheet Metal Fabrication',
-        images: [
-            { src: 'sheet metal cutting/Laser cutting 2kW.png', caption: 'Laser Cutting Machine -2kW' },
-            { src: 'sheet metal cutting/Laser cutting 3kW.png', caption: 'Laser Cutting Machine -3kW' },
-            { src: 'sheet metal cutting/Press break 150 ton.png', caption: 'Press break -150ton' },
-            { src: 'sheet metal cutting/Press break 75 ton.png', caption: 'Press break -75ton' }
-        ],
-        items: [
-            {
-                title: 'Utilize high-power laser cutting machines for precision and heavy-duty tasks',
-                desc: 'Equipped with 2 kW lasers for precision cutting and 3 kW lasers for heavy-duty applications, enabling versatile and accurate sheet metal processing.'
-            },
-            {
-                title: 'Employ press brakes with varying capacities for flexible forming needs',
-                desc: 'Press brakes feature 75-ton capacity for versatile forming and 150-ton capacity for large-scale bending, supporting diverse fabrication requirements.'
-            }
-        ],
-        // Fallback (not used when items exist)
-        description: '',
-        points: []
-    },
-    'complex-machines': {
-        title: 'CNC and Multi-Axis Machining',
-        images: [
-            { src: 'Complex machine/CNC honing.png', caption: 'CNC Honing' },
-            { src: 'Complex machine/CNC turning.png', caption: 'CNC Turning' },
-            { src: 'Complex machine/VMC 3axis.png', caption: 'VMC -3Axis' },
-            { src: 'Complex machine/VMC 5axis.png', caption: 'VMC -5Axis' }
-        ],
-        items: [
-            {
-                title: 'UTILIZE VMC 5 AXIS & 3 AXIS FOR COMPLEX GEOMETRIES',
-                desc: 'Enable Machining of Parts With Tight Tolerances And Intricate Shapes, Supporting Advanced Manufacturing Requirements.'
-            },
-            {
-                title: 'EMPLOY CNC TURNING FOR HIGH PRECISION ROTATIONAL PARTS',
-                desc: 'Manufacture Rotational Components With Superior Accuracy And Consistency, Ideal For Automotive And HVAC Applications.'
-            },
-            {
-                title: 'IMPLEMENT CNC HONING FOR OPTIMAL SURFACE FINISHING',
-                desc: 'Enhance Part Performance Through Precise Surface Finishing Techniques That Improve Durability And Function.'
-            }
-        ],
-        description: '',
-        points: []
-    },
-    'welding': {
-        title: 'Robotic and Specialized Welding',
-        images: [
-            { src: 'welding/Laser Welding.png', caption: 'Laser Welding' },
-            { src: 'welding/Mig welding.png', caption: 'Mig Welding' },
-            { src: 'welding/robotic welding.png', caption: 'Robotic Welding' },
-            { src: 'welding/Spot welding.png', caption: 'Spot Welding' },
-            { src: 'welding/Tig welding.png', caption: 'Tig Welding' },
-            { src: 'welding/welding SPM.png', caption: 'Welding SPM' }
-        ],
-        items: [
-            {
-                title: 'Flexible process coverage',
-                desc: 'Utilize MIG, TIG, and laser welding techniques that offer flexibility for different material types and thicknesses, ensuring precise and effective welds.'
-            },
-            {
-                title: 'Robotic welding for consistency',
-                desc: 'Robotic welding systems deliver uniform welds that enhance assembly reliability and reduce defects, meeting procurement demands for consistent quality.'
-            },
-            {
-                title: 'High-volume throughput with SPM & spot welding',
-                desc: 'Deploy Special Purpose Machines (SPM) and spot welding to optimize high-volume production, supporting scalable manufacturing needs.'
-            }
-        ],
-        description: '',
-        points: []
-    },
-    'tubular': {
-        title: 'Tubular Fabrication Facilities',
-        images: [
-            { src: 'tubular/CNC pipe bend 3axis.png', caption: 'CNC Pipe Bending -3Axis' },
-            { src: 'tubular/CNC pipe bend 5axis.png', caption: 'CNC Pipe Bending -5axis' },
-            { src: 'tubular/NC pipe bend.png', caption: 'NC Pipe Bending Machine' }
-        ],
-        items: [
-            {
-                title: 'Manufacture complex tubular assemblies using CNC pipe bending machines',
-                desc: 'Utilize 5 Axis and 3 Axis CNC Pipe Bending Machines to create intricate tubular shapes with high dimensional accuracy and surface quality.'
-            },
-            {
-                title: 'Achieve precise bends with NC pipe bending technology',
-                desc: 'Employ NC Pipe Bending Machines to deliver precise pipe bends essential for complex tubular fabrication projects.'
-            }
-        ],
-        description: '',
-        points: []
-    },
-    'infrastructure': {
-        title: 'Supporting Facilities and Processes',
-        images: [
-            { src: 'infra/powder coating room.png', caption: 'Powder Coating Room' },
-            { src: 'infra/press shop.png', caption: 'Press Shop' },
-            { src: 'infra/tool room.png', caption: 'Tool Room' }
-        ],
-        description: 'Our facility includes a tool room for precision design and maintenance of essential tools, a press room equipped with high-performance presses for accurate shaping and assembly of components, and a powder coating facility that delivers durable, high-quality finishes to enhance both protection and aesthetics.',
-        points: []
-    },
-    'others': {
-        title: 'Quality & Assembly Equipment',
-        images: [
-            { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
-            { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },
-            { src: 'others/hydrofoaming.png', caption: 'Hydroforming Machine' },
-            { src: 'others/induction brazing.png', caption: 'Induction Brazing Machine' },
-            { src: 'others/pressure decay leak tester.png', caption: 'Pressure Decay Leak Tester' },
-            { src: 'others/tube end reforming.png', caption: 'Tube End Forming Machine' },
-            { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' }
-        ],
-        items: [
-            {
-                title: 'Specialized machines for pipe forming',
-                desc: 'Employ Tube End Forming Machine, Hydroforming Machine, Hose Crimping Machine, and Hose Cutting Machine to achieve precise tube and hose fabrication essential for product assembly.'
-            },
-            {
-                title: 'Implement advanced joining and brazing technology',
-                desc: 'Use Induction Brazing Machine to ensure strong, reliable joints critical for product durability and performance.'
-            },
-            {
-                title: 'Conduct rigorous leak testing for quality assurance',
-                desc: 'Apply Pressure Decay Leak Tester to verify leak-proof assemblies, maintaining high product integrity and compliance with quality standards.'
-            },
-            {
-                title: 'Ensure compliance with MNC procurement and quality standards',
-                desc: 'Leverage advanced equipment and processes to meet strict quality control requirements aligned with multinational corporation procurement standards.'
-            }
-        ],
-        description: '',
-        points: []
-    }
-};
 
 // Mobile Navigation Toggle
 const hamburger = document.querySelector('.hamburger');
@@ -954,33 +1331,22 @@ window.addEventListener('load', () => {
         heroImage.style.opacity = '0';
         heroImage.style.transform = 'translateX(50px)';
         heroImage.style.transition = 'opacity 1s ease, transform 1s ease';
+        
+        // Finish hero image animation after setup
+        setTimeout(() => {
+            heroImage.style.opacity = '1';
+            heroImage.style.transform = 'translateX(0)';
+        }, 600);
     }
 
-        // Initialize Infrastructure Modal (run regardless of hero image presence)
-        const infraModal = document.getElementById('infraModal');
-        const infraModalClose = infraModal ? infraModal.querySelector('.modal-close') : null;
-        const modalHeader = infraModal ? infraModal.querySelector('.modal-header') : null;
-        const modalGallery = infraModal ? infraModal.querySelector('.modal-gallery') : null;
-        const imageCounter = infraModal ? infraModal.querySelector('.image-counter') : null;
-        const thumbnailsContainer = infraModal ? infraModal.querySelector('.thumbnails-container') : null;
-        const prevBtn = infraModal ? infraModal.querySelector('.modal-prev') : null;
-        const nextBtn = infraModal ? infraModal.querySelector('.modal-next') : null;
-        const thumbScrollLeft = infraModal ? infraModal.querySelector('.thumb-scroll-left') : null;
-        const thumbScrollRight = infraModal ? infraModal.querySelector('.thumb-scroll-right') : null;
-        const sideBlurb = infraModal ? infraModal.querySelector('.modal-info-blurb') : null;
-        const sidePoints = infraModal ? infraModal.querySelector('.modal-info-points') : null;
-    let sideItems = infraModal ? infraModal.querySelector('.modal-info-items') : null;
-    let lastFocusedTrigger = null; // to restore focus on close
-        
-        let currentImageIndex = 0;
-        let currentImages = [];
+        // Modal initialization moved to DOMContentLoaded block below
 
         // Ensure the main image fits fully within the modal (no clipping)
         function sizeModalImageArea() {
-            const header = infraModal ? infraModal.querySelector('.modal-header') : null;
-            const main = infraModal ? infraModal.querySelector('.modal-main') : null;
-            const thumbs = infraModal ? infraModal.querySelector('.modal-thumbnails') : null;
-            const galleryImg = infraModal ? infraModal.querySelector('.modal-gallery img') : null;
+            const header = window.infraModal ? window.infraModal.querySelector('.modal-header') : null;
+            const main = window.infraModal ? window.infraModal.querySelector('.modal-main') : null;
+            const thumbs = window.infraModal ? window.infraModal.querySelector('.modal-thumbnails') : null;
+            const galleryImg = window.infraModal ? window.infraModal.querySelector('.modal-gallery img') : null;
             if (!main) return;
             const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
             const headerH = header ? header.getBoundingClientRect().height : 0;
@@ -995,23 +1361,23 @@ window.addEventListener('load', () => {
         }
 
         function updateImageCounter() {
-            imageCounter.textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+            window.imageCounter.textContent = `${window.currentImageIndex + 1} / ${window.currentImages.length}`;
         }
 
         function showImage(index) {
-            modalGallery.innerHTML = '';
+            window.modalGallery.innerHTML = '';
             const img = document.createElement('img');
-            img.src = currentImages[index].src;
-            img.alt = currentImages[index].caption;
+            img.src = window.currentImages[index].src;
+            img.alt = window.currentImages[index].caption;
             // Re-size once the image loads for exact dimensions
             img.addEventListener('load', sizeModalImageArea);
             
             const caption = document.createElement('p');
-            caption.textContent = currentImages[index].caption;
+            caption.textContent = window.currentImages[index].caption;
             caption.className = 'modal-caption';
             
-            modalGallery.appendChild(img);
-            modalGallery.appendChild(caption);
+            window.modalGallery.appendChild(img);
+            window.modalGallery.appendChild(caption);
             updateImageCounter();
             // Also call sizing to handle quick transitions
             sizeModalImageArea();
@@ -1019,7 +1385,7 @@ window.addEventListener('load', () => {
             // Sidebar no longer mirrors image caption; keep only on image
 
             // Update thumbnails
-            const thumbnails = thumbnailsContainer.querySelectorAll('.thumbnail');
+            const thumbnails = window.thumbnailsContainer.querySelectorAll('.thumbnail');
             thumbnails.forEach((thumb, i) => {
                 thumb.classList.toggle('active', i === index);
             });
@@ -1036,10 +1402,10 @@ window.addEventListener('load', () => {
         }
 
         function createThumbnails() {
-            thumbnailsContainer.innerHTML = '';
-            currentImages.forEach((image, index) => {
+            window.thumbnailsContainer.innerHTML = '';
+            window.currentImages.forEach((image, index) => {
                 const thumbnail = document.createElement('div');
-                thumbnail.className = `thumbnail ${index === currentImageIndex ? 'active' : ''}`;
+                thumbnail.className = `thumbnail ${index === window.currentImageIndex ? 'active' : ''}`;
                 
                 const thumbImg = document.createElement('img');
                 thumbImg.src = image.src;
@@ -1047,121 +1413,15 @@ window.addEventListener('load', () => {
                 
                 thumbnail.appendChild(thumbImg);
                 thumbnail.addEventListener('click', () => {
-                    currentImageIndex = index;
-                    showImage(currentImageIndex);
+                    window.currentImageIndex = index;
+                    showImage(window.currentImageIndex);
                 });
                 
-                thumbnailsContainer.appendChild(thumbnail);
+                window.thumbnailsContainer.appendChild(thumbnail);
             });
         }
 
-        // Open modal helper so any part of the card can trigger it
-        function openInfraCard(card) {
-            lastFocusedTrigger = card; // remember what opened the modal
-            const category = card.dataset.category;
-            const data = infrastructureData[category];
-            if (!data) return;
-            currentImages = data.images;
-            currentImageIndex = 0;
-            modalHeader.textContent = data.title;
-            // Optional description and points if present in data
-            // Prefer structured items (title + description per item) when present
-            const hasItems = Array.isArray(data.items) && data.items.length > 0;
-            // Ensure items container exists; if not, create it so content is visible
-            if (!sideItems && hasItems) {
-                const infoContent = infraModal ? infraModal.querySelector('.modal-info-content') : null;
-                if (infoContent) {
-                    const container = document.createElement('div');
-                    container.className = 'modal-info-items';
-                    infoContent.insertBefore(container, sidePoints || null);
-                    sideItems = container;
-                }
-            }
-
-            if (sideItems) {
-                sideItems.innerHTML = '';
-                if (hasItems) {
-                    data.items.forEach(item => {
-                        const wrap = document.createElement('div');
-                        wrap.className = 'modal-info-item';
-
-                        if (item.title) {
-                            const h4 = document.createElement('h4');
-                            h4.className = 'modal-info-item-title';
-                            h4.textContent = item.title;
-                            wrap.appendChild(h4);
-                        }
-                        if (item.desc) {
-                            const p = document.createElement('p');
-                            p.className = 'modal-info-item-desc';
-                            p.textContent = item.desc;
-                            wrap.appendChild(p);
-                        }
-                        sideItems.appendChild(wrap);
-                    });
-                }
-                // Show/hide items container based on data
-                sideItems.style.display = hasItems ? 'block' : 'none';
-            }
-
-            // If items exist and container is present, hide blurb/points; else use fallback blurb + points
-            const useFallback = !hasItems || !sideItems;
-            if (sideBlurb) {
-                sideBlurb.textContent = useFallback && typeof data.description === 'string' ? data.description : '';
-                sideBlurb.style.display = useFallback && data.description ? 'block' : 'none';
-            }
-            if (sidePoints) {
-                sidePoints.innerHTML = '';
-                if (useFallback && Array.isArray(data.points)) {
-                    data.points.forEach(pt => {
-                        const li = document.createElement('li');
-                        li.textContent = pt;
-                        sidePoints.appendChild(li);
-                    });
-                }
-                sidePoints.style.display = useFallback && Array.isArray(data.points) && data.points.length ? 'block' : 'none';
-            }
-            createThumbnails();
-            showImage(currentImageIndex);
-            // Size on open
-            sizeModalImageArea();
-            // Open modal with accessibility attributes
-            infraModal.style.display = 'block';
-            infraModal.setAttribute('aria-hidden', 'false');
-            document.body.classList.add('modal-open'); // hide navbar + lock scroll
-
-            // Focus management: trap focus inside modal
-            const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
-            const focusable = Array.from(infraModal.querySelectorAll(focusableSelectors)).filter(el => el.offsetParent !== null || el === document.activeElement);
-            const firstFocusable = focusable[0] || infraModalClose || infraModal;
-            const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
-            // Move focus to modal content or close button
-            setTimeout(() => {
-                (firstFocusable instanceof HTMLElement ? firstFocusable : infraModal).focus();
-            }, 0);
-
-            function trapFocus(e) {
-                if (e.key !== 'Tab') return;
-                if (focusable.length === 0) {
-                    e.preventDefault();
-                    (infraModal instanceof HTMLElement ? infraModal : document.body).focus();
-                    return;
-                }
-                if (e.shiftKey) {
-                    if (document.activeElement === firstFocusable) {
-                        e.preventDefault();
-                        lastFocusable.focus();
-                    }
-                } else {
-                    if (document.activeElement === lastFocusable) {
-                        e.preventDefault();
-                        firstFocusable.focus();
-                    }
-                }
-            }
-            infraModal.addEventListener('keydown', trapFocus);
-            infraModal._trapFocus = trapFocus; // store for cleanup
-        }
+        // Modal initialization moved to DOMContentLoaded block below
 
         // Bind clicks to the whole card plus its main regions
         document.querySelectorAll('.infra-card').forEach(card => {
@@ -1171,116 +1431,17 @@ window.addEventListener('load', () => {
             if (!card.hasAttribute('tabindex')) {
                 card.setAttribute('tabindex', '0');
             }
-            card.addEventListener('click', (ev) => {
-                // If user really dragged, ignore this click (track handler will suppress anyway)
-                openInfraCard(card);
-            });
             // Keyboard activate
             card.addEventListener('keydown', (ev) => {
                 const key = ev.key;
                 if (key === 'Enter' || key === ' ') {
                     ev.preventDefault();
-                    openInfraCard(card);
+                    window.openInfraCard(card);
                 }
             });
-            // Image area
-            const imgWrap = card.querySelector('.infra-card-img-wrapper');
-            if (imgWrap) {
-                imgWrap.style.cursor = 'pointer';
-                imgWrap.addEventListener('click', (ev) => {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    openInfraCard(card);
-                });
-            }
-            // Info/text area
-            const info = card.querySelector('.infra-card-info');
-            if (info) {
-                info.style.cursor = 'pointer';
-                info.addEventListener('click', (ev) => {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    openInfraCard(card);
-                });
-            }
         });
 
-        // Modal controls
-        function closeModalAndRestoreFocus() {
-            infraModal.style.display = 'none';
-            infraModal.setAttribute('aria-hidden', 'true');
-            document.body.classList.remove('modal-open');
-            if (infraModal._trapFocus) infraModal.removeEventListener('keydown', infraModal._trapFocus);
-            // restore focus to trigger
-            if (lastFocusedTrigger && lastFocusedTrigger.focus) {
-                setTimeout(() => lastFocusedTrigger.focus(), 0);
-            }
-        }
-
-        infraModalClose && infraModalClose.addEventListener('click', closeModalAndRestoreFocus);
-        // Support keyboard activation for the close element
-        infraModalClose && infraModalClose.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                closeModalAndRestoreFocus();
-            }
-        });
-
-        prevBtn && prevBtn.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
-            showImage(currentImageIndex);
-        });
-
-        nextBtn && nextBtn.addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-            showImage(currentImageIndex);
-        });
-
-        // Recompute size on window resize
-        window.addEventListener('resize', () => {
-            sizeModalImageArea();
-        });
-
-        // Thumbnail scroll controls
-        thumbScrollLeft && thumbScrollLeft.addEventListener('click', () => {
-            thumbnailsContainer.scrollBy({
-                left: -200,
-                behavior: 'smooth'
-            });
-        });
-
-        thumbScrollRight && thumbScrollRight.addEventListener('click', () => {
-            thumbnailsContainer.scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        });
-
-        // Close modal on outside click
-        infraModal && infraModal.addEventListener('click', (e) => {
-            if (e.target === infraModal) {
-                closeModalAndRestoreFocus();
-            }
-        });
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (infraModal && infraModal.style.display === 'block') {
-                if (e.key === 'ArrowLeft') {
-                    prevBtn && prevBtn.click();
-                } else if (e.key === 'ArrowRight') {
-                    nextBtn && nextBtn.click();
-                } else if (e.key === 'Escape') {
-                    closeModalAndRestoreFocus();
-                }
-            }
-        });
-
-        // Finish hero image animation after setup
-        setTimeout(() => {
-            heroImage.style.opacity = '1';
-            heroImage.style.transform = 'translateX(0)';
-        }, 600);
+        // Modal controls moved to DOMContentLoaded block
     
 });
 
