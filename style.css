@@ -663,7 +663,7 @@ a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
     padding: 2.5rem 1.5rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
@@ -682,7 +682,7 @@ a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
     align-items: center;
     gap: 6px;
     opacity: 1;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     white-space: nowrap;
     box-shadow: 0 4px 12px rgba(28, 55, 97, 0.15);
 }
@@ -1100,7 +1100,7 @@ body.modal-open { overflow: hidden; }
     border: 2px solid transparent;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
@@ -2308,22 +2308,22 @@ p {
 .insight-icon {
     width: 90px;
     height: 90px;
-    background: linear-gradient(135deg, var(--brand-blue-dark), var(--brand-blue-mid));
-    border-radius: 50%;
+    background: transparent;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 2rem;
     font-size: 2.2rem;
     color: white;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .insight-card:hover .insight-icon {
     transform: scale(1.1);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    box-shadow: none;
 }
 
 .insight-card h3 {
@@ -2431,7 +2431,7 @@ p {
     color: white;
     opacity: 0.9;
     box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
@@ -3187,29 +3187,30 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 .mv-card:hover {
-    transform: translateY(-15px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(30, 64, 175, 0.18), 0 1.5px 6px rgba(30, 64, 175, 0.10);
+    border-color: rgba(102, 126, 234, 0.2);
 }
 
 .mv-icon {
     width: 90px;
     height: 90px;
-    background: linear-gradient(135deg, var(--brand-blue-dark), var(--brand-blue-mid));
-    border-radius: 50%;
+    background: transparent;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 2rem;
     font-size: 2.2rem;
     color: white;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    transition: all 0.3s ease;
+    box-shadow: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
 .mv-card:hover .mv-icon {
     transform: scale(1.1);
-    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+    box-shadow: none;
 }
 
 .mv-card h3 {
@@ -3382,61 +3383,70 @@ img.portrait-top {
 }
 
 .why-item {
+    background: white;
+    padding: 3rem 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
     overflow: hidden;
-    background: white;
-    padding: 2rem;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.why-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--brand-blue-dark), var(--brand-blue-mid));
+    transform: scaleX(0);
     transition: transform 0.3s ease;
 }
 
+.why-item:hover::before {
+    transform: scaleX(1);
+}
+
 .why-item:hover {
-    transform: translateY(-5px);
-    }
-
-    .why-item::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-    background: linear-gradient(135deg, var(--brand-blue-dark), var(--brand-blue-mid));
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-        z-index: 2;
-    }
-
-    .why-item:hover::before {
-        transform: scaleX(1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
 .why-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--brand-blue-dark), var(--brand-blue-mid));
-    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    background: transparent;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 1.5rem;
+    margin: 0 auto 2rem;
+    font-size: 2.2rem;
     color: white;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.why-item:hover .why-icon {
+    transform: scale(1.1);
+    box-shadow: none;
 }
 
 .why-item h4 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: #1e293b;
+    letter-spacing: -0.01em;
 }
 
 .why-item p {
     color: #64748b;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    line-height: 1.7;
+    font-size: 1.05rem;
 }
 
 /* Products Overview */
@@ -3832,7 +3842,7 @@ img.portrait-top {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .spec-item:hover {
@@ -3860,7 +3870,7 @@ img.portrait-top {
     padding-left: 2rem;
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .machinery-features li:hover {
@@ -4141,7 +4151,7 @@ img.portrait-top {
     font-size: 2.2rem;
     color: white;
     box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
 
@@ -4365,7 +4375,7 @@ img.portrait-top {
     background: white;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -4405,7 +4415,7 @@ img.portrait-top {
     color: white;
     flex-shrink: 0;
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .contact-item:hover .contact-icon {
@@ -4450,7 +4460,7 @@ img.portrait-top {
     justify-content: center;
     color: #64748b;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .social-icons a:hover {
@@ -4499,7 +4509,7 @@ img.portrait-top {
     border: 2px solid #e2e8f0;
     border-radius: 12px;
     font-size: 1.05rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     background: #f8fafc;
     font-weight: 500;
 }
@@ -4604,7 +4614,7 @@ img.portrait-top {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .map-directions .btn i {
@@ -4696,7 +4706,7 @@ img.portrait-top {
     padding: 0 1.5rem;
     max-height: 0;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .faq-item.active .faq-answer {
@@ -5166,15 +5176,34 @@ h2::after,
 .key-insights .insight-icon,
 .mission-vision .mv-icon,
 .why-choose .why-icon {
-    background: #0A1F44 !important;
+    background: transparent !important;
     color: #ffffff !important; /* icon glyphs stay white */
-    box-shadow: 0 8px 25px rgba(4, 35, 63, 0.28) !important;
+    box-shadow: none !important;
 }
 
 /* Preserve hover emphasis with unified tone */
 .insight-card:hover .insight-icon,
 .mv-card:hover .mv-icon {
-    box-shadow: 0 12px 35px rgba(4, 35, 63, 0.38) !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================
+   Image-based Icon Styling
+   ========================================== */
+.insight-icon img,
+.mv-icon img,
+.why-icon img {
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insight-card:hover .insight-icon img,
+.mv-card:hover .mv-icon img,
+.why-item:hover .why-icon img {
+    transform: scale(1.05);
+    background: transparent;
 }
 
 /* ==========================================
