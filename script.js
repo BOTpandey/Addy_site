@@ -189,6 +189,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.querySelector('.infra-prev');
     const nextBtn = document.querySelector('.infra-next');
 
+    function updateArrowStates() {
+        if (!prevBtn || !nextBtn || !infraCards.length) return;
+        
+        // Store boundary states for manual click prevention
+        prevBtn.dataset.atBoundary = focusIndex === 0;
+        nextBtn.dataset.atBoundary = focusIndex === infraCards.length - 1;
+        
+        // Keep arrows visually enabled but add visual indication when at boundaries
+        prevBtn.style.opacity = focusIndex === 0 ? '0.7' : '1';
+        nextBtn.style.opacity = focusIndex === infraCards.length - 1 ? '0.7' : '1';
+    }
+
     function pauseAndResumeLater() {
         isPaused = true;
         if (autoFocusInterval) { clearInterval(autoFocusInterval); autoFocusInterval = null; }
@@ -202,21 +214,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (prevBtn) {
         prevBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (prevBtn.dataset.atBoundary === 'true' || !infraCards.length) return;
             pauseAndResumeLater();
-            if (!infraCards.length) return;
-            const idx = (focusIndex - 1 + infraCards.length) % infraCards.length;
+            const idx = focusIndex - 1;
             setFocus(idx, { scroll: true });
+            updateArrowStates();
         });
     }
     if (nextBtn) {
         nextBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            if (nextBtn.dataset.atBoundary === 'true' || !infraCards.length) return;
             pauseAndResumeLater();
-            if (!infraCards.length) return;
-            const idx = (focusIndex + 1) % infraCards.length;
+            const idx = focusIndex + 1;
             setFocus(idx, { scroll: true });
+            updateArrowStates();
         });
     }
+
+    // Update arrow states initially
+    updateArrowStates();
+    
+    // Update arrow states periodically to keep them in sync (but don't interfere with auto-focus)
+    setInterval(updateArrowStates, 1000);
 });
 
 // Manufacturing Capabilities gallery data
@@ -1699,6 +1719,138 @@ window.addEventListener('scroll', () => {
         const rate = scrolled * -0.5;
         hero.style.transform = `translateY(${rate}px)`;
     }
+});
+
+// --- Product Carousel Auto-Focus (similar to infra carousel) ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all product carousel tracks
+    const productTracks = document.querySelectorAll('.product-carousel-track');
+    
+    productTracks.forEach(track => {
+        const productCards = track.querySelectorAll('.product-card');
+        
+        // Center align tracks with 5 or fewer products
+        if (productCards.length <= 5) {
+            track.classList.add('center-aligned');
+            return; // Skip carousel functionality for 5 or fewer items
+        }
+        
+        let focusIndex = 0;
+        let autoFocusInterval = null;
+        let isPaused = false;
+        let resumeTimeout = null;
+        
+        function setProductFocus(idx, opts = {}) {
+            const doScroll = opts.scroll !== false;
+            productCards.forEach((card, i) => {
+                // Remove focus class from all cards to keep them all visible
+                card.classList.remove('product-card-focus');
+                
+                if (i === idx) {
+                    // Only add subtle focus indicator, no blur effects
+                    card.classList.add('product-card-focus');
+                    if (doScroll) {
+                        const productSection = track.closest('.product-category');
+                        if (productSection) {
+                            const rect = productSection.getBoundingClientRect();
+                            const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                            const dragging = track.classList.contains('dragging');
+                            if (inView && track && !dragging) {
+                                const trackRect = track.getBoundingClientRect();
+                                const cardRect = card.getBoundingClientRect();
+                                const delta = (cardRect.left + cardRect.right) / 2 - (trackRect.left + trackRect.right) / 2;
+                                let target = track.scrollLeft + delta;
+                                const styles = getComputedStyle(track);
+                                const padLeft = parseFloat(styles.paddingLeft) || 0;
+                                const padRight = parseFloat(styles.paddingRight) || 0;
+                                const safe = 24;
+                                const maxScroll = track.scrollWidth - track.clientWidth;
+                                const minTarget = 0 - padLeft - safe;
+                                const maxTarget = maxScroll + padRight + safe;
+                                target = Math.max(minTarget, Math.min(maxTarget, target));
+                                const by = target - track.scrollLeft;
+                                track.scrollBy({ left: by, behavior: 'smooth' });
+                            }
+                        }
+                    }
+                }
+            });
+            focusIndex = idx;
+        }
+        
+        function startProductAutoFocus() {
+            if (autoFocusInterval) clearInterval(autoFocusInterval);
+            autoFocusInterval = setInterval(() => {
+                const productSection = track.closest('.product-category');
+                const rect = productSection ? productSection.getBoundingClientRect() : null;
+                const inView = rect && rect.top < window.innerHeight && rect.bottom > 0;
+                if (!isPaused && inView && productCards.length) {
+                    const nextIdx = (focusIndex + 1) % productCards.length;
+                    setProductFocus(nextIdx, { scroll: true });
+                }
+            }, 1800); // Slightly slower than infra carousel
+        }
+        
+        // Initial focus without scrolling
+        setProductFocus(focusIndex, { scroll: false });
+        
+        // Start/pause when the section enters/leaves viewport
+        let hasStartedOnView = false;
+        const productSectionEl = track.closest('.product-category');
+        if (productSectionEl) {
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        isPaused = false;
+                        if (!autoFocusInterval) startProductAutoFocus();
+                        if (!hasStartedOnView && productCards.length) {
+                            hasStartedOnView = true;
+                            setTimeout(() => setProductFocus((focusIndex + 1) % productCards.length, { scroll: true }), 150);
+                        }
+                    } else {
+                        isPaused = true;
+                    }
+                });
+            }, { threshold: 0.15 });
+            io.observe(productSectionEl);
+        }
+        
+        // Pause autoplay when hovering over the track
+        if (track) {
+            track.addEventListener('mouseenter', () => {
+                isPaused = true;
+                if (autoFocusInterval) {
+                    clearInterval(autoFocusInterval);
+                    autoFocusInterval = null;
+                }
+            });
+            track.addEventListener('mouseleave', () => {
+                isPaused = false;
+                startProductAutoFocus();
+            });
+            track.addEventListener('focusin', () => { isPaused = true; });
+            track.addEventListener('focusout', (e) => {
+                const next = e.relatedTarget;
+                if (!next || !track.contains(next)) {
+                    isPaused = false;
+                    startProductAutoFocus();
+                }
+            });
+        }
+        
+        // Card-level hover: focus the hovered card without scrolling
+        productCards.forEach((card, idx) => {
+            card.addEventListener('mouseenter', function() {
+                isPaused = true;
+                setProductFocus(idx, { scroll: false });
+            });
+            card.addEventListener('mouseleave', function(e) {
+                if (track && e.relatedTarget && track.contains(e.relatedTarget)) {
+                    return;
+                }
+            });
+        });
+    });
 });
 
 // Add form validation enhancements

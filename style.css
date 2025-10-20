@@ -448,23 +448,27 @@
 }
     /* Infra Card Info Styling */
     .infra-card-info {
-        padding: 18px 18px 0 18px;
+        padding: 18px 18px 18px 18px;
         text-align: center;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
     }
     .infra-card-info h4 {
-        margin: 0 0 8px 0;
+        margin: 0 0 12px 0;
         font-size: 1.18rem;
         font-weight: 700;
         color: #1C3761;
         letter-spacing: 0.5px;
     }
     .infra-card-info p {
-        margin: 0;
+        margin: 0 0 12px 0;
         font-size: 1rem;
         color: #3b3b3b;
         line-height: 1.6;
-        margin-bottom: 0;
+        flex-grow: 1;
         text-align: center;
     }
 @media (max-width: 900px) {
@@ -3551,6 +3555,91 @@ img.portrait-top {
 
 /* Defensive: make sure all images within product categories never crop */
 .product-category .product-item img { object-fit: contain !important; }
+
+/* --- Product Carousel Styles (for categories with >6 items) --- */
+.product-carousel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 32px 0;
+    position: relative;
+    overflow: visible;
+}
+
+.product-carousel-track {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+}
+
+.product-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* Product carousel cards */
+.product-carousel-track .product-card {
+    opacity: 1;
+    border-radius: 18px;
+    transition: box-shadow 0.22s cubic-bezier(.2,.9,.2,1), transform 0.22s ease;
+    cursor: pointer;
+    transform-origin: center top;
+    will-change: transform, box-shadow;
+    filter: none;
+    flex-shrink: 0;
+    width: 240px;
+    scroll-snap-align: start;
+}
+
+.product-carousel-track .product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(12,37,79,0.15);
+    z-index: 12;
+}
+
+.product-carousel-track .product-card-focus {
+    transform: scale(1.05);
+    z-index: 12;
+    box-shadow: 0 20px 50px rgba(12,37,79,0.35), 0 8px 20px rgba(12,37,79,0.15);
+}
+
+/* Center align carousel tracks with 5 or fewer products */
+.product-carousel-track:has(.product-card:nth-child(5):last-child),
+.product-carousel-track:has(.product-card:nth-child(4):last-child),
+.product-carousel-track:has(.product-card:nth-child(3):last-child),
+.product-carousel-track:has(.product-card:nth-child(2):last-child),
+.product-carousel-track:has(.product-card:nth-child(1):last-child) {
+    justify-content: center;
+}
+
+/* Fallback for browsers that don't support :has() */
+.product-carousel-track.center-aligned {
+    justify-content: center;
+}
+
+/* Responsive adjustments for product carousel */
+@media (max-width: 900px) {
+    .product-carousel-track .product-card {
+        width: 200px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-carousel-track .product-card {
+        width: 180px;
+    }
+    .product-carousel-track {
+        gap: 15px;
+        padding: 15px;
+    }
+}
 
 .overview-content {
     text-align: center;
