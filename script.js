@@ -2092,4 +2092,5 @@ document.addEventListener('DOMContentLoaded', function() {
             statusEl.textContent = 'If your email app did not open, please email us directly at sales@enray.co.in.';
         }, 1500);
     });
+
 });
