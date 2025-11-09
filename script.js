@@ -1332,20 +1332,41 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 // ...existing code...
 
-// Mobile Navigation Toggle
+// Mobile Navigation Toggle (robust and accessible)
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
+if (hamburger && navMenu) {
+    // ARIA attributes for accessibility
+    hamburger.setAttribute('role', 'button');
+    hamburger.setAttribute('aria-label', 'Toggle navigation');
+    hamburger.setAttribute('aria-expanded', 'false');
+    // Associate the menu (if id missing, give it one)
+    if (!navMenu.id) navMenu.id = 'site-nav';
+    hamburger.setAttribute('aria-controls', navMenu.id);
+    // Ensure initial hidden state on mobile
+    if (!navMenu.classList.contains('active')) {
+        navMenu.setAttribute('aria-hidden', 'true');
+    }
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+    hamburger.addEventListener('click', (e) => {
+        const isActive = hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        // expose state to assistive tech
+        hamburger.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        navMenu.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        // prevent background scroll when menu open on mobile
+        document.body.classList.toggle('menu-open', isActive);
+    });
 
-// Close mobile menu when clicking on a link
-document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
-}));
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+        navMenu.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('menu-open');
+    }));
+}
 
 // Smooth scrolling for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

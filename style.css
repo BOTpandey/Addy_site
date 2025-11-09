@@ -2142,6 +2142,9 @@ p {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    /* push hamburger to the far right inside .nav-container on wide screens */
+    margin-left: auto;
+    align-items: center;
 }
 
 .bar {
@@ -3270,18 +3273,35 @@ h1, h2, h3, h4, h5, h6, .section-title {
         position: fixed;
         left: -100%;
         top: 70px;
+        z-index: 1101; /* ensure menu overlays page content and navbar */
         flex-direction: column;
         background-color: white;
         width: 100%;
+        height: calc(100vh - 70px);
+        overflow: auto;
         text-align: center;
-        transition: 0.3s;
+        transition: left 0.28s ease, transform 0.28s ease;
         box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
         padding: 2rem 0;
+        -webkit-overflow-scrolling: touch;
     }
 
     .nav-menu.active {
         left: 0;
     }
+
+    /* Prevent background scrolling when the mobile nav is open */
+    body.menu-open {
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    /* Transform hamburger into an 'X' when active for clearer affordance */
+    .hamburger .bar { background: var(--brand-blue-dark); }
+    .hamburger.active .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .hamburger.active .bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.active .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+    .hamburger .bar { transition: transform 240ms ease, opacity 180ms ease, background 180ms; }
 
     .nav-menu li {
         margin: 1rem 0;
@@ -3292,6 +3312,22 @@ h1, h2, h3, h4, h5, h6, .section-title {
         text-align: left;
         justify-items: start;
         gap: 2rem;
+    }
+
+    /* On small screens make navbar content spread out and logo smaller */
+    .nav-container {
+        justify-content: space-between;
+        padding: 0 16px;
+        height: 64px;
+    }
+
+    .nav-logo img { width: 140px; height: auto; }
+
+    /* Make hero height fluid on small screens to avoid clipping and large svh usage */
+    .hero {
+        height: auto !important;
+        padding-top: 64px; /* leave room for fixed navbar */
+        padding-bottom: 28px;
     }
 
     .hero-title {
@@ -3327,6 +3363,14 @@ h1, h2, h3, h4, h5, h6, .section-title {
 
     .hero-buttons {
         justify-content: flex-start;
+    }
+
+    /* Make nav links touch-friendly on mobile */
+    .nav-menu li a {
+        display: block;
+        padding: 12px 8px;
+        font-size: 1.05rem;
+        color: var(--brand-blue-dark);
     }
 
     .cta-content h2 {
