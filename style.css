@@ -22,35 +22,33 @@
 }
 .infra-card-more {
     position: absolute;
-    left: 50%;
     bottom: 14px;
+    left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.45); /* transparent black */
-    color: #fff;
-    padding: 7px 14px;
-    border-radius: 999px;
-    font-size: 0.92rem;
+    background: rgba(28,55,97,0.92);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 14px;
     font-weight: 600;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+    font-size: 0.9rem;
+    line-height: 1;
+    display: block; /* present in layout but hidden by opacity for transitions */
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.18s ease, transform 0.18s ease;
-    letter-spacing: 0.2px;
-    z-index: 2;
-    white-space: nowrap; /* single-line */
-    text-overflow: ellipsis;
-    overflow: hidden;
+    transition: opacity 180ms ease, transform 180ms ease;
+    z-index: 8;
+    white-space: nowrap;
 }
-.infra-card-focus .infra-card-more,
-.infra-card-img-wrapper:hover .infra-card-more {
+
+/* Show the "Click for More" indicator only for the focused/active infra card.
+   The JS carousel already toggles the `infra-card-focus` class on the active card,
+   and cards are made keyboard-focusable; this rule ensures only that card shows the tag. */
+.infra-card.infra-card-focus .infra-card-more,
+.infra-card:focus .infra-card-more,
+.infra-card:focus-within .infra-card-more {
     opacity: 1;
-    pointer-events: auto;
     transform: translateX(-50%) translateY(-2px);
-}
-.infra-carousel-track {
-    /* Hide scrollbar for Webkit browsers */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */
+    pointer-events: auto;
 }
 .infra-carousel-track::-webkit-scrollbar {
     display: none;
@@ -184,6 +182,45 @@
 /* Keep arrows outside the card scaling area */
 .infra-carousel-wrapper .infra-carousel-arrow {
     z-index: 20;
+}
+
+/* Product carousel arrows: reuse infra arrow styling but scoped to product carousels */
+.product-carousel-wrapper {
+    position: relative; /* container for arrows */
+}
+.product-carousel-wrapper .product-prev,
+.product-carousel-wrapper .product-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    left: 8px; /* default for prev */
+}
+.product-carousel-wrapper .product-next { right: 8px; left: auto; }
+.product-carousel-wrapper .product-carousel-arrow {
+    background: linear-gradient(180deg,#274a7d,#1c3761);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 8px 22px rgba(12,37,79,0.18);
+    transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.product-carousel-wrapper .product-carousel-arrow:hover {
+    background: #ffffff;
+    color: #1C3761;
+    box-shadow: 0 8px 22px rgba(12,37,79,0.20), inset 0 0 0 1px rgba(28,55,97,0.25);
+}
+
+@media (max-width: 900px) {
+    .product-carousel-wrapper .product-prev,
+    .product-carousel-wrapper .product-next { display: none; } /* hide arrows on smaller screens to avoid overlap */
 }
 
 @media (max-width: 900px) {
@@ -618,6 +655,38 @@ a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
     z-index: 3; /* above hero's z-index:2 */
 }
 
+/* Reduce vertical gap between section title and subtitle specifically for the
+   infrastructure section without affecting other sections */
+.infrastructure .section-title {
+    margin-bottom: 1rem !important;
+}
+.infrastructure .section-subtitle {
+    margin-top: 0 !important;
+    margin-bottom: 1.5rem !important; /* increased spacing per request */
+    white-space: normal !important; /* allow wrapping on smaller screens */
+}
+
+/* Apply the same tighter spacing to the Clients & Partners section so the
+   subtitle sits closer to the heading without changing global defaults. */
+.clients-partners .section-title {
+    margin-bottom: 1rem !important;
+}
+.clients-partners .section-subtitle {
+    margin-top: 0 !important;
+    margin-bottom: 1.5rem !important;
+    white-space: normal !important;
+}
+
+/* Apply the same tighter spacing to the Key Insights / "Why Choose" section */
+.key-insights .section-title {
+    margin-bottom: 1rem !important;
+}
+.key-insights .section-subtitle {
+    margin-top: 0 !important;
+    margin-bottom: 1.5rem !important;
+    white-space: normal !important;
+}
+
 /* CTA under infrastructure cards */
 .infra-cta {
     display: flex;
@@ -625,6 +694,111 @@ a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
     align-items: center;
     gap: 14px;
     margin-top: 28px;
+}
+
+/* CTA item: text-only buttons with small icon below */
+.cta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+/* CTA button: text + icon together as one clickable unit */
+.cta-button {
+    display: inline-flex;
+    flex-direction: row; /* place icon beside the text */
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.95);
+    color: #ffffff !important;
+    background: transparent !important;
+    text-decoration: none;
+    min-width: 140px;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cta-button:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(12,37,79,0.14);
+}
+
+.cta-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.14);
+}
+
+.cta-button .cta-text {
+    font-weight: 700;
+    color: #ffffff !important;
+}
+
+.cta-button .cta-icon i {
+    color: #ffffff;
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+/* Ensure spacing and touch target remain accessible on small screens */
+@media (max-width: 640px) {
+    .cta-item { gap: 8px; }
+    /* stack icon above text on narrow screens for readability */
+    .cta-button { padding: 12px 18px; min-width: 140px; flex-direction: column; gap: 8px; }
+}
+
+/* Ensure both primary and secondary CTA anchors look identical (white outline + same hover)
+   This overrides any `.btn-primary` / `.btn-secondary` differences for these special CTAs. */
+.cta-button.btn-primary,
+.cta-button.btn-secondary {
+    border: 2px solid rgba(255,255,255,0.95);
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.cta-button.btn-primary:hover,
+.cta-button.btn-secondary:hover {
+    /* match the same hover effect for both buttons */
+    background: rgba(255,255,255,0.04) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 26px rgba(12,37,79,0.14) !important;
+}
+
+/* Make the primary CTA outline change to brand blue on hover (match .btn-secondary behavior) */
+.cta-button.btn-primary:hover {
+    border-color: var(--brand-blue-dark) !important;
+}
+
+.cta-button.btn-primary:focus-visible,
+.cta-button.btn-secondary:focus-visible {
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.18) !important;
+}
+
+/* Also ensure the primary CTA shows brand blue outline when focused */
+.cta-button.btn-primary:focus-visible {
+    border-color: var(--brand-blue-dark) !important;
+}
+
+/* Apply the same shimmer/highlight animation used by .btn-primary to the
+   Get Quote CTA (which is .btn-secondary) so both CTAs have the same hover
+   animation. We scope this to .cta-button.btn-secondary so it doesn't affect
+   global .btn-secondary usage elsewhere. */
+.cta-button.btn-secondary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7) 40%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.7) 60%, transparent 100%);
+    transition: left 0.35s ease;
+    pointer-events: none;
+}
+
+.cta-button.btn-secondary:hover::before {
+    left: 100% !important;
 }
 
 /* Ensure anchor scroll doesn't get hidden behind fixed navbar */
@@ -1332,6 +1506,28 @@ body.modal-open { overflow: hidden; }
     gap: 8px;
 }
 
+/* Small override: make the "Get Directions" button (inside .map-actions) transparent
+   and give it a border that matches the text color. This is scoped to .map-actions so
+   other .btn/.btn-primary usages across the site are unaffected. */
+.map-actions .btn {
+    background: transparent !important;
+    color: inherit !important; /* use surrounding text color */
+    border: 2px solid currentColor !important; /* border same color as text */
+    padding: 10px 16px !important;
+    border-radius: 10px !important;
+}
+
+.map-actions .btn:hover {
+    background: rgba(0,0,0,0.04) !important; /* subtle hover tint */
+    transform: translateY(-2px) !important;
+    box-shadow: none !important;
+}
+
+.map-actions .btn:focus-visible {
+    outline: 3px solid rgba(0,0,0,0.08) !important;
+    outline-offset: 3px !important;
+}
+
 @media (max-width: 900px) {
     .map-grid {
         grid-template-columns: 1fr;
@@ -1685,8 +1881,14 @@ body.modal-open { overflow: hidden; }
 .footer-logo-section p {
     margin-top: 0;
 }
-.footer-contact-info h4 {
+.footer-contact-info h4,
+.footer-contact-info h3,
+.redesigned-footer .footer-contact-info h4,
+.redesigned-footer .footer-contact-info h3,
+.footer-col .footer-contact-info h4,
+.footer-col .footer-contact-info h3 {
     margin-bottom: 8px;
+    color: #ffffff !important; /* make contact info title in footer white */
 }
 .footer-contact-info p {
     display: flex;
@@ -1694,6 +1896,17 @@ body.modal-open { overflow: hidden; }
     justify-content: center;
     gap: 10px;
     margin: 4px 0;
+}
+
+/* Footer: when hovering links inside the footer, use green #00C853 */
+footer a:hover,
+.redesigned-footer a:hover,
+.footer a:hover,
+.footer-content a:hover,
+.footer-section a:hover,
+.footer-col a:hover,
+.footer-contact-info a:hover {
+    color: #00C853 !important;
 }
 .footer-contact-info i {
     font-size: 1.1em;
@@ -1823,6 +2036,19 @@ h6 { font-size: clamp(0.92rem, 0.2vw + 0.75rem, 1.0rem); line-height: 1.4; color
 p {
     text-align: justify;
     text-justify: inter-word;
+}
+
+/* Fix: prevent overly large word gaps in justified text for the homepage features block.
+   The site uses global justified paragraphs, but `.features` should use ragged-right
+   or improved wrapping. Prefer left-aligned text and enable hyphenation to avoid
+   large gaps on narrow columns. */
+.features p,
+.features .features-text p {
+    text-align: left !important;
+    text-justify: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 /* Opt-out class in case a component needs ragged right */
@@ -1961,9 +2187,14 @@ p {
     content: '';
     position: absolute;
     inset: 0; /* Ensure the decorative overlay covers the same area */
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    opacity: 0.3;
+    /* lighter gradient overlay + subtle grain so text remains readable but image stays visible */
+    background:
+        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0.12) 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.06"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    background-repeat: no-repeat, repeat;
+    background-size: cover, auto;
     pointer-events: none;
+    z-index: 1; /* sits above the image but below the hero content */
 }
 
 /* Remove any gap before the next section */
@@ -1988,11 +2219,54 @@ p {
     grid-template-columns: 1fr; /* single column now that icons are removed */
     gap: 1.5rem;
     align-items: center;
-    justify-items: start; /* left-align children horizontally */
-    text-align: left; /* left-align text in hero */
+    justify-items: center; /* center children horizontally */
+    text-align: center; /* center text in hero */
+    position: relative;
+    z-index: 2; /* ensure content sits above the overlay and image */
+    padding: 0 var(--page-gutter); /* horizontal gutters */
+}
+
+/* Subtle translucent panel behind hero text to ensure legibility on all backgrounds.
+   Uses backdrop-filter where supported; falls back to a semi-transparent dark background. */
+.hero-content {
     position: relative;
     z-index: 2;
-    padding: 0 var(--page-gutter); /* horizontal gutters */
+    max-width: 1100px; /* restore original container width so text wrapping doesn't change */
+    padding: 8px 12px; /* much smaller padding to preserve original layout */
+    border-radius: 8px;
+    /* very subtle translucent background only to help small contrast issues */
+    background: rgba(0,0,0,0.06);
+    backdrop-filter: blur(4px) saturate(110%);
+    -webkit-backdrop-filter: blur(4px) saturate(110%);
+    box-shadow: none; /* remove heavy shadow that altered visual weight */
+}
+
+/* Improve contrast for hero text */
+.hero-title, .hero-subtitle, .hero-description {
+    color: #ffffff; /* ensure pure white text */
+    /* softer shadow so text pops but doesn't look heavy */
+    text-shadow: 0 4px 12px rgba(0,0,0,0.45), 0 1px 2px rgba(0,0,0,0.3);
+}
+.hero-title { -webkit-text-stroke: 0.2px rgba(0,0,0,0.25); }
+.hero-subtitle { font-weight: 500; opacity: 0.99; }
+.hero-description { opacity: 0.97; }
+
+/* Slightly tighten spacing when the translucent panel is visible */
+.hero-container .hero-content .hero-title { margin-bottom: 0.9rem; }
+
+/* Inline hero image to show full photo without cropping. Use object-fit: contain so the entire image is visible.
+   This will letterbox the image (showing background gradient behind it) when aspect ratios differ. */
+.hero-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* show the whole image */
+    object-position: center center;
+    display: block;
+    pointer-events: none; /* let clicks pass through to content */
+    z-index: 0; /* below overlay (::before z-index:1) and content (z-index:2) */
+    background-color: transparent;
 }
 .hero-title,
 .hero-subtitle,
@@ -2051,15 +2325,17 @@ p {
 }
 
 .hero-description {
-    font-size: clamp(0.95rem, 0.5vw + 0.8rem, 1.15rem);
-    margin-bottom: 1.6rem;
-    opacity: 0.8;
+    /* Match the hero subtitle styling so the two lines appear identical */
+    font-size: clamp(1.05rem, 0.7vw + 0.9rem, 1.4rem);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    opacity: 0.9;
     font-style: italic;
     max-width: 62ch;            /* match subtitle width for symmetry */
-    margin-left: 0;              /* left-align block within container */
+    margin-left: 0;             /* left-align block within container */
     margin-right: 0;
-    line-height: 1.6;            /* consistent rhythm */
-    text-wrap: balance;          /* more even line breaks where supported */
+    line-height: 1.6;          /* consistent rhythm */
+    text-wrap: balance;        /* more even line breaks where supported */
 }
 
 .hero-buttons {
@@ -2067,6 +2343,143 @@ p {
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: flex-start; /* left-align the button row */
+}
+
+/* Floating "Explore us" cue placed at bottom-center of hero */
+.hero-explore-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0; /* anchor flush to the bottom edge of the hero section */
+    pointer-events: none; /* container shouldn't block other interactions */
+    z-index: 12;
+    display: flex;
+    justify-content: center;
+    /* ensure it visually touches the hero edge */
+    padding-bottom: 0;
+}
+.hero-explore {
+    pointer-events: auto; /* enable link clicks */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    padding: 6px 10px;
+    transform: translateZ(0);
+     /* start hidden and fade in on load, then run a continuous fade in/out loop */
+     opacity: 0;
+     /*
+         - hero-explore-fade: entrance animation (one-shot)
+         - hero-explore-pulse: continuous fade in/out after entrance
+     */
+    animation: hero-explore-fade 700ms ease-out 500ms forwards,
+               hero-explore-pulse 1800ms ease-in-out 400ms infinite;
+    animation-fill-mode: both;
+    will-change: opacity, transform;
+    transition: color 200ms ease, transform 120ms ease;
+}
+.hero-explore-text {
+    font-size: 1.25rem; /* slightly bigger */
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+    opacity: 0.95;
+}
+.hero-explore-arrow {
+    font-size: 20px;
+    line-height: 1;
+    opacity: 0.95;
+    display: inline-block;
+    /* visual container for the SVG; animation applied to the SVG for reliable motion */
+}
+
+/* Ensure the inline SVG itself bounces visibly */
+.hero-explore-arrow svg {
+    display: inline-block;
+    width: 28px; /* a touch larger */
+    height: 20px;
+    transform-origin: center center;
+    /* no continuous bounce to keep the fade clean and less noisy */
+    animation: none;
+}
+
+/* fade-in for the whole cue */
+@keyframes hero-explore-fade {
+    0% { opacity: 0; transform: translateY(8px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-explore, .hero-explore-text, .hero-explore-arrow { animation: none !important; opacity: 0.95 !important; transform: none !important; }
+}
+
+@keyframes hero-explore-bounce {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+    100% { transform: translateY(0); }
+}
+
+/* small fade-in for the visible text/arrow after the wrapper appears */
+.hero-explore-text,
+.hero-explore-arrow {
+    opacity: 0;
+    transform: translateY(4px);
+    /* children only run the entrance fade; the wrapper controls the repeating fade
+       to keep the overall animation smooth and synchronized */
+    animation: hero-explore-text-fade 560ms ease-out 760ms forwards;
+    transition: color 200ms ease, opacity 220ms ease, transform 220ms ease;
+}
+
+@keyframes hero-explore-text-fade {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 0.95; transform: translateY(0); }
+}
+
+@keyframes hero-explore-text-pulse {
+    /* Smooth, gradual micro-pulse for text and arrow: soft ramps and tiny motion */
+    0%   { opacity: 0; transform: translateY(1px); }
+    12%  { opacity: 0.5; transform: translateY(0.5px); }
+    30%  { opacity: 1; transform: translateY(0); }
+    70%  { opacity: 1; transform: translateY(0); }
+    88%  { opacity: 0.5; transform: translateY(0.5px); }
+    100% { opacity: 0; transform: translateY(1px); }
+}
+
+/* Subtle opacity-only pulse for the whole cue to avoid transform conflicts with hover */
+@keyframes hero-explore-pulse {
+    /* Symmetric, smooth fade in/out for the whole cue. Ramps avoid abrupt jumps. */
+    0%   { opacity: 0; }
+    20%  { opacity: 0.2; }
+    50%  { opacity: 1; }
+    80%  { opacity: 0.2; }
+    100% { opacity: 0; }
+}
+
+/* Slightly raise on hover/focus for affordance, but keep text & icon white */
+.hero-explore:focus,
+.hero-explore:hover {
+    transform: translateY(-2px);
+    color: #ffffff !important; /* keep white on hover */
+}
+
+/* Ensure children respect the white color on hover (SVG uses currentColor for stroke) */
+.hero-explore:focus .hero-explore-text,
+.hero-explore:hover .hero-explore-text,
+.hero-explore:focus .hero-explore-arrow svg,
+.hero-explore:hover .hero-explore-arrow svg {
+    color: #ffffff !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+@media (max-width: 600px) {
+    .hero-explore-text { font-size: 0.95rem; }
+    .hero-explore-arrow { font-size: 18px; }
+    .hero-explore-wrapper { bottom: 0; }
 }
 
 /* Align hero subtitle, description, and buttons just after the opening quote */
@@ -2077,7 +2490,9 @@ p {
 .hero .hero-subtitle,
 .hero .hero-description,
 .hero .hero-buttons {
-    margin-left: var(--hero-align-offset);
+    margin-left: 0; /* reset left offset so these blocks are centered */
+    margin-right: 0;
+    text-align: center;
 }
 
 @media (max-width: 520px) {
@@ -2106,17 +2521,18 @@ p {
 }
 
 .btn-primary {
-    background: var(--brand-gold);
-    color: var(--brand-black);
+    /* Use brand blue for primary CTAs instead of gold to match the site theme */
+    background: var(--brand-blue-mid);
+    color: #ffffff; /* white text on blue for good contrast */
     border: none;
     position: relative;
     overflow: hidden;
 }
 
 .btn-primary:hover {
-    background: var(--brand-gold);
+    background: var(--brand-blue-dark);
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(28, 55, 97, 0.22);
+    box-shadow: 0 15px 35px rgba(12, 37, 79, 0.22);
 }
 
 .btn-primary::before {
@@ -2137,17 +2553,18 @@ p {
 
 .btn-secondary {
     background: transparent;
-    color: var(--brand-gold);
-    border: 2px solid var(--brand-gold);
+    /* Make outlined/secondary buttons use the brand blue to match primary CTAs */
+    color: var(--brand-blue-dark);
+    border: 2px solid var(--brand-blue-dark);
     backdrop-filter: blur(10px);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--brand-gold);
-    color: var(--brand-gold);
+    background: rgba(28,55,97,0.06);
+    border-color: var(--brand-blue-dark);
+    color: var(--brand-blue-dark);
     transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(255, 255, 255, 0.10);
+    box-shadow: 0 8px 18px rgba(12,37,79,0.07);
 }
 
 .btn-large {
@@ -2351,6 +2768,8 @@ p {
     color: #64748b;
     line-height: 1.7;
     font-size: 1.05rem;
+    text-align: center; /* center-align card paragraphs */
+    text-align-last: center;
 }
 
 /* Features Section */
@@ -2729,10 +3148,16 @@ p {
 .footer-section h3,
 .footer-section h4 {
     margin-bottom: 0.8rem;
-    color: var(--brand-gold);
+    color: #ffffff !important; /* ensure footer headings are white */
     font-weight: 700;
     font-size: 1.3rem;
     letter-spacing: -0.01em;
+}
+
+/* Force the specific CONTACT INFO h4 in the footer to white (highest specificity) */
+footer.footer .footer-section.with-divider > h4,
+footer .footer-section.with-divider > h4 {
+    color: #ffffff !important;
 }
 
 .footer-section p {
@@ -2755,12 +3180,20 @@ p {
 }
 
 .footer-section ul li a:hover {
-    color: #ffd700;
+    color: #00C853 !important; /* green hover for footer links */
+}
+
+/* Also force other footer-specific hover states to green */
+.footer .social-links a:hover,
+.footer .footer-section a:hover,
+.footer .with-divider a:hover,
+.footer-bottom a:hover {
+    color: #00C853 !important;
 }
 
 /* Footer contact info hyperlinks hover color */
 .footer-section a:hover {
-    color: #ffd801 !important;
+    color: #00C853 !important;
 }
 
 .social-links {
@@ -3074,6 +3507,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
 .page-header {
     background: linear-gradient(135deg, var(--brand-grey-light) 0%, var(--brand-grey-lighter) 100%);
     color: var(--brand-black);
+    /* restored original vertical spacing: keep header as it was */
     padding: 100px 0 60px;
     text-align: center;
     position: relative;
@@ -3103,8 +3537,9 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 /* Company Story */
 .company-story {
-    /* Reduce bottom padding to tighten space before Mission & Vision */
-    padding: 100px 0 40px;
+    /* Reduce top padding to bring the company story closer to the header while
+       preserving the header layout. */
+    padding: 24px 0 40px;
     background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
     position: relative;
 }
@@ -3143,6 +3578,125 @@ h1, h2, h3, h4, h5, h6, .section-title {
     margin-bottom: 2rem;
     line-height: 1.8;
     font-weight: 400;
+}
+
+/* Company Story: unified typography and accent color */
+.company-story .story-text {
+    /* layout-related inline styles are kept in the HTML; typography is controlled here */
+    font-family: inherit;
+    color: #333333; /* unified body color for story text */
+}
+.company-story .story-text p {
+    font-size: 1.08rem;
+    line-height: 1.7;
+    margin-bottom: 16px;
+    color: #333333;
+    font-weight: 400;
+}
+.company-story .story-text p strong {
+    color: inherit;
+    font-weight: 600;
+}
+/* Accent class used for the two blue phrases only */
+.accent-blue {
+    color: #2563eb; /* ENRAY blue */
+    font-weight: 500;
+}
+
+/* Simple slideshow styles used on About page (factory images) */
+.slideshow {
+    position: relative;
+    width: 100%; /* fill available container space */
+    max-width: none; /* allow parent layout to control width */
+    margin: 0 auto;
+    border-radius: 28px;
+    overflow: hidden;
+    background: #fff; /* subtle backdrop while images load */
+}
+.slideshow .slideshow-track {
+    display: flex;
+    position: relative;
+    width: 100%;
+    /* Use aspect-ratio so height scales with width automatically; keep a sensible max height */
+    aspect-ratio: 16 / 9;
+    max-height: clamp(260px, 40vw, 720px);
+    height: auto;
+    /* sliding handled by translateX on the track */
+    transition: transform 420ms cubic-bezier(.22,.9,.26,1);
+    will-change: transform;
+}
+.slideshow .slideshow-track img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex: 0 0 100%;
+    /* gentle scale transition for the active slide */
+    transition: transform 520ms cubic-bezier(.22,.9,.26,1), filter 520ms ease;
+    transform: scale(1);
+}
+.slideshow .slideshow-track img.active {
+    transform: scale(1.03);
+    filter: brightness(0.98);
+}
+.slideshow button.slideshow-prev,
+.slideshow button.slideshow-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    /* Darker control for higher contrast */
+    background: rgba(0,0,0,0.78);
+    color: #fff;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 4;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.35);
+}
+.slideshow button.slideshow-prev { left: 12px; }
+.slideshow button.slideshow-next { right: 12px; }
+.slideshow button.slideshow-prev:focus,
+.slideshow button.slideshow-next:focus {
+    outline: 2px solid rgba(37,99,235,0.95);
+    outline-offset: 2px;
+}
+
+.slideshow button.slideshow-prev:hover,
+.slideshow button.slideshow-next:hover {
+    background: rgba(0,0,0,0.92);
+}
+.slideshow-dots {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 12px;
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+.slideshow-dots button {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.65);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.slideshow-dots button.active {
+    background: #fff;
+    width: 10px;
+    height: 10px;
+}
+
+@media (max-width: 640px) {
+    .slideshow button.slideshow-prev,
+    .slideshow button.slideshow-next { width: 34px; height: 34px; }
 }
 
 /* Mission & Vision */
@@ -3238,6 +3792,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
     color: #64748b;
     line-height: 1.7;
     font-size: 1.05rem;
+}
+
+/* Ensure mission card text is explicitly centered */
+.mv-card h3,
+.mv-card p {
+    text-align: center;
 }
 
 /* Team Section */
@@ -3383,6 +3943,39 @@ img.portrait-top {
     opacity: 0.9;
 }
 
+/* Stats section becomes the positioning context so the footnote can sit at the section bottom */
+.stats { position: relative; }
+
+/* Stats footnote: single-line left-aligned at the bottom of the stats section */
+.stats-footnote {
+    font-size: 0.82rem; /* noticeably smaller */
+    color: #94a3b8; /* muted slate */
+    line-height: 1.4;
+    margin: 0; /* reset margin when absolutely positioned */
+    position: absolute;
+    /* align with the container's inner content by using the page gutter variable */
+    /* keep within page gutters and center the text horizontally */
+    left: var(--page-gutter);
+    right: var(--page-gutter);
+    bottom: 0; /* touch the bottom of the stats section */
+    text-align: center;
+    white-space: nowrap; /* keep it on a single line */
+    overflow: hidden;
+    text-overflow: ellipsis; /* show ellipsis if it overflows */
+    display: block;
+}
+
+@media (max-width: 640px) {
+    .stats-footnote {
+        font-size: 0.75rem;
+        bottom: 0;
+        left: 0; /* ensure left stays flush on small screens */
+        /* Keep single-line behavior but allow ellipsis on very small screens */
+        white-space: nowrap;
+        text-align: left;
+    }
+}
+
 /* Why Choose Us */
 .why-choose {
     padding: 80px 0;
@@ -3400,12 +3993,19 @@ img.portrait-top {
     padding: 3rem 2.5rem;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* lighter default shadow; heavy hover shadow is expensive */
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+    /* Only animate transform and box-shadow for smoother performance */
+    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 260ms ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
     position: relative;
     overflow: hidden;
     cursor: pointer;
+    /* Hint to the browser which properties will change and promote to its own layer */
+    will-change: transform, box-shadow;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .why-item::before {
@@ -3420,12 +4020,14 @@ img.portrait-top {
     transition: transform 0.3s ease;
 }
 
-.why-item:hover::before {
-    transform: scaleX(1);
-}
+.why-item:hover::before { transform: scaleX(1); }
 
 .why-item:hover {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    /* Keep cards from lifting on hover but apply the same subtle shadow used by other cards */
+    transform: none !important; /* prevent translateY/scale on hover */
+    /* Slightly darker hover shadow for better contrast without adding motion */
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+    border-color: rgba(102, 126, 234, 0.06);
 }
 
 .why-icon {
@@ -3439,13 +4041,14 @@ img.portrait-top {
     margin: 0 auto 2rem;
     font-size: 2.2rem;
     color: white;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Only transform the icon (cheap) and hint the change */
+    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
     position: relative;
 }
 
 .why-item:hover .why-icon {
-    transform: scale(1.1);
-    box-shadow: none;
+    transform: scale(1.06);
 }
 
 .why-item h4 {
@@ -3460,6 +4063,12 @@ img.portrait-top {
     color: #64748b;
     line-height: 1.7;
     font-size: 1.05rem;
+}
+
+/* Ensure Why Choose Us card text is explicitly centered */
+.why-item h4,
+.why-item p {
+    text-align: center;
 }
 
 /* Products Overview */
@@ -3531,7 +4140,7 @@ img.portrait-top {
 }
 .product-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 .product-item img {
     width: 100%;
@@ -3625,7 +4234,7 @@ img.portrait-top {
 
 .product-carousel-track .product-card:hover {
     transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(12,37,79,0.15);
+    box-shadow: 0 10px 30px rgba(12,37,79,0.20);
     z-index: 12;
 }
 
@@ -3707,7 +4316,7 @@ img.portrait-top {
 
 .product-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 22px 46px rgba(0, 0, 0, 0.18);
 }
 
 .product-image {
@@ -3877,7 +4486,7 @@ img.portrait-top {
 
 .machinery-card:hover {
     transform: translateY(-15px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 28px 56px rgba(0, 0, 0, 0.18);
     border-color: rgba(102, 126, 234, 0.2);
 }
 
@@ -4083,7 +4692,7 @@ img.portrait-top {
 
 .industry-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14);
     }
 
     .industry-item::before {
@@ -4253,7 +4862,7 @@ img.portrait-top {
 
 .impact-card:hover {
     transform: translateY(-15px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 28px 56px rgba(0, 0, 0, 0.18);
 }
 
 .impact-icon {
@@ -4498,7 +5107,7 @@ img.portrait-top {
 
 .contact-item:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.14);
     border-color: rgba(102, 126, 234, 0.2);
     }
 
@@ -5208,37 +5817,56 @@ h2::after,
 #green-products      { --cat-color: #0f766e;                --cat-tint: rgba(15,118,110,0.08); }
 
 /* Category section container: subtle band and left accent bar */
-.product-category { padding: 56px 0 28px; position: relative; }
+.product-category { padding: 32px 0 16px; position: relative; }
 .product-category > .container {
     background: linear-gradient(180deg, var(--cat-tint, transparent), transparent 60%);
     border-left: 6px solid var(--cat-color, var(--brand-blue-mid));
-    border-radius: 18px;
-    padding: 28px max(22px, var(--page-gutter));
-    box-shadow: 0 8px 28px rgba(0,0,0,0.06);
+    border-radius: 12px;
+    padding: 18px max(16px, var(--page-gutter));
+    box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
-.product-category + .product-category { margin-top: 12px; }
+.product-category + .product-category { margin-top: 8px; }
 
-/* Category chip above the title */
-.product-category .section-title { position: relative; margin-top: 8px; }
-.product-category .section-title::before {
-    content: '';
-    display: inline-block;
-    margin: 0 auto 10px auto;
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    color: var(--cat-color, var(--brand-blue-mid));
-    background: var(--cat-tint, rgba(0,0,0,0.04));
-    border: 1px solid currentColor;
-    border-radius: 999px;
-}
-/* Chip labels per category */
+/* Category heading adjustments: left-aligned title, chip hidden for compact layout */
+.product-category .section-title { position: relative; margin-top: 8px; text-align: left; display: inline-block; margin-right: 12px; vertical-align: middle; }
+.product-category .section-title::before { display: none !important; content: none !important; }
+/* Remove site-wide underline specifically for product category headings */
+.product-category .section-title::after { display: none !important; }
+/* Chip labels per category (hidden in compact layout) */
 #automobile-products .section-title::before { content: 'Automotive'; }
 #tube-products .section-title::before       { content: 'Tube & Hose'; }
 #bus-products .section-title::before        { content: 'Bus HVAC'; }
 #cmb-products .section-title::before        { content: 'CMB'; }
 #green-products .section-title::before      { content: 'Green Energy'; }
+
+/* Place subtitle inline to the right of the title on wider screens */
+.product-category .section-subtitle {
+    display: inline-block;
+    margin: 0;
+    margin-left: 8px;
+    vertical-align: middle;
+    text-align: left; /* override global centering */
+    font-size: 1rem;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+/* Product header wrapper ensures title + subtitle stay on one line */
+.product-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap; /* keep title and subtitle on same line */
+    overflow: hidden; /* allow content to truncate if needed */
+}
+.product-header .section-title { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.product-header .section-subtitle { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.95; font-size: 0.98rem; }
+
+/* If subtitle is very long on tiny screens, allow it to shrink and show ellipsis */
+@media (max-width: 420px) {
+    .product-header .section-subtitle { max-width: 40%; }
+    .product-header .section-title { max-width: 58%; }
+}
 
 /* Tinted accents on items and scrollbar to tie the section together */
 .product-category .product-item { border-top: 3px solid var(--cat-color, var(--brand-blue-mid)); }
@@ -5247,7 +5875,7 @@ h2::after,
 
 @supports not (color: color-mix(in srgb, white, black)) {
   /* Fallback hover shadow when color-mix is unsupported */
-  .product-category .product-item:hover { box-shadow: 0 12px 24px rgba(28,55,97,0.12); }
+    .product-category .product-item:hover { box-shadow: 0 12px 24px rgba(28,55,97,0.16); }
 }
 
 /* Use heading color for all product category accents; remove category chips */

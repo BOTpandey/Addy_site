@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { threshold: 0.15 });
         io.observe(infraSectionEl);
     }
-    // Pause autoplay when hovering anywhere over the track; resume when leaving the track
+        // Pause autoplay when hovering anywhere over the track; resume when leaving the track
     if (infraTrack) {
         infraTrack.addEventListener('mouseenter', () => {
             isPaused = true;
@@ -158,14 +158,29 @@ document.addEventListener('DOMContentLoaded', function() {
             isPaused = false;
             startAutoFocus();
         });
-        // Accessibility: pause while focus is within the track, resume when focus leaves track
-        infraTrack.addEventListener('focusin', () => { isPaused = true; });
+        // Accessibility: when an element inside the track receives focus, update visual focus
+        // and pause autoplay. When focus leaves the entire track, clear focused state so the
+        // "Click for More" tag disappears immediately.
+        infraTrack.addEventListener('focusin', (e) => {
+            isPaused = true;
+            // If focus moved to a card (keyboard navigation), reflect that in the carousel focus
+            const card = (e.target && e.target.closest) ? e.target.closest('.infra-card') : null;
+            if (card) {
+                const idx = Array.prototype.indexOf.call(infraCards, card);
+                if (idx >= 0) {
+                    // Do not scroll when user is tabbing; just update visuals
+                    setFocus(idx, { scroll: false });
+                }
+            }
+        });
         infraTrack.addEventListener('focusout', (e) => {
             // Only resume if focus has moved completely outside the track
             const next = e.relatedTarget;
             if (!next || !infraTrack.contains(next)) {
                 isPaused = false;
                 startAutoFocus();
+                // Remove any visual focus so the "Click for More" tag is hidden
+                infraCards.forEach(c => c.classList.remove('infra-card-focus'));
             }
         });
     }
@@ -590,6 +605,15 @@ document.addEventListener('DOMContentLoaded', function() {
             (firstFocusable instanceof HTMLElement ? firstFocusable : window.infraModal).focus();
         }, 0);
 
+        // Ensure the "Click for More" tag is not left visible on the underlying card
+        // once the modal opens. Remove the visual focus class from all infra cards so
+        // the indicator only appears while a card is actually focused in the carousel.
+        try {
+            document.querySelectorAll('.infra-card').forEach(c => c.classList.remove('infra-card-focus'));
+        } catch (e) {
+            // silent
+        }
+
         function trapFocus(e) {
             if (e.key !== 'Tab') return;
             if (focusable.length === 0) {
@@ -620,8 +644,29 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.classList.remove('modal-open');
         if (window.infraModal._trapFocus) window.infraModal.removeEventListener('keydown', window.infraModal._trapFocus);
         // restore focus to trigger
+        // Ensure no infra card retains the visual focus class
+        try { document.querySelectorAll('.infra-card').forEach(c => c.classList.remove('infra-card-focus')); } catch (e) {}
+
         if (window.lastFocusedTrigger && window.lastFocusedTrigger.focus) {
-            setTimeout(() => window.lastFocusedTrigger.focus(), 0);
+            const trigger = window.lastFocusedTrigger;
+            // If the trigger was an infra card, avoid moving focus back to it (that would re-show the tag).
+            // Instead, move focus to the infrastructure section container for a sensible landing spot.
+            if (trigger.classList && trigger.classList.contains('infra-card')) {
+                const infraSection = document.querySelector('.infrastructure');
+                if (infraSection) {
+                    // Make it temporarily focusable, focus it, then remove tabindex
+                    infraSection.setAttribute('tabindex', '-1');
+                    setTimeout(() => {
+                        infraSection.focus();
+                        infraSection.removeAttribute('tabindex');
+                    }, 0);
+                } else {
+                    // Fallback: blur the trigger
+                    setTimeout(() => { try { trigger.blur(); } catch (e) {} }, 0);
+                }
+            } else {
+                setTimeout(() => trigger.focus(), 0);
+            }
         }
     }
 
@@ -1850,6 +1895,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+
+        // Add left/right nav buttons when there are 6 or more product cards
+        // Buttons are injected into the `.product-carousel-wrapper` and use smooth scroll
+        try {
+            const wrapper = track.closest('.product-carousel-wrapper');
+            if (wrapper && productCards.length >= 6) {
+                // Create buttons
+                const prev = document.createElement('button');
+                prev.type = 'button';
+                prev.className = 'product-prev product-carousel-arrow';
+                prev.setAttribute('aria-label', 'Scroll left');
+                prev.innerHTML = '&#x2039;'; // single left angle
+
+                const next = document.createElement('button');
+                next.type = 'button';
+                next.className = 'product-next product-carousel-arrow';
+                next.setAttribute('aria-label', 'Scroll right');
+                next.innerHTML = '&#x203A;'; // single right angle
+
+                // Insert buttons into wrapper
+                wrapper.appendChild(prev);
+                wrapper.appendChild(next);
+
+                // Determine sensible scroll amount: visible width * 0.72 or card width + gap
+                function getScrollAmount() {
+                    const card = productCards[0];
+                    if (!card) return Math.floor(track.clientWidth * 0.7);
+                    const styles = getComputedStyle(track);
+                    const gap = parseFloat(styles.gap || styles.columnGap || '12') || 12;
+                    const cardW = Math.ceil(card.getBoundingClientRect().width + gap);
+                    // prefer card width if several visible, else use 70% of viewport
+                    return Math.max(cardW, Math.floor(track.clientWidth * 0.6));
+                }
+
+                // Click handlers
+                prev.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // pause auto focus briefly
+                    isPaused = true;
+                    if (autoFocusInterval) { clearInterval(autoFocusInterval); autoFocusInterval = null; }
+                    const amt = getScrollAmount();
+                    track.scrollBy({ left: -amt, behavior: 'smooth' });
+                    setTimeout(() => { isPaused = false; startProductAutoFocus(); }, 1200);
+                });
+
+                next.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    isPaused = true;
+                    if (autoFocusInterval) { clearInterval(autoFocusInterval); autoFocusInterval = null; }
+                    const amt = getScrollAmount();
+                    track.scrollBy({ left: amt, behavior: 'smooth' });
+                    setTimeout(() => { isPaused = false; startProductAutoFocus(); }, 1200);
+                });
+
+                // Keyboard support: allow arrow keys when wrapper is focused
+                // Make wrapper focusable so keyboard users can use ArrowLeft/ArrowRight
+                wrapper.setAttribute('tabindex', '0');
+                wrapper.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'ArrowLeft') { prev.click(); }
+                    if (ev.key === 'ArrowRight') { next.click(); }
+                });
+
+                // Update buttons visibility on resize (hide if track not overflowing)
+                function updateProductButtons() {
+                    const overflowing = track.scrollWidth > track.clientWidth + 2;
+                    prev.style.display = overflowing ? 'inline-flex' : 'none';
+                    next.style.display = overflowing ? 'inline-flex' : 'none';
+                }
+                updateProductButtons();
+                window.addEventListener('resize', updateProductButtons);
+            }
+        } catch (err) {
+            // safe fail
+            console.error('Failed to add product carousel arrows', err);
+        }
     });
 });
 
@@ -2094,3 +2214,84 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+    // --- Merged slideshow.js (moved from separate file) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        const slideshow = document.querySelector('.slideshow');
+        if (!slideshow) return;
+
+        const track = slideshow.querySelector('.slideshow-track');
+        const slides = Array.from(track.querySelectorAll('img'));
+        const prevBtn = slideshow.querySelector('.slideshow-prev');
+        const nextBtn = slideshow.querySelector('.slideshow-next');
+        const dotsWrap = slideshow.querySelector('.slideshow-dots');
+
+        let idx = slides.findIndex(s => s.classList.contains('is-active'));
+        if (idx < 0) idx = 0;
+        const total = slides.length;
+        let timer = null;
+        const interval = 3000; // 3.0s - slowed down per feedback
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // create dots
+        function createDots() {
+            dotsWrap.innerHTML = '';
+            slides.forEach((s, i) => {
+                const btn = document.createElement('button');
+                btn.className = i === idx ? 'active' : '';
+                btn.setAttribute('aria-label', `Show image ${i + 1} of ${total}`);
+                btn.addEventListener('click', () => { goTo(i); restart(); });
+                dotsWrap.appendChild(btn);
+            });
+        }
+
+        function updateActive() {
+            // slide the track
+            track.style.transform = `translateX(-${idx * 100}%)`;
+            const dots = Array.from(dotsWrap.children || []);
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            // mark the active slide for subtle scale/brightness effect
+            slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+        }
+
+        function goTo(i) {
+            idx = (i + total) % total;
+            updateActive();
+        }
+
+        function next() { goTo(idx + 1); }
+        function prev() { goTo(idx - 1); }
+
+        function start() {
+            if (prefersReduced) return;
+            stop();
+            timer = setInterval(next, interval);
+        }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+        function restart() { stop(); start(); }
+
+        prevBtn && prevBtn.addEventListener('click', (e) => { e.preventDefault(); prev(); restart(); });
+        nextBtn && nextBtn.addEventListener('click', (e) => { e.preventDefault(); next(); restart(); });
+
+        slideshow.addEventListener('mouseenter', stop);
+        slideshow.addEventListener('mouseleave', start);
+        slideshow.addEventListener('focusin', stop);
+        slideshow.addEventListener('focusout', start);
+
+        // keyboard support
+        slideshow.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { prev(); restart(); }
+            if (e.key === 'ArrowRight') { next(); restart(); }
+        });
+
+        // Initialize
+        createDots();
+        // Ensure track starts at the correct position even before images load
+        track.style.transform = `translateX(-${idx * 100}%)`;
+        updateActive();
+        start();
+        // Make the first automatic advance feel responsive: nudge shortly after init
+        if (slides.length > 1 && !prefersReduced) {
+            setTimeout(() => { next(); }, 500);
+        }
+    });

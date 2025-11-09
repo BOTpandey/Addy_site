@@ -35,10 +35,7 @@
                     <a href="contact.html" class="nav-link">Contact Us</a>
                 </li>
             </ul>
-            <div class="nav-contact">
-                <span class="contact-number"><i class="fa fa-phone"></i> <a href="tel:+919712959453">+91-9712959453</a>
-                    | <a href="tel:+919319001453">+91-9319001453</a></span>
-            </div>
+            <!-- phone numbers removed from navbar on homepage -->
             <div class="hamburger">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -49,6 +46,8 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <!-- Inline hero image so we can use object-fit/object-position and ensure the full image is visible -->
+        <img src="assets/factory.jpg" alt="Factory background" class="hero-img" aria-hidden="true" />
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
@@ -64,11 +63,19 @@
                 <p class="hero-description">
                     We believe in Continuous Improvement and follow that with 100% sincerity
                 </p>
-                <div class="hero-buttons">
-                    <a href="#infrastructure" class="btn btn-primary">Explore Now!</a>
-                </div>
-
             </div>
+        </div>
+        <!-- Floating explore cue placed as a direct child of .hero so it anchors to the section bottom -->
+        <div class="hero-explore-wrapper" aria-hidden="false">
+            <a href="#infrastructure" class="hero-explore" aria-label="Explore us">
+                <span class="hero-explore-text">Explore Us</span>
+                <span class="hero-explore-arrow" aria-hidden="true">
+                    <!-- Filled triangle arrow (uses currentColor for fill so hover color applies) -->
+                    <svg width="22" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <path d="M12 16 L6 8 H18 Z" fill="currentColor" />
+                    </svg>
+                </span>
+            </a>
         </div>
     </section>
 
@@ -299,10 +306,18 @@
                 </button>
             </div>
             <div class="infra-cta">
-                <a href="products.html" class="btn btn-primary btn-large" aria-label="View our products">Our
-                    Products</a>
-                <a href="#quote" id="getQuoteBtn" class="btn btn-secondary btn-large" aria-label="Request a quote">Get a
-                    Quote</a>
+                <div class="cta-item">
+                    <a href="products.html" class="btn btn-primary btn-large cta-button" aria-label="View our products">
+                        <span class="cta-text">Our Products</span>
+                        <span class="cta-icon" aria-hidden="true"><i class="fas fa-cog"></i></span>
+                    </a>
+                </div>
+                <div class="cta-item">
+                    <a href="#quote" id="getQuoteBtn" class="btn btn-secondary btn-large cta-button" aria-label="Request a quote">
+                        <span class="cta-text">Get a Quote</span>
+                        <span class="cta-icon" aria-hidden="true"><i class="fas fa-file-alt"></i></span>
+                    </a>
+                </div>
             </div>
         </div>
 
