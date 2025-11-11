@@ -6389,7 +6389,7 @@ body.products-page .infrastructure,
 body.products-page .industries,
 body.products-page .map-section,
 body.products-page .product-category,
-body.products-page .page-header,
+/* removed .page-header here so product pages use the shared header styles like other pages */
 body.products-page .clients-partners,
 body.products-page .clients,
 body.products-page .features {
