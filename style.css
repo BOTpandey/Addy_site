@@ -442,12 +442,15 @@
 .map-card .section-title,
 .map-card .section-title .find,
 .map-card .section-title .us {
-    color: #111 !important;
+    /* Use the unified heading style so 'Find Us' matches other page headings */
+    color: var(--heading-unified) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: var(--heading-weight) !important;
     background: none !important;
     background-image: none !important;
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
-    -webkit-text-fill-color: initial !important;
+    -webkit-text-fill-color: currentColor !important;
 }
 /* Map-card section title color split */
 .section-title .find {
@@ -458,8 +461,15 @@
 }
 /* Map-card: make address and hours use navbar link color */
 .map-card .map-address,
-.map-card .hours p {
+.map-card .hours p,
+.map-card .map-address strong {
+    /* Ensure the address and hours paragraph use the brand blue */
     color: var(--brand-blue-dark) !important;
+}
+
+/* Business Hours heading should use #2D3748 */
+.map-card .hours h4 {
+    color: #2D3748 !important;
 }
 /* Industries We Serve Section */
 /* --------------------------------------------------------- */
@@ -552,37 +562,42 @@ a:hover { color: var(--link-hover); }
 
 /* Page headers on About, Products, Contact */
 .page-header h1 {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 
 /* Generic section titles (e.g., Why Choose, Clients, Product sections) */
 .section-title {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 
 /* Features block headline on homepage */
 .features h2 {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 
 /* Mission, Vision, Values headings on About page */
 .mission-vision h3 {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 
 /* Contact page: override map-card heading and inline styles */
 .map-card .section-title,
 .map-card .section-title .find,
 .map-card .section-title .us {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 .contact-section .hours h4 {
+    color: var(--heading-unified) !important;
+}
+
+/* More specific rule to override generic contact-section heading color for the map-card hours */
+.contact-section .map-card .hours h4 {
     color: #2D3748 !important;
 }
 
 /* Homepage Infrastructure section title (override older white rule) */
 body .infrastructure .section-title {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
 }
 a:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 3px; }
 
@@ -1364,6 +1379,52 @@ body.modal-open { overflow: hidden; }
 
 .modal-info-points li { margin: 6px 0; }
 
+/* -- Product enlarge modal tweaks -- */
+.product-modal .modal-content {
+    max-width: 980px;
+    width: 96%;
+}
+.product-modal .modal-body { grid-template-columns: 1fr; }
+#productModalImg {
+    max-width: 100%;
+    max-height: calc(90vh - 140px);
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+.product-modal .modal-caption {
+    position: static;
+    background: transparent;
+    color: #111;
+    text-align: center;
+    padding: 12px 18px 18px 18px;
+    font-size: 1rem;
+}
+.product-modal .modal-close { color: #fff; background: transparent; border: none; font-size: 32px; }
+.product-modal .modal-main { background: transparent; }
+
+/* Animations for product modal open/close */
+.product-modal {
+    opacity: 0;
+    transition: opacity 220ms ease;
+}
+.product-modal .modal-content {
+    transform: translateY(8px) scale(0.98);
+    transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease;
+    opacity: 0;
+}
+.product-modal.show {
+    opacity: 1;
+}
+.product-modal.show .modal-content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* small image hint link */
+/* removed .modal-open-original styles — feature disabled per user request */
+
+
 .industry-item i {
     font-size: 2.8rem;
     color: #1C3761;
@@ -1686,7 +1747,7 @@ body.modal-open { overflow: hidden; }
     margin-top: 0;
 }
 .hero-underline {
-    border-bottom: 8px solid #ffd700;
+    border-bottom: 8px solid var(--heading-unified);
     padding-bottom: 0.15em;
     display: inline-block;
 }
@@ -1719,7 +1780,7 @@ body.modal-open { overflow: hidden; }
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
     -webkit-text-fill-color: currentColor !important;
-    color: var(--heading-unified) !important;
+    color: var(--heading-unified);
 }
 @keyframes heroFadeInUp {
     0% { opacity: 0; transform: translateY(40px) scale(0.98); }
@@ -1728,7 +1789,16 @@ body.modal-open { overflow: hidden; }
 }
 /* Subtle depth for hero title; detailed outline handled on child spans */
 .hero-title {
-    text-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    /* slightly stronger shadow behind hero letters for improved legibility */
+    text-shadow: 0 3px 10px rgba(0,0,0,0.50);
+}
+.hero-title .hero-main {
+    /* ensure the animated headline span also receives the shadow */
+    text-shadow: 0 3px 10px rgba(0,0,0,0.50);
+}
+.hero-subtitle {
+    /* subtle shadow for the subtitle under the headline */
+    text-shadow: 0 2px 6px rgba(0,0,0,0.45);
 }
 /* Block rotator for hero headline (wipe + horizontal motion) */
 .hero-rotator {
@@ -2003,6 +2073,18 @@ h4 { font-size: clamp(1.1rem, 0.6vw + 0.8rem, 1.3rem); line-height: 1.3;  color:
 h5 { font-size: clamp(1.0rem, 0.35vw + 0.78rem, 1.15rem); line-height: 1.35; color: var(--heading-unified); }
 h6 { font-size: clamp(0.92rem, 0.2vw + 0.75rem, 1.0rem); line-height: 1.4; color: var(--heading-unified); }
 
+/* Tweak section-title to improve hierarchy with subtitles:
+   - slightly reduce the default heavy weight used site-wide
+   - tighten spacing so subtitles sit closer and read as secondary
+*/
+.section-title {
+    font-weight: 600; /* softer than 700 but still prominent */
+    letter-spacing: -0.01em;
+    margin-bottom: 0.35rem;
+    line-height: 1.12;
+    color: var(--heading-unified);
+}
+
 /* Typography utilities (opt-in classes) */
 .text-left { text-align: left !important; }
 .text-center { text-align: center !important; }
@@ -2106,9 +2188,68 @@ p {
     align-items: center;
 }
 
+/* Desktop layout: use CSS Grid to create three columns (logo / centered nav / right controls)
+   This is more robust than absolute positioning and keeps the nav links centered relative
+   to the page while the logo stays left and the hamburger (or other controls) stays right. */
+@media (min-width: 900px) {
+    .nav-container {
+        /* use symmetric horizontal padding so the center column is truly centered
+           (previously left/right paddings differed which nudged the center column) */
+        padding-inline: var(--page-gutter);
+        display: grid;
+          /* Fix left column to the logo width so the center column truly aligns to viewport center.
+              Reduce left padding so the logo sits nearer to the viewport edge while keeping
+              the right padding (page gutter) for visual balance. */
+          grid-template-columns: 180px 1fr auto; /* logo (fixed) / center / controls */
+          /* nudge logo toward left edge without affecting absolute-centered nav-menu */
+          padding-left: clamp(8px, 2.5vw, 24px);
+          padding-right: var(--page-gutter);
+        align-items: center;
+        column-gap: 1rem;
+    }
+
+    .nav-logo { grid-column: 1; }
+
+    .nav-menu {
+        /* absolutely center the nav links relative to the viewport so they
+           appear exactly centered and symmetric regardless of container padding */
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        /* prevent the centered menu from overlapping the logo or controls; leaves 180px
+           free on each side as a safe margin (logo width + potential control width) */
+        max-width: calc(100% - 360px);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        justify-content: center;
+        z-index: 50;
+        flex: 0 1 auto;
+        margin: 0;
+        white-space: nowrap;
+        overflow: visible;
+    }
+
+    /* Right-side controls (cog + hamburger) stay in the 3rd grid column */
+    .nav-controls {
+        grid-column: 3;
+        justify-self: end;
+        align-items: center;
+        display: flex;
+        gap: 12px;
+    }
+
+    .hamburger {
+        grid-column: 3;
+        margin-left: 0; /* reset earlier auto margin */
+        justify-self: end;
+    }
+}
+
 .nav-link {
     text-decoration: none; /* override global link underline inside nav */
-    color: var(--brand-blue-dark);
+    color: var(--brand-blue-mid);
     font-weight: 500;
     transition: color 0.3s ease;
     position: relative;
@@ -2147,6 +2288,147 @@ p {
     align-items: center;
 }
 
+/* Container for right-side navbar controls (cog, hamburger, etc.) */
+.nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-cog {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--brand-blue-mid);
+    border-radius: 8px;
+    transition: transform 220ms ease, color 220ms ease, background 220ms ease;
+}
+
+.nav-cog:hover {
+    transform: translateY(-2px) scale(1.03);
+    color: var(--brand-maroon-dark);
+    background: rgba(28,55,97,0.04);
+}
+
+.nav-cog svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    transform-origin: 50% 50%;
+    /* gentle continuous rotation */
+    animation: cogRotate 6s linear infinite;
+}
+
+@keyframes cogRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav-cog svg { animation: none !important; }
+}
+
+/* Custom tooltip (visible on hover & keyboard focus) using the data-tooltip attribute.
+   - Visual tooltip only (screen readers use aria-label already)
+   - Hides native title by removing title attributes in HTML
+*/
+.nav-cog[data-tooltip] {
+    position: relative;
+}
+
+
+.nav-cog[data-tooltip]::after,
+.nav-cog[data-tooltip]::before {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms ease, transform 200ms cubic-bezier(.2,.7,.2,1);
+}
+
+/* Tooltip box: placed to the left of the cog and vertically centered */
+.nav-cog[data-tooltip]::after {
+    content: attr(data-tooltip);
+    right: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%) translateX(6px); /* start slightly to the right (off) and slide left into place */
+    min-width: 160px;
+    max-width: 22rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: var(--brand-blue-dark);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(12,37,79,0.18);
+    z-index: 1200;
+}
+
+/* Tooltip arrow (points right toward the cog) */
+.nav-cog[data-tooltip]::before {
+    content: '';
+    right: calc(100% + 6px);
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    background: var(--brand-blue-dark);
+    transform: translateY(-50%) rotate(45deg) translateX(6px);
+    z-index: 1199;
+}
+
+/* Show on hover or focus (keyboard) */
+.nav-cog[data-tooltip]:hover::after,
+.nav-cog[data-tooltip]:hover::before,
+.nav-cog[data-tooltip]:focus::after,
+.nav-cog[data-tooltip]:focus::before,
+.nav-cog[data-tooltip]:focus-visible::after,
+.nav-cog[data-tooltip]:focus-visible::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .nav-cog[data-tooltip]::after,
+    .nav-cog[data-tooltip]::before {
+        transition: none !important;
+        transform: translateX(-50%) translateY(0) !important;
+    }
+}
+
+/* Ensure tooltip doesn't overcrowd on very small screens: scale down text and allow wrapping */
+@media (max-width: 420px) {
+    .nav-cog[data-tooltip]::after {
+        white-space: normal;
+        font-size: 0.85rem;
+        padding: 6px 10px;
+        min-width: 120px;
+    }
+}
+
+.nav-welcome {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--brand-blue-mid);
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.nav-welcome:hover {
+    color: var(--brand-maroon-dark);
+}
+
 .bar {
     width: 25px;
     height: 3px;
@@ -2157,14 +2439,17 @@ p {
 
 /* Hero Section */
 .hero {
-    /* Background: blue gradient over factory image */
-    background: 
-        linear-gradient(120deg, rgba(28,55,97,0.78) 0%, rgba(44,82,139,0.62) 70%, rgba(74,167,230,0.38) 100%),
+    /* Use a single background image (cover) for the hero so one photo fills the whole area.
+       Apply a blue gradient tint on top via the stacked linear-gradient. The inline <img>
+       is hidden so only this background image is used.
+    */
+    /* Brand-blue tint over the hero image; made more transparent per request */
+    background:
+        linear-gradient(180deg, rgba(28,55,97,0.70), rgba(28,55,97,0.70)),
         url('assets/factory.jpg');
-    background-position: center top, center top;
+    background-position: center center, center center;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
-    background-color: #1C3761; /* solid fallback to avoid any white gap */
     color: white;
     /* Make sure the background scrolls with the element (not fixed to the viewport) */
     background-attachment: scroll !important;
@@ -2183,22 +2468,12 @@ p {
     z-index: 2; /* keep hero above overlapping next section */
     /* Ensure earlier min-height does not interfere */
     min-height: 0;
+
 }
 
 
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0; /* Ensure the decorative overlay covers the same area */
-    /* lighter gradient overlay + subtle grain so text remains readable but image stays visible */
-    background:
-        linear-gradient(180deg, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0.12) 100%),
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.06"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-    background-repeat: no-repeat, repeat;
-    background-size: cover, auto;
-    pointer-events: none;
-    z-index: 1; /* sits above the image but below the hero content */
-}
+.hero::before,
+.hero::after { display: none !important; }
 
 /* Remove any gap before the next section */
 .hero + section {
@@ -2234,14 +2509,13 @@ p {
 .hero-content {
     position: relative;
     z-index: 2;
-    max-width: 1100px; /* restore original container width so text wrapping doesn't change */
-    padding: 8px 12px; /* much smaller padding to preserve original layout */
-    border-radius: 8px;
-    /* very subtle translucent background only to help small contrast issues */
-    background: rgba(0,0,0,0.06);
-    backdrop-filter: blur(4px) saturate(110%);
-    -webkit-backdrop-filter: blur(4px) saturate(110%);
-    box-shadow: none; /* remove heavy shadow that altered visual weight */
+    max-width: 1100px; /* keep same container width */
+    padding: 0; /* remove boxed panel padding */
+    border-radius: 0;
+    background: transparent; /* remove glass/translucent panel behind title */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
 }
 
 /* Improve contrast for hero text */
@@ -2264,9 +2538,8 @@ p {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* show the whole image */
+    display: none; /* hide inline image since background covers the hero */
     object-position: center center;
-    display: block;
     pointer-events: none; /* let clicks pass through to content */
     z-index: 0; /* below overlay (::before z-index:1) and content (z-index:2) */
     background-color: transparent;
@@ -3303,12 +3576,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
     .hamburger.active .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
     .hamburger .bar { transition: transform 240ms ease, opacity 180ms ease, background 180ms; }
 
-    .nav-menu li {
-        margin: 1rem 0;
-    }
+    .nav-menu li a {
+        display: block;
+        padding: 12px 8px;
+        font-size: 1.05rem;
+        color: var(--brand-blue-mid);
 
-    .hero-container {
-        grid-template-columns: 1fr;
         text-align: left;
         justify-items: start;
         gap: 2rem;
@@ -4001,7 +4274,7 @@ img.portrait-top {
     /* keep within page gutters and center the text horizontally */
     left: var(--page-gutter);
     right: var(--page-gutter);
-    bottom: 0; /* touch the bottom of the stats section */
+    bottom: 18px; /* lift the footnote a little above the section bottom */
     text-align: center;
     white-space: nowrap; /* keep it on a single line */
     overflow: hidden;
@@ -4012,7 +4285,7 @@ img.portrait-top {
 @media (max-width: 640px) {
     .stats-footnote {
         font-size: 0.75rem;
-        bottom: 0;
+        bottom: 12px;
         left: 0; /* ensure left stays flush on small screens */
         /* Keep single-line behavior but allow ellipsis on very small screens */
         white-space: nowrap;
@@ -4137,17 +4410,17 @@ img.portrait-top {
 
 /* --- Product Category Scroller --- */
 .product-category {
-    padding: 40px 0 20px;
+    padding: 8px 0 8px; /* tightened bottom padding for closer stacked categories */
     background: #fff;
 }
 .product-category .section-title {
-    margin-bottom: 2.8rem;
+    margin-bottom: 1.8rem; /* increase so more space appears between heading and product cards */
 }
 .product-category .section-subtitle {
-    text-align: center;
+    text-align: left;
     color: #475569;
-    margin-top: 0.2rem;
-    margin-bottom: 1rem;
+    margin-top: 0.12rem;
+    margin-bottom: 0.5rem; /* tightened subtitle spacing */
 }
 .product-scroll {
     display: grid;
@@ -4191,7 +4464,7 @@ img.portrait-top {
     height: 140px;
     object-fit: contain !important; /* show full image without cropping */
     object-position: center;
-    background: #f8fafc; /* subtle backdrop for letterboxing */
+    background: #ffffff; /* uniform white backdrop for product images */
     display: block;
     padding: 6px; /* breathing room so edges never look clipped */
 }
@@ -4214,6 +4487,17 @@ img.portrait-top {
 
 /* Defensive: make sure all images within product categories never crop */
 .product-category .product-item img { object-fit: contain !important; }
+
+/* Ensure carousel product images use the same white backdrop and padding
+   (some figures use both .product-item and .product-card - make rule explicit) */
+.product-carousel-track .product-card img,
+.product-category .product-card img {
+    background: #ffffff;
+    padding: 6px;
+    display: block;
+    object-fit: contain !important;
+    object-position: center;
+}
 
 /* --- Product Carousel Styles (for categories with >6 items) --- */
 .product-carousel-wrapper {
@@ -4241,25 +4525,19 @@ img.portrait-top {
     max-width: 100%;
 }
 
+/* Hide native scrollbars for the product carousel but keep it scrollable
+   - Firefox: scrollbar-width: none
+   - IE/Edge: -ms-overflow-style: none
+   - WebKit: hide the ::-webkit-scrollbar pseudo-element
+*/
+.product-carousel-track {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
 .product-carousel-track::-webkit-scrollbar {
-    height: 8px;
-    display: block;
-}
-
-.product-carousel-track::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    margin: 0 20px;
-}
-
-.product-carousel-track::-webkit-scrollbar-thumb {
-    background: var(--brand-blue-mid);
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-}
-
-.product-carousel-track::-webkit-scrollbar-thumb:hover {
-    background: var(--brand-blue-dark);
+    display: none; /* Safari and Chrome */
+    height: 0;
 }
 
 /* Product carousel cards */
@@ -4480,14 +4758,19 @@ img.portrait-top {
 }
 
 .section-subtitle {
+    /* Subtitles: slightly smaller than headings, readable weight and color,
+       and allow normal wrapping so long descriptions don't get clipped. */
     text-align: center;
-    font-size: 1.2rem;
-    color: #64748b;
-    margin-bottom: 3rem;
+    font-size: 1rem; /* reduced for better hierarchy vs h2/h1 */
+    color: #475569; /* stronger muted color for better contrast */
+    margin-bottom: 1.8rem;
     max-width: none;
     margin-left: 0;
     margin-right: 0;
-    white-space: nowrap;
+    white-space: normal; /* allow wrapping on narrow screens */
+    line-height: 1.4;
+    font-weight: 500; /* medium weight to visually pair with titles */
+    font-family: var(--font-body);
 }
 
 .machinery-grid {
@@ -5846,7 +6129,7 @@ h2::after,
     background-clip: initial !important;
     -webkit-text-fill-color: #ffffff !important;
 }
-.infrastructure .section-title::after { background: currentColor !important; }
+.infrastructure .section-title::after { background: #ffffff !important; }
 
 /* ==========================================
    Products & Services: Category Distinction
@@ -5869,11 +6152,17 @@ h2::after,
     padding: 18px max(16px, var(--page-gutter));
     box-shadow: 0 6px 20px rgba(0,0,0,0.05);
 }
-.product-category + .product-category { margin-top: 8px; }
+.product-category + .product-category { margin-top: 4px; }
 
 /* Category heading adjustments: left-aligned title, chip hidden for compact layout */
 .product-category .section-title { position: relative; margin-top: 8px; text-align: left; display: inline-block; margin-right: 12px; vertical-align: middle; }
 .product-category .section-title::before { display: none !important; content: none !important; }
+/* Match product category heading size to the "Specialized Service" card headings on the homepage */
+.product-category .section-title {
+    font-size: 1.3rem; /* same as .insight-card h3 */
+    font-weight: 600;
+    line-height: 1.15;
+}
 /* Remove site-wide underline specifically for product category headings */
 .product-category .section-title::after { display: none !important; }
 /* Chip labels per category (hidden in compact layout) */
@@ -5883,28 +6172,53 @@ h2::after,
 #cmb-products .section-title::before        { content: 'CMB'; }
 #green-products .section-title::before      { content: 'Green Energy'; }
 
-/* Place subtitle inline to the right of the title on wider screens */
+/* Position subtitles: stack under the title for clearer hierarchy by default,
+   center them, and style them for a refined look. On wide screens they
+   return to an inline layout (narrower breakpoint to suit content). */
 .product-category .section-subtitle {
-    display: inline-block;
-    margin: 0;
-    margin-left: 8px;
-    vertical-align: middle;
-    text-align: left; /* override global centering */
-    font-size: 1rem;
-    color: #64748b;
-    white-space: nowrap;
+    display: block;
+    margin: 0.08rem 0 0 0; /* small gap beneath the title */
+    text-align: left; /* left-align subtitle under the heading */
+    font-size: 0.95rem;
+    color: #475569;
+    white-space: normal;
+    line-height: 1.35;
+    font-weight: 400; /* lighter for a softer, supportive tone */
+    font-style: italic; /* elegant secondary text */
+    max-width: 100%;
+    font-family: var(--font-heading); /* closer typographic match to headings */
 }
 
-/* Product header wrapper ensures title + subtitle stay on one line */
+/* Product header wrapper: center stacked title + subtitle by default */
 .product-header {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap; /* keep title and subtitle on same line */
-    overflow: hidden; /* allow content to truncate if needed */
+    flex-direction: column; /* stack title above subtitle for clarity */
+    align-items: flex-start; /* left-align by default */
+    gap: 4px; /* tightened gap between title and subtitle */
+    overflow: visible;
 }
-.product-header .section-title { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.product-header .section-subtitle { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0.95; font-size: 0.98rem; }
+.product-header .section-title { margin: 0; }
+.product-header .section-subtitle {
+    margin: 0;
+    white-space: normal;
+    overflow: visible;
+    opacity: 0.95;
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.35;
+    text-align: left;
+}
+
+/* Revert to inline (title + subtitle on one line) on wider viewports.
+   Narrowed breakpoint and tightened max-width so subtitle remains secondary. */
+@media (min-width: 880px) {
+    .product-header { flex-direction: row; align-items: center; gap: 10px; justify-content: flex-start; }
+    .product-category .section-subtitle { display: inline-block; margin-left: 8px; max-width: 55%; }
+    .product-header .section-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .product-header .section-subtitle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
 
 /* If subtitle is very long on tiny screens, allow it to shrink and show ellipsis */
 @media (max-width: 420px) {
@@ -5949,7 +6263,7 @@ h2::after,
 .team .section-title,
 .why-choose .section-title,
 .product-category .section-title {
-    color: #2D3748 !important;
+    color: var(--heading-unified) !important;
     background: none !important;
     -webkit-background-clip: initial !important;
     background-clip: initial !important;
@@ -6030,12 +6344,11 @@ h2::after,
 }
 
 /* ==========================================
-   Site-wide Heading Color Unification
-   Sets all headings to the Features h2 color (#1e293b)
-   while preserving contrast on dark sections and
-   brand accents in the footer and map card.
+    Site-wide Heading Color Unification
+    Sets all headings and their underlines to the brand mid-blue (#2C528B)
+    while avoiding overwrite of intentionally white headings (those use stronger !important rules).
    ========================================== */
-:root { --heading-unified: #2D3748; }
+:root { --heading-unified: #2C528B; }
 
 /* Apply unified color and remove gradient text effects */
 body h1,
@@ -6045,14 +6358,14 @@ body h4,
 body h5,
 body h6,
 body .section-title {
-    color: var(--heading-unified) !important;
-    background: none !important;
-    -webkit-background-clip: initial !important;
-    background-clip: initial !important;
-    -webkit-text-fill-color: currentColor !important;
+    color: var(--heading-unified);
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: currentColor;
 }
 
-/* Fix: Infrastructure underline should be white */
+/* Make infrastructure section underline white to preserve contrast against the dark infrastructure background */
 .infrastructure .section-title::after {
     background: #ffffff !important;
 }
@@ -6063,3 +6376,28 @@ body .section-title {
 }
 
 /* Remove previous special-case overrides so unified heading color applies everywhere */
+
+/* Products page overrides: keep the products page background completely white.
+   This is scoped to the `.products-page` body class so other pages remain unchanged.
+   If you prefer to change scopes, update the selectors below. */
+body.products-page, html.products-page {
+    background: #ffffff !important;
+    background-image: none !important;
+    background-color: #ffffff !important;
+}
+body.products-page .infrastructure,
+body.products-page .industries,
+body.products-page .map-section,
+body.products-page .product-category,
+body.products-page .page-header,
+body.products-page .clients-partners,
+body.products-page .clients,
+body.products-page .features {
+    background: #ffffff !important;
+    background-image: none !important;
+    background-color: #ffffff !important;
+}
+body.products-page .container,
+body.products-page .modal-content {
+    background: transparent !important;
+}

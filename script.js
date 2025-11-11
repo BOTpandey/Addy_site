@@ -2316,3 +2316,64 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => { next(); }, 500);
         }
     });
+
+// Hide browser status-bar style URL preview for local .html links
+// Approach: for anchors that point to local .html files we remove the `href`
+// (so browsers don't show the destination on hover) and store the URL in
+// `data-href`. We then add accessible keyboard + click handlers that perform
+// navigation. External links, mailto:, tel:, and fragment anchors (#...) are
+// left untouched.
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const anchors = Array.from(document.querySelectorAll('a[href]'));
+        anchors.forEach(a => {
+            const href = a.getAttribute('href');
+            if (!href) return;
+
+            // Skip external and special links
+            const lower = href.trim().toLowerCase();
+            if (lower.startsWith('http:') || lower.startsWith('https:') || lower.startsWith('mailto:') || lower.startsWith('tel:') || lower.startsWith('javascript:') || lower.startsWith('#')) {
+                return;
+            }
+
+            // Only target simple local HTML files (e.g. about.html, products.html)
+            if (!/\.html?(?:[?#]|$)/i.test(href)) return;
+
+            // Store destination and remove href so browser won't show it on hover
+            a.setAttribute('data-href', href);
+            a.removeAttribute('href');
+
+            // Keep a pointer cursor and preserve visual affordance
+            a.classList.add('no-status-url');
+            a.setAttribute('role', a.getAttribute('role') || 'link');
+            if (!a.hasAttribute('tabindex')) a.setAttribute('tabindex', '0');
+
+            function navigate() {
+                const dest = a.getAttribute('data-href');
+                if (!dest) return;
+                // Use location.assign so history behaves like a normal link
+                window.location.assign(dest);
+            }
+
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                navigate();
+            });
+
+            a.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate();
+                }
+            });
+        });
+
+        // Inject a tiny style so these elements still show a pointer
+        const style = document.createElement('style');
+        style.textContent = '.no-status-url { cursor: pointer; }';
+        document.head.appendChild(style);
+    } catch (err) {
+        // fail silently - nothing catastrophic if this doesn't run
+        console.error('hide-status-url init failed', err);
+    }
+});

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products & Services - ENRAY AUTOCOMP</title>
         <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="products-page">
     <!-- Navigation -->
     <nav class="navbar" style="background:#fff;">
         <div class="nav-container">
@@ -32,10 +32,24 @@
                 </li>
             </ul>
             
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="nav-controls">
+                <button class="nav-cog" aria-label="Welcome to ENRAY AUTOCOMP !" data-tooltip="Welcome to ENRAY AUTOCOMP !">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                        <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94s-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32
+                        c-0.11-0.2-0.35-0.28-0.56-0.2l-2.39,0.96c-0.5-0.38-1.04-0.7-1.64-0.94L14.5,2.81C14.47,2.58,14.26,2.42,14.03,2.42h-4.06
+                        c-0.23,0-0.44,0.16-0.47,0.39L9.02,5.06C8.42,5.3,7.88,5.62,7.38,6L5,5.04C4.79,4.96,4.55,5.03,4.44,5.23L2.52,8.56
+                        C2.41,8.76,2.46,9.03,2.64,9.17l2.03,1.58C4.62,11.36,4.6,11.67,4.6,12s0.02,0.64,0.06,0.94L2.63,14.52c-0.18,0.14-0.23,0.41-0.12,0.61
+                        l1.92,3.32c0.11,0.2,0.35,0.28,0.56,0.2l2.39-0.96c0.5,0.38,1.04,0.7,1.64,0.94l0.48,2.63c0.03,0.23,0.24,0.39,0.47,0.39h4.06
+                        c0.23,0,0.44-0.16,0.47-0.39l0.48-2.63c0.6-0.24,1.15-0.56,1.64-0.94l2.39,0.96c0.21,0.08,0.45,0,0.56-0.2l1.92-3.32
+                        c0.11-0.2,0.06-0.47-0.12-0.61L19.14,12.94z M12,15.5c-1.93,0-3.5-1.57-3.5-3.5S10.07,8.5,12,8.5s3.5,1.57,3.5,3.5S13.93,15.5,12,15.5z" />
+                    </svg>
+                </button>
+
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -157,13 +171,13 @@
             <div class="product-carousel-wrapper">
                 <div class="product-carousel-track" aria-label="CMB products carousel">
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-01.png" alt="CMB product 1" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-01.jpg" alt="CMB product 1" loading="lazy" />
                     </figure>
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-02.png" alt="CMB product 2" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-02.jpg" alt="CMB product 2" loading="lazy" />
                     </figure>
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-03.png" alt="CMB product 3" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-03.jpg" alt="CMB product 3" loading="lazy" />
                     </figure>
                 </div>
             </div>
@@ -231,6 +245,176 @@
         </div>
     </footer>
     <script src="script.js"></script>
-</body>
-</html>
+        <!-- Product enlarge modal -->
+        <div id="productModal" class="modal product-modal" aria-hidden="true" role="dialog" aria-label="Product preview">
+            <div class="modal-content" role="document">
+                <button class="modal-close" aria-label="Close product preview">&times;</button>
+                <div class="modal-body" style="grid-template-columns: 1fr;">
+                    <div class="modal-left">
+                        <div class="modal-main">
+                            <div class="modal-gallery">
+                                <img id="productModalImg" src="" alt="" />
+                                <p class="modal-caption" id="productModalCaption"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        // Product enlarge modal handlers with focus trap, animation and hi-res support
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('productModal');
+            if (!modal) return;
+            const modalImg = document.getElementById('productModalImg');
+            const modalCaption = document.getElementById('productModalCaption');
+            const closeBtn = modal.querySelector('.modal-close');
+            let lastActiveElement = null;
+            let trapHandler = null;
+
+            function getFocusable(container) {
+                const selectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]';
+                return Array.from(container.querySelectorAll(selectors)).filter(el => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
+            }
+
+            function openProductModal(largeSrc, alt, captionText, triggerEl) {
+                lastActiveElement = triggerEl || document.activeElement || null;
+
+                // prefer hi-res if provided; otherwise fallback to the image src
+                const srcCandidate = (largeSrc && largeSrc.trim()) || '';
+                const displayCaption = captionText || alt || '';
+
+                // prepare caption area
+                modalCaption.textContent = displayCaption;
+
+                // show modal immediately (empty image) for quick feedback
+                modalImg.src = '';
+                modalImg.alt = alt || displayCaption || '';
+
+                modal.style.display = 'block';
+                void modal.offsetWidth;
+                modal.classList.add('show');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('modal-open');
+
+                // preload image so we can inspect its natural dimensions
+                const toLoad = srcCandidate || (triggerEl && triggerEl.src) || '';
+                if (!toLoad) {
+                    // nothing to show
+                    modalCaption.textContent = 'Image not available';
+                    return;
+                }
+
+                const imgLoader = new Image();
+                imgLoader.onload = function () {
+                    // set loaded src (hi-res preferred)
+                    modalImg.src = imgLoader.src;
+                    modalImg.alt = alt || displayCaption || '';
+
+                    // detect if the loaded image is small compared to modal area
+                    // compare naturalWidth to available modal width
+                    try {
+                        const maxAvailable = Math.min(window.innerWidth * 0.9, 980);
+                        const naturalW = imgLoader.naturalWidth || 0;
+                        // keep small images as-is (no open-original link)
+                    } catch (e) {
+                        // ignore detection errors
+                    }
+                };
+                imgLoader.onerror = function () {
+                    // fallback: show the trigger image src (if any)
+                    modalImg.src = (triggerEl && triggerEl.src) || toLoad;
+                };
+                imgLoader.src = toLoad;
+
+                // focus trapping
+                const focusable = getFocusable(modal);
+                const firstFocusable = focusable[0] || closeBtn;
+                const lastFocusable = focusable[focusable.length - 1] || firstFocusable;
+
+                trapHandler = function (e) {
+                    if (e.key === 'Tab') {
+                        if (focusable.length === 0) {
+                            e.preventDefault();
+                            (closeBtn || modal).focus();
+                            return;
+                        }
+                        if (e.shiftKey) {
+                            if (document.activeElement === firstFocusable) {
+                                e.preventDefault();
+                                lastFocusable.focus();
+                            }
+                        } else {
+                            if (document.activeElement === lastFocusable) {
+                                e.preventDefault();
+                                firstFocusable.focus();
+                            }
+                        }
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeProductModal();
+                    }
+                };
+
+                document.addEventListener('keydown', trapHandler);
+
+                // initial focus
+                setTimeout(() => (closeBtn || modal).focus(), 10);
+            }
+
+            function closeProductModal() {
+                modal.classList.remove('show');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+
+                // wait for transition to finish then hide and cleanup
+                const onTransitionEnd = function () {
+                    modal.style.display = 'none';
+                    // remove image src to free memory
+                    try { modalImg.src = ''; } catch (e) {}
+                    modal.removeEventListener('transitionend', onTransitionEnd);
+                };
+                modal.addEventListener('transitionend', onTransitionEnd);
+
+                if (trapHandler) {
+                    document.removeEventListener('keydown', trapHandler);
+                    trapHandler = null;
+                }
+
+                // restore focus
+                if (lastActiveElement && typeof lastActiveElement.focus === 'function') {
+                    setTimeout(() => lastActiveElement.focus(), 10);
+                }
+            }
+
+            // Attach click on product images
+            document.querySelectorAll('.product-card img, .product-item img').forEach(img => {
+                img.style.cursor = 'zoom-in';
+                img.addEventListener('click', (e) => {
+                    const fig = img.closest('figure');
+                    const caption = fig ? (fig.querySelector('figcaption') ? fig.querySelector('figcaption').textContent.trim() : '') : '';
+                    // prefer data-large-src if present
+                    const largeSrc = img.getAttribute('data-large-src') || img.dataset.largeSrc || img.src;
+                    openProductModal(largeSrc, img.alt, caption, img);
+                });
+                // support keyboard activation when image is focusable
+                img.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Enter' || ev.key === ' ') {
+                        ev.preventDefault();
+                        img.click();
+                    }
+                });
+            });
+
+            // Close handlers
+            closeBtn && closeBtn.addEventListener('click', closeProductModal);
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) closeProductModal();
+            });
+        });
+        </script>
+
+        </body>
+    </html>
 </html>
