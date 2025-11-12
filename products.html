@@ -33,18 +33,6 @@
             </ul>
             
             <div class="nav-controls">
-                <button class="nav-cog" aria-label="Welcome to ENRAY AUTOCOMP !" data-tooltip="Welcome to ENRAY AUTOCOMP !">
-                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
-                        <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94s-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32
-                        c-0.11-0.2-0.35-0.28-0.56-0.2l-2.39,0.96c-0.5-0.38-1.04-0.7-1.64-0.94L14.5,2.81C14.47,2.58,14.26,2.42,14.03,2.42h-4.06
-                        c-0.23,0-0.44,0.16-0.47,0.39L9.02,5.06C8.42,5.3,7.88,5.62,7.38,6L5,5.04C4.79,4.96,4.55,5.03,4.44,5.23L2.52,8.56
-                        C2.41,8.76,2.46,9.03,2.64,9.17l2.03,1.58C4.62,11.36,4.6,11.67,4.6,12s0.02,0.64,0.06,0.94L2.63,14.52c-0.18,0.14-0.23,0.41-0.12,0.61
-                        l1.92,3.32c0.11,0.2,0.35,0.28,0.56,0.2l2.39-0.96c0.5,0.38,1.04,0.7,1.64,0.94l0.48,2.63c0.03,0.23,0.24,0.39,0.47,0.39h4.06
-                        c0.23,0,0.44-0.16,0.47-0.39l0.48-2.63c0.6-0.24,1.15-0.56,1.64-0.94l2.39,0.96c0.21,0.08,0.45,0,0.56-0.2l1.92-3.32
-                        c0.11-0.2,0.06-0.47-0.12-0.61L19.14,12.94z M12,15.5c-1.93,0-3.5-1.57-3.5-3.5S10.07,8.5,12,8.5s3.5,1.57,3.5,3.5S13.93,15.5,12,15.5z" />
-                    </svg>
-                </button>
-
                 <div class="hamburger">
                     <span class="bar"></span>
                     <span class="bar"></span>
@@ -171,13 +159,13 @@
             <div class="product-carousel-wrapper">
                 <div class="product-carousel-track" aria-label="CMB products carousel">
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-01.jpg" alt="CMB product 1" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-01.png" alt="CMB product 1" loading="lazy" />
                     </figure>
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-02.jpg" alt="CMB product 2" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-02.png" alt="CMB product 2" loading="lazy" />
                     </figure>
                     <figure class="product-item product-card">
-                        <img src="cmb_prod/cmb-product-03.jpg" alt="CMB product 3" loading="lazy" />
+                        <img src="cmb_prod/cmb-product-03.png" alt="CMB product 3" loading="lazy" />
                     </figure>
                 </div>
             </div>
@@ -285,8 +273,9 @@
                 const srcCandidate = (largeSrc && largeSrc.trim()) || '';
                 const displayCaption = captionText || alt || '';
 
-                // prepare caption area
-                modalCaption.textContent = displayCaption;
+                // do not show caption in the enlarged product view (hidden by CSS)
+                // modalCaption intentionally left blank to avoid displaying the product name
+                try { modalCaption.textContent = ''; } catch (e) { /* silent */ }
 
                 // show modal immediately (empty image) for quick feedback
                 modalImg.src = '';
@@ -311,6 +300,22 @@
                     // set loaded src (hi-res preferred)
                     modalImg.src = imgLoader.src;
                     modalImg.alt = alt || displayCaption || '';
+
+                    // adjust max-height so the image never gets clipped by the viewport
+                    try {
+                        const adjust = () => {
+                            const pad = 40; // leave breathing room for controls and edges
+                            // enforce both max-width and max-height tied to viewport so image is never cropped
+                            modalImg.style.width = 'auto';
+                            modalImg.style.height = 'auto';
+                            modalImg.style.maxWidth = Math.max(120, window.innerWidth - pad) + 'px';
+                            modalImg.style.maxHeight = Math.max(120, window.innerHeight - pad) + 'px';
+                        };
+                        // store handler so we can remove it when modal closes
+                        modal._adjustFn = adjust;
+                        adjust();
+                        window.addEventListener('resize', modal._adjustFn);
+                    } catch (e) { /* ignore */ }
 
                     // detect if the loaded image is small compared to modal area
                     // compare naturalWidth to available modal width
@@ -376,6 +381,18 @@
                     modal.removeEventListener('transitionend', onTransitionEnd);
                 };
                 modal.addEventListener('transitionend', onTransitionEnd);
+
+                // remove resize adjustment listener if present and clear inline sizing
+                try {
+                    if (modal._adjustFn) {
+                        window.removeEventListener('resize', modal._adjustFn);
+                        delete modal._adjustFn;
+                    }
+                    modalImg.style.maxWidth = '';
+                    modalImg.style.maxHeight = '';
+                    modalImg.style.width = '';
+                    modalImg.style.height = '';
+                } catch (e) { /* silent */ }
 
                 if (trapHandler) {
                     document.removeEventListener('keydown', trapHandler);

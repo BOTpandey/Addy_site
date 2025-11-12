@@ -444,7 +444,9 @@
 .map-card .section-title .us {
     /* Use the unified heading style so 'Find Us' matches other page headings */
     color: var(--heading-unified) !important;
-    font-family: var(--font-heading) !important;
+    /* Use the more professional body/neutral font stack for this small map-card heading
+       (Poppins can look too geometric/playful at very small sizes). */
+    font-family: var(--font-body) !important;
     font-weight: var(--heading-weight) !important;
     background: none !important;
     background-image: none !important;
@@ -1402,6 +1404,70 @@ body.modal-open { overflow: hidden; }
 }
 .product-modal .modal-close { color: #fff; background: transparent; border: none; font-size: 32px; }
 .product-modal .modal-main { background: transparent; }
+
+/* Center the product modal content within the full-screen black overlay
+    so the enlarged image appears centered from all sides of the dark background. */
+
+.product-modal.show {
+    /* Use flex centering when visible. Use !important to override inline display:block set by JS. */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; /* breathing room on very small viewports */
+}
+
+.product-modal .modal-content {
+    /* Make the content container transparent and let it size to the image so the
+       black overlay is visible on all sides. Keep some max width to avoid overly large images. */
+    background: transparent !important;
+    box-shadow: none !important;
+    width: auto !important;
+    max-width: calc(100% - 40px) !important;
+    margin: 0 !important;
+    border-radius: 12px !important;
+    overflow: visible !important;
+    max-height: none !important;
+    transform-origin: center center; /* animate from center */
+}
+
+.product-modal .modal-body {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    grid-template-columns: none !important;
+    padding: 0 !important;
+}
+
+#productModalImg {
+    /* Ensure the full image is visible: allow natural sizing but constrain to viewport
+       so the browser will scale the image down (contain) rather than crop it. */
+    width: auto !important;
+    height: auto !important;
+    max-width: calc(100vw - 40px) !important;
+    max-height: calc(100vh - 40px) !important;
+    object-fit: contain !important;
+    display: block;
+    margin: 0 auto;
+}
+
+.product-modal .modal-caption {
+    /* Hide caption entirely for product enlarged view per user request */
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.product-modal .modal-close {
+    /* keep close button visible in top-right of the overlay */
+    position: absolute !important;
+    right: 18px !important;
+    top: 18px !important;
+    z-index: 3001 !important;
+    color: #fff !important;
+}
 
 /* Animations for product modal open/close */
 .product-modal {
@@ -5920,6 +5986,34 @@ html {
     color: #6b7280;
     margin-bottom: 18px;
 }
+
+/* Icon style for map-card heading (warehouse icon) */
+.map-card .section-title .section-icon {
+    font-size: 2.2rem; /* larger, more prominent */
+    color: var(--heading-unified) !important;
+    margin-right: 0.6rem;
+    vertical-align: middle;
+}
+
+/* Utility to keep accessible text for screen readers only */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Remove the decorative underline for the map-card heading specifically. This
+   overrides the site-wide underline rule so the icon-only heading doesn't get
+   an unexpected underline. */
+.map-card .section-title::after {
+    display: none !important;
+}
 .map-address {
     font-style: normal;
     line-height: 1.6;
@@ -6091,8 +6185,8 @@ h2::after,
 .section-title::after { margin-left: auto; margin-right: auto; }
 
 /* Re-enable underlines in contexts that previously forced them off */
-.infrastructure .section-title::after,
-.map-card .section-title::after { display: block !important; }
+/* Keep map-card excluded so icon-only heading stays underline-free. */
+.infrastructure .section-title::after { display: block !important; }
 
 /* Utilities */
 .no-underline::after { display: none !important; }
