@@ -594,6 +594,8 @@ document.addEventListener('DOMContentLoaded', function() {
         window.infraModal.style.display = 'block';
         window.infraModal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open'); // hide navbar + lock scroll
+        // Hide scroll-to-top while modal is open
+        if (window.updateScrollToTopVisibility) window.updateScrollToTopVisibility();
 
         // Focus management: trap focus inside modal
         const focusableSelectors = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
@@ -642,6 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.infraModal.style.display = 'none';
         window.infraModal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        if (window.updateScrollToTopVisibility) window.updateScrollToTopVisibility();
         if (window.infraModal._trapFocus) window.infraModal.removeEventListener('keydown', window.infraModal._trapFocus);
         // restore focus to trigger
         // Ensure no infra card retains the visual focus class
@@ -1627,14 +1630,23 @@ scrollToTopBtn.style.cssText = `
 `;
 
 document.body.appendChild(scrollToTopBtn);
+// Expose for other modules
+window.scrollToTopBtn = scrollToTopBtn;
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        scrollToTopBtn.style.display = 'block';
-    } else {
-        scrollToTopBtn.style.display = 'none';
-    }
-});
+// Centralized visibility control: hide while any modal is open
+window.updateScrollToTopVisibility = function updateScrollToTopVisibility() {
+    try {
+        if (document.body.classList.contains('modal-open')) {
+            scrollToTopBtn.style.display = 'none';
+            return;
+        }
+        scrollToTopBtn.style.display = (window.scrollY > 300) ? 'block' : 'none';
+    } catch (_) { /* silent */ }
+};
+
+window.addEventListener('scroll', window.updateScrollToTopVisibility);
+// Initialize once
+window.updateScrollToTopVisibility();
 
 scrollToTopBtn.addEventListener('click', () => {
     window.scrollTo({
@@ -1798,6 +1810,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Center align tracks with 5 or fewer products
         if (productCards.length <= 5) {
             track.classList.add('center-aligned');
+            const wrapper = track.closest('.product-carousel-wrapper');
+            if (wrapper) wrapper.classList.add('center-aligned');
             return; // Skip carousel functionality for 5 or fewer items
         }
         

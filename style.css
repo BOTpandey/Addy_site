@@ -229,6 +229,21 @@
     .infra-next { right: 10px; }
     /* On mobile, no translate baseline, so scale only */
     .infra-prev:hover, .infra-next:hover { transform: scale(1.08); }
+    /* Remove card scaling on small screens to avoid horizontal overflow */
+    .infra-card,
+    .infra-card:hover,
+    .infra-card-focus { 
+        transform: none !important; 
+        filter: none !important; 
+        opacity: 1 !important; 
+    }
+
+    /* Ensure track fits viewport width exactly */
+    .infra-carousel-track { 
+        width: 100% !important; 
+        padding-left: 12px; 
+        padding-right: 12px; 
+    }
 }
 /* Enable a grabbing cursor and avoid accidental clicks while dragging the carousel */
 .infra-carousel-track.dragging {
@@ -412,12 +427,12 @@
     margin-bottom: 0.7rem;
 }
 @media (max-width: 1700px) {
-    .infra-item {
-        min-width: 90vw;
-        max-width: 98vw;
+    /* Keep 2 columns even on small phones */
+    .product-carousel-track.center-aligned {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 12px;
     }
-}
-@media (max-width: 900px) {
     .infra-card-content {
         flex-direction: column;
     }
@@ -575,6 +590,8 @@ a:hover { color: var(--link-hover); }
 /* Features block headline on homepage */
 .features h2 {
     color: var(--heading-unified) !important;
+    overflow-wrap: anywhere;
+    word-break: normal;
 }
 
 /* Mission, Vision, Values headings on About page */
@@ -1928,6 +1945,14 @@ body.modal-open { overflow: hidden; }
     .hero-rotator { transition: none; }
     .hero-rotator .rot-block { transition: none; transform: none; clip-path: none; }
 }
+
+/* Keep hero headline on one line on desktop (original look) */
+@media (min-width: 901px) {
+    .hero-rotator .rot-block .hero-main,
+    .hero-title .hero-main {
+        white-space: nowrap;
+    }
+}
 /* ============================= */
 /* PAGE: INDEX (Home)            */
 /* ============================= */
@@ -2107,7 +2132,7 @@ footer a:hover,
     box-sizing: border-box;
 }
 
-body {
+html, body {
     font-family: var(--font-body);
     line-height: 1.7;
     color: var(--text-1);
@@ -2118,11 +2143,24 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Make media elements fluid by default to prevent overflow on mobile */
+img, video, canvas, svg, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
 .container {
-    /* Wider content area with small gutters */
-    max-width: 98vw;
+    /* Standard responsive container: full width with side gutters, clamped max */
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--page-gutter);
+}
+
+/* Restore wider desktop canvas so content doesn't look shrunken */
+@media (min-width: 1200px) {
+    /* Increase total container width on desktop; padding is included (border-box) */
+    .container { max-width: 1600px; }
 }
 
 /* Global heading family and sensible defaults */
@@ -2570,6 +2608,12 @@ p {
     padding: 0 var(--page-gutter); /* horizontal gutters */
 }
 
+/* Allow a wider hero text block on desktop to match original feel */
+@media (min-width: 1200px) {
+    .hero-container { max-width: 1400px; }
+    .hero-content { max-width: 1400px; }
+}
+
 /* Subtle translucent panel behind hero text to ensure legibility on all backgrounds.
    Uses backdrop-filter where supported; falls back to a semi-transparent dark background. */
 .hero-content {
@@ -2822,6 +2866,29 @@ p {
     .hero-explore-text { font-size: 0.95rem; }
     .hero-explore-arrow { font-size: 18px; }
     .hero-explore-wrapper { bottom: 0; }
+}
+
+/* On small screens, keep Explore cue anchored at bottom and reserve space */
+@media (max-width: 900px) {
+    /* Reserve space so text never sits under the cue */
+    .hero { padding-bottom: 96px; }
+    .hero-explore-wrapper {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 8px;
+        padding-bottom: 0;
+        margin-top: 0;
+        z-index: 12;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* On very small screens, hide the Explore cue and reduce padding */
+@media (max-width: 480px) {
+    .hero-explore-wrapper { display: none !important; }
+    .hero { padding-bottom: 28px; }
 }
 
 /* Align hero subtitle, description, and buttons just after the opening quote */
@@ -3602,7 +3669,8 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* Treat widths <= 900px as mobile/tablet to avoid cramped nav */
+@media (max-width: 900px) {
     .hamburger {
         display: flex;
     }
@@ -3611,12 +3679,12 @@ h1, h2, h3, h4, h5, h6, .section-title {
     .nav-menu {
         position: fixed;
         left: -100%;
-        top: 70px;
+        top: 64px; /* match compact navbar height */
         z-index: 1101; /* ensure menu overlays page content and navbar */
         flex-direction: column;
         background-color: white;
         width: 100%;
-        height: calc(100vh - 70px);
+        height: calc(100vh - 64px);
         overflow: auto;
         text-align: center;
         transition: left 0.28s ease, transform 0.28s ease;
@@ -4632,22 +4700,36 @@ img.portrait-top {
     box-shadow: 0 20px 50px rgba(12,37,79,0.35), 0 8px 20px rgba(12,37,79,0.15);
 }
 
-/* Center align carousel tracks with 5 or fewer products */
-.product-carousel-track:has(.product-card:nth-child(5):last-child),
-.product-carousel-track:has(.product-card:nth-child(4):last-child),
-.product-carousel-track:has(.product-card:nth-child(3):last-child),
-.product-carousel-track:has(.product-card:nth-child(2):last-child),
-.product-carousel-track:has(.product-card:nth-child(1):last-child) {
-    justify-content: center;
-}
-
-/* Fallback for browsers that don't support :has() */
-.product-carousel-track.center-aligned {
-    justify-content: center;
-}
-
 /* Responsive adjustments for product carousel */
 @media (max-width: 900px) {
+    /* Center align carousel tracks with 5 or fewer products on mobile */
+    .product-carousel-track:has(.product-card:nth-child(5):last-child),
+    .product-carousel-track:has(.product-card:nth-child(4):last-child),
+    .product-carousel-track:has(.product-card:nth-child(3):last-child),
+    .product-carousel-track:has(.product-card:nth-child(2):last-child),
+    .product-carousel-track:has(.product-card:nth-child(1):last-child) {
+        justify-content: center;
+    }
+    /* Fallback class for small sets: use a simple 2-column grid on mobile */
+    .product-carousel-track.center-aligned {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        justify-items: center;
+        align-items: stretch;
+        gap: 18px;
+        padding: 16px;
+        overflow-x: visible;
+        scroll-snap-type: none;
+    }
+    .product-carousel-track.center-aligned .product-card {
+        width: 100%;
+        max-width: 520px;
+        flex: 0 0 auto;
+    }
+    /* When the wrapper is used with small sets, don't clip shadows/edges on mobile */
+    .product-carousel-wrapper:has(.product-carousel-track.center-aligned) {
+        overflow: visible;
+    }
     .product-carousel-track .product-card {
         width: 200px;
     }
@@ -4660,6 +4742,12 @@ img.portrait-top {
     .product-carousel-track {
         gap: 15px;
         padding: 15px;
+    }
+    /* Even on small phones, keep two columns per request */
+    .product-carousel-track.center-aligned {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        padding: 12px;
     }
 }
 
@@ -5951,8 +6039,9 @@ html {
     border: 1px solid #e5e7eb;
 }
 .map-card {
-    /* max-width: 400px; */
-    width: 500px;
+    /* Make card responsive: fill container but cap width for desktop */
+    width: 100%;
+    max-width: 500px;
     background: linear-gradient(135deg, var(--brand-grey-light) 0%, var(--brand-grey-lighter) 100%);
     border-radius: 16px;
     box-shadow: 0 8px 32px rgba(28,55,97,0.10);
@@ -5985,6 +6074,13 @@ html {
 .map-card .muted {
     color: #6b7280;
     margin-bottom: 18px;
+}
+
+/* Override any inline truncation to allow wrapping inside the card */
+.map-card .muted {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: initial !important;
 }
 
 /* Icon style for map-card heading (warehouse icon) */
@@ -6041,6 +6137,40 @@ html {
     margin-bottom: 8px;
     padding-left: 24px;
     width: 100%;
+}
+/* Ensure phone/email text wraps naturally on narrow screens (override inline styles) */
+.map-card .contact-list li span {
+    min-width: 0 !important;
+    white-space: normal !important;
+    text-align: left !important;
+}
+
+/* Restore original desktop presentation exactly */
+@media (min-width: 901px) {
+    /* Fixed card width inside the right column */
+    .map-contact-grid .map-card { width: 500px; max-width: none; margin: 0 auto; }
+    /* Desktop subtitle: single line with ellipsis */
+    .map-contact-grid .map-card .muted {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    /* Center the list rows like the original, remove left padding */
+    .map-contact-grid .contact-list { align-items: center; }
+    .map-contact-grid .contact-list li {
+        justify-content: center;
+        padding-left: 0;
+    }
+    /* Desktop: keep phone/email text on one line with ellipsis */
+    .map-contact-grid .contact-list li span {
+        min-width: 180px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        text-align: left !important;
+    }
+    /* Desktop: icons use solid black like the original */
+    .contact-section .map-card .contact-list i { color: #000000 !important; font-size: 1.2rem; margin-right: 4px; }
 }
 .contact-list i {
     color: #801D1D;
@@ -6141,8 +6271,8 @@ html {
     }
 }
 
-/* Slightly reduce scale on laptop/tablet to avoid bottom clipping */
-@media (max-width: 1280px) {
+/* Slightly reduce scale on small screens only to avoid bottom clipping */
+@media (max-width: 900px) {
     .infra-card:hover,
     .infra-card-focus {
         transform: scale(1.05);
