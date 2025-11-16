@@ -3180,7 +3180,11 @@ p {
     font-size: 1.05rem;
     text-align: justify;
     text-align-last: left; /* avoid awkward last-line centering */
-    hyphens: auto;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 /* Features Section */
@@ -4669,6 +4673,27 @@ img.portrait-top {
     -webkit-overflow-scrolling: touch;
     width: 100%;
     max-width: 100%;
+}
+
+/* When a track is marked as center-aligned it means the section has
+   a small number of products and doesn't need carousel behavior.
+   Center them and allow wrapping on wider screens. */
+.product-carousel-track.center-aligned {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 20px 12px;
+    overflow: visible; /* show shadows and allow wrapping */
+}
+.product-carousel-track.center-aligned .product-card {
+    flex: 0 0 auto;
+    width: 240px;
+    scroll-snap-align: none;
+}
+.product-carousel-wrapper:has(.product-carousel-track.center-aligned) {
+    overflow: visible;
 }
 
 /* Hide native scrollbars for the product carousel but keep it scrollable
@@ -6666,7 +6691,9 @@ body.products-page .modal-content {
     margin: 0 0 0.75rem !important;
     text-align: justify !important;
     text-align-last: left !important;
-    hyphens: auto;
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+    hyphens: none !important;
 }
 .key-insights .insight-card p:last-child,
 .mission-vision .mv-card p:last-child,

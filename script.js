@@ -2261,7 +2261,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const nextBtn = slideshow.querySelector('.slideshow-next');
         const dotsWrap = slideshow.querySelector('.slideshow-dots');
 
-        let idx = slides.findIndex(s => s.classList.contains('is-active'));
+        // Normalize any server-side markup using `is-active` so the script
+        // consistently uses the `active` class. Then pick the initial index.
+        slides.forEach(s => s.classList.remove('is-active'));
+        let idx = slides.findIndex(s => s.classList.contains('active'));
         if (idx < 0) idx = 0;
         const total = slides.length;
         let timer = null;
@@ -2313,6 +2316,19 @@ document.addEventListener('DOMContentLoaded', function() {
         slideshow.addEventListener('focusin', stop);
         slideshow.addEventListener('focusout', start);
 
+        // Also pause when the pointer is directly over an image element
+        // or when an image receives focus (keyboard users). This ensures
+        // that hovering the image itself (not just the container) pauses
+        // autoplay across different browsers and input methods.
+        slides.forEach(img => {
+            img.addEventListener('mouseenter', stop);
+            img.addEventListener('mouseleave', start);
+            img.addEventListener('focusin', stop);
+            img.addEventListener('focusout', start);
+            img.addEventListener('touchstart', stop, { passive: true });
+            img.addEventListener('touchend', start, { passive: true });
+        });
+
         // keyboard support
         slideshow.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') { prev(); restart(); }
@@ -2325,10 +2341,9 @@ document.addEventListener('DOMContentLoaded', function() {
         track.style.transform = `translateX(-${idx * 100}%)`;
         updateActive();
         start();
-        // Make the first automatic advance feel responsive: nudge shortly after init
-        if (slides.length > 1 && !prefersReduced) {
-            setTimeout(() => { next(); }, 500);
-        }
+        // Do not auto-nudge the slideshow on init. The regular interval
+        // will advance slides after `interval` ms. Removing the early nudge
+        // prevents skipping the first slides on page load.
     });
 
 // Hide browser status-bar style URL preview for local .html links
