@@ -3178,8 +3178,9 @@ p {
     color: #64748b;
     line-height: 1.7;
     font-size: 1.05rem;
-    text-align: center; /* center-align card paragraphs */
-    text-align-last: center;
+    text-align: justify;
+    text-align-last: left; /* avoid awkward last-line centering */
+    hyphens: auto;
 }
 
 /* Features Section */
@@ -4254,9 +4255,10 @@ h1, h2, h3, h4, h5, h6, .section-title {
 }
 
 /* Ensure mission card text is explicitly centered */
-.mv-card h3,
+.mv-card h3 { text-align: center; }
 .mv-card p {
-    text-align: center;
+    text-align: justify;
+    hyphens: auto;
 }
 
 /* Team Section */
@@ -4526,9 +4528,10 @@ img.portrait-top {
 }
 
 /* Ensure Why Choose Us card text is explicitly centered */
-.why-item h4,
+.why-item h4 { text-align: center; }
 .why-item p {
-    text-align: center;
+    text-align: justify;
+    hyphens: auto;
 }
 
 /* Products Overview */
@@ -6634,3 +6637,42 @@ body.products-page .container,
 body.products-page .modal-content {
     background: transparent !important;
 }
+
+/* ========================================================= */
+/* Card Height & Spacing Normalization (Insights / Mission / Strengths) */
+/* ========================================================= */
+/* Goal: remove excess vertical space, ensure symmetrical heights per section,
+   keep headings centered while paragraphs are justified for better readability. */
+.key-insights .insight-card,
+.mission-vision .mv-card,
+.why-choose .why-item {
+    padding: 2.2rem 2rem 2rem !important; /* tighter vertical space */
+    min-height: 300px; /* uniform baseline height per section */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.key-insights .insight-card h3,
+.mission-vision .mv-card h3,
+.why-choose .why-item h4 {
+    margin-bottom: 1rem !important;
+    font-size: 1.25rem !important;
+}
+
+.key-insights .insight-card p,
+.mission-vision .mv-card p,
+.why-choose .why-item p {
+    margin: 0 0 0.75rem !important;
+    text-align: justify !important;
+    text-align-last: left !important;
+    hyphens: auto;
+}
+.key-insights .insight-card p:last-child,
+.mission-vision .mv-card p:last-child,
+.why-choose .why-item p:last-child { margin-bottom: 0 !important; }
+
+/* Ensure grids stretch children to same height */
+.insights-grid,
+.mv-grid,
+.why-grid { align-items: stretch; }
