@@ -2550,8 +2550,9 @@ p {
     /* Brand-blue tint over the hero image; made more transparent per request */
     background:
         linear-gradient(180deg, rgba(28,55,97,0.70), rgba(28,55,97,0.70)),
-        url('assets/factory.jpg');
-    background-position: center center, center center;
+        url('assets/factory.jpeg');
+    /* Keep gradient centered; nudge image up (show lower area) */
+    background-position: center center, center 40%;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
     color: white;
@@ -3204,6 +3205,13 @@ p {
     color: #1e293b;
     letter-spacing: -0.02em;
     line-height: 1.2;
+}
+
+/* Keep the Features headline on a single line on desktop and allow room */
+@media (min-width: 901px) {
+    .features-text h2 { white-space: nowrap; }
+    /* Override inline max-width set in HTML so the line fits without overflow */
+    .features-text { max-width: 780px !important; }
 }
 
 .features-text p {
@@ -4105,6 +4113,7 @@ h1, h2, h3, h4, h5, h6, .section-title {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 22px; /* increase size of arrow glyphs (‹ ›) */
     cursor: pointer;
     z-index: 4;
     box-shadow: 0 8px 22px rgba(0,0,0,0.35);
@@ -4147,9 +4156,8 @@ h1, h2, h3, h4, h5, h6, .section-title {
 
 @media (max-width: 640px) {
     .slideshow button.slideshow-prev,
-    .slideshow button.slideshow-next { width: 34px; height: 34px; }
+    .slideshow button.slideshow-next { width: 34px; height: 34px; font-size: 18px; }
 }
-
 /* Mission & Vision */
 .mission-vision {
     /* Reduce top padding to further close the gap after Company Story */
@@ -4328,7 +4336,8 @@ img.portrait-top {
     position: static; /* participate in inline flow */
     display: inline-block;
     font-family: Georgia, "Times New Roman", Times, serif; /* elegant curly glyphs */
-    font-size: clamp(1.6em, 4vw, 2.4em); /* bigger than text, responsive */
+    /* Make the curly quotes subtle and closer to text size */
+    font-size: clamp(1em, 2.2vw, 1.15em);
     line-height: 1;
     color: currentColor; /* match message text color */
     pointer-events: none;
@@ -4348,7 +4357,7 @@ img.portrait-top {
 @media (max-width: 640px) {
     .team p { padding: 0; }
     .team p::before,
-    .team p::after { font-size: clamp(1.4em, 5vw, 2em); }
+    .team p::after { font-size: clamp(1em, 3.5vw, 1.1em); }
 }
 
 /* Stats Section */
