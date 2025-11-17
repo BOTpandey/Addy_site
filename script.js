@@ -281,10 +281,10 @@ const infrastructureData = {
     'complex-machines': {
         title: 'CNC and Multi-Axis Machining',
         images: [
-            { src: 'Complex machine/CNC honing.png', caption: 'CNC Honing' },
-            { src: 'Complex machine/CNC turning.png', caption: 'CNC Turning' },
+            { src: 'Complex machine/VMC 5axis.png', caption: 'VMC -5Axis' },
             { src: 'Complex machine/VMC 3axis.png', caption: 'VMC -3Axis' },
-            { src: 'Complex machine/VMC 5axis.png', caption: 'VMC -5Axis' }
+            { src: 'Complex machine/CNC turning.png', caption: 'CNC Turning' },
+            { src: 'Complex machine/CNC honing.png', caption: 'CNC Honing' }
         ],
         items: [
             {
@@ -361,7 +361,7 @@ const infrastructureData = {
         points: []
     },
     'others': {
-        title: 'Quality & Assembly Equipment',
+        title: 'Assembly and Quality Equipment',
         images: [
             { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
             { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },

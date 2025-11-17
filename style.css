@@ -2551,8 +2551,8 @@ p {
     background:
         linear-gradient(180deg, rgba(28,55,97,0.70), rgba(28,55,97,0.70)),
         url('assets/factory.jpeg');
-    /* Keep gradient centered; nudge image up (show lower area) */
-    background-position: center center, center 40%;
+    /* Center both gradient and image for proper, complete coverage */
+    background-position: center center, center center;
     background-size: cover, cover;
     background-repeat: no-repeat, no-repeat;
     color: white;
@@ -3233,7 +3233,7 @@ p {
 .features-list li {
     display: flex;
     align-items: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     font-weight: 600;
     color: #1e293b;
     font-size: 1.1rem;
