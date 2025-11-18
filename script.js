@@ -335,7 +335,12 @@ const infrastructureData = {
         images: [
             { src: 'tubular/CNC pipe bend 3axis.png', caption: 'CNC Pipe Bending -3Axis' },
             { src: 'tubular/CNC pipe bend 5axis.png', caption: 'CNC Pipe Bending -5axis' },
-            { src: 'tubular/NC pipe bend.png', caption: 'NC Pipe Bending Machine' }
+            { src: 'tubular/NC pipe bend.png', caption: 'NC Pipe Bending Machine' },
+            { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
+            { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },
+            { src: 'others/hydrofoaming.png', caption: 'Hydroforming Machine' },
+            { src: 'others/induction brazing.png', caption: 'Induction Brazing Machine' },
+            { src: 'others/tube end reforming.png', caption: 'Tube End Forming Machine' }
         ],
         items: [
             {
@@ -345,6 +350,14 @@ const infrastructureData = {
             {
                 title: 'Achieve precise bends with NC pipe bending technology',
                 desc: 'Employ NC Pipe Bending Machines to deliver precise pipe bends essential for complex tubular fabrication projects.'
+            },
+            {
+                title: 'Specialized machines for pipe forming',
+                desc: 'Employ Tube End Forming Machine, Hydroforming Machine, Hose Crimping Machine, and Hose Cutting Machine to achieve precise tube and hose fabrication essential for product assembly.'
+            },
+            {
+                title: 'Implement advanced joining and brazing technology',
+                desc: 'Use Induction Brazing Machine to ensure strong, reliable joints critical for product durability and performance.'
             }
         ],
         description: '',
@@ -363,26 +376,17 @@ const infrastructureData = {
     'others': {
         title: 'Assembly and Quality Equipment',
         images: [
-            { src: 'others/hose crimping.png', caption: 'Hose Crimping Machine' },
-            { src: 'others/hose cutting.png', caption: 'Hose Cutting Machine' },
-            { src: 'others/hydrofoaming.png', caption: 'Hydroforming Machine' },
-            { src: 'others/induction brazing.png', caption: 'Induction Brazing Machine' },
             { src: 'others/pressure decay leak tester.png', caption: 'Pressure Decay Leak Tester' },
-            { src: 'others/tube end reforming.png', caption: 'Tube End Forming Machine' },
             { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' }
         ],
         items: [
             {
-                title: 'Specialized machines for pipe forming',
-                desc: 'Employ Tube End Forming Machine, Hydroforming Machine, Hose Crimping Machine, and Hose Cutting Machine to achieve precise tube and hose fabrication essential for product assembly.'
-            },
-            {
-                title: 'Implement advanced joining and brazing technology',
-                desc: 'Use Induction Brazing Machine to ensure strong, reliable joints critical for product durability and performance.'
-            },
-            {
                 title: 'Conduct rigorous leak testing for quality assurance',
                 desc: 'Apply Pressure Decay Leak Tester to verify leak-proof assemblies, maintaining high product integrity and compliance with quality standards.'
+            },
+            {
+                title: 'Advanced ultrasonic cleaning for precision components',
+                desc: 'Utilize Ultrasonic Washing Machine to ensure thorough cleaning of components, removing contaminants and maintaining the highest quality standards.'
             },
             {
                 title: 'Ensure compliance with MNC procurement and quality standards',
