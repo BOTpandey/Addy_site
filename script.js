@@ -377,7 +377,8 @@ const infrastructureData = {
         title: 'Assembly and Quality Equipment',
         images: [
             { src: 'others/pressure decay leak tester.png', caption: 'Pressure Decay Leak Tester' },
-            { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' }
+            { src: 'others/ultrasonic.png', caption: 'Ultrasonic Washing Machine' },
+            { src: 'others/Cordinate Measuring.jpeg', caption: 'Coordinate Measuring Machine (CMM)' }
         ],
         items: [
             {
@@ -387,6 +388,10 @@ const infrastructureData = {
             {
                 title: 'Advanced ultrasonic cleaning for precision components',
                 desc: 'Utilize Ultrasonic Washing Machine to ensure thorough cleaning of components, removing contaminants and maintaining the highest quality standards.'
+            },
+            {
+                title: 'Precision dimensional inspection with Coordinate Measuring Machine',
+                desc: 'Employ state-of-the-art CMM technology for accurate 3D measurement and verification of complex geometries, ensuring dimensional accuracy and quality compliance.'
             },
             {
                 title: 'Ensure compliance with MNC procurement and quality standards',
