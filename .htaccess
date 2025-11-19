@@ -1,0 +1,56 @@
+# Enable Rewrite Engine
+RewriteEngine On
+
+# ============================================================================
+# UNCOMMENT BELOW (Remove the # from the 2 lines) to redirect www to non-www
+# ============================================================================
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# ============================================================================
+# UNCOMMENT BELOW (Remove the # from the 2 lines) when SSL is installed
+# ============================================================================
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Remove .html extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+# Redirect .html URLs to clean URLs
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Handle index page - redirect index.html to root
+RewriteCond %{THE_REQUEST} ^.*/index\.html
+RewriteRule ^(.*)index.html$ /$1 [R=301,L]
+
+# Custom Error Pages (optional)
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html
+
+# Prevent directory browsing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Enable compression (improves performance)
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Browser Caching (improves performance)
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
